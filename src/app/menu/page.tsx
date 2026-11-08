@@ -179,9 +179,10 @@ export default async function MenuPage() {
                 <div className="store-product-grid">
                   {category.products.map((product: any) => (
                     <article className="store-product" key={product.id}>
-                      <div className="product-photo-wrap">
-                        <img className="product-photo" src={categoryImages[category.slug] ?? "/offers/friends-625.webp"} alt={product.name_ar} loading="lazy" />
-                        <span className="product-photo-badge">CHICKEN FACTOR</span>
+                      <div className="product-photo-wrap product-photo-placeholder">
+                        <span className="product-placeholder-kicker">CHICKEN FACTOR</span>
+                        <span className="product-placeholder-name">{product.name_ar}</span>
+                        <span className="product-photo-badge">FRESH • CRISPY</span>
                       </div>
                       <div className="store-product-body">
                         <div className="store-product-top"><span className="store-product-code">{product.sku}</span><span className="store-product-mark">CF</span></div>
