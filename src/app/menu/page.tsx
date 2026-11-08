@@ -65,7 +65,7 @@ export default async function MenuPage() {
         .eq("is_active", true)
         .order("sort_order"),
       supabase.from("products")
-        .select("id, sku, name_ar, name_en, description_ar, category_id, sort_order")
+        .select("id, sku, name_ar, name_en, description_ar, image_path, category_id, sort_order")
         .eq("is_active", true)
         .order("sort_order"),
       supabase.from("product_variants")
@@ -220,10 +220,21 @@ export default async function MenuPage() {
                 <div className="store-product-grid">
                   {category.products.map((product: any) => (
                     <article className="store-product" key={product.id}>
-                      <div className="product-photo-wrap product-photo-placeholder">
-                        <span className="product-placeholder-kicker">CHICKEN FACTOR</span>
-                        <span className="product-placeholder-name">{product.name_ar}</span>
-                        <span className="product-photo-badge">FRESH • CRISPY</span>
+                      <div className="product-photo-wrap">
+                        {product.image_path ? (
+                          <img
+                            className="product-photo"
+                            src={supabase.storage.from("product-images").getPublicUrl(product.image_path).data.publicUrl}
+                            alt={product.name_ar}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="product-photo-placeholder">
+                            <span className="product-placeholder-kicker">CHICKEN FACTOR</span>
+                            <span className="product-placeholder-name">{product.name_ar}</span>
+                            <span className="product-photo-badge">FRESH • CRISPY</span>
+                          </div>
+                        )}
                       </div>
                       <div className="store-product-body">
                         <div className="store-product-top"><span className="store-product-code">{product.sku}</span><span className="store-product-mark">CF</span></div>
