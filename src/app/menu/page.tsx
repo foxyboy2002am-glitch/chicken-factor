@@ -1,4 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import AddToCartButton from "@/components/add-to-cart-button";
+import CartButton from "@/components/cart-button";
 
 export const revalidate = 60;
 
@@ -124,7 +126,7 @@ export default async function MenuPage() {
           <img src="/profile_chicken_factor.webp" alt="Chicken Factor" />
           <b>CHICKEN FACTOR</b>
         </a>
-        <a className="store-hotline" href="tel:15407">الخط الساخن <strong>15407</strong></a>
+        <div className="store-header-actions"><CartButton /><a className="store-hotline" href="tel:15407">الخط الساخن <strong>15407</strong></a></div>
       </header>
 
       <section className="store-hero">
@@ -253,6 +255,7 @@ export default async function MenuPage() {
                               <div className="store-price" key={variant.id}>
                                 <span>{variant.name_ar}</span>
                                 <strong>{price.toLocaleString("ar-EG")} <small>جنيه</small></strong>
+                                <AddToCartButton productId={product.id} variantId={variant.id} productName={product.name_ar} variantName={variant.name_ar} price={price} sku={product.sku} />
                                 {whatsappUrl ? <a className="variant-whatsapp-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">اطلب هذا الحجم عبر واتساب</a> : null}
                               </div>
                             );
