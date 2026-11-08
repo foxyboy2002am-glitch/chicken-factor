@@ -16,7 +16,9 @@ const categoryImages: Record<string, string> = {
   drinks: "/offers/rizo-150.webp",
   "selected-pieces": "/offers/friends-625.webp",
   "wing-swaps": "/offers/friends-625.webp",
-};\n\nconst promotions = [
+};
+
+const promotions = [
   {
     id: "friends-625",
     title: "عرض الصحاب",
