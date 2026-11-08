@@ -207,3 +207,84 @@
 .store-product{border-radius:18px}
 .store-product-body{padding:15px 18px 18px}
 @media(max-width:600px){.product-photo-placeholder{height:125px}.product-placeholder-name{font-size:21px}}
+
+
+/* Professional menu refresh — consistent hierarchy, real product imagery, cleaner spacing */
+.store-page{background:#fff;color:#241b18}
+.store-header{height:72px;padding-inline:clamp(18px,5vw,72px);box-shadow:0 2px 14px #2d160d0a}
+.store-logo img{width:48px;height:48px}
+.store-hero{background:linear-gradient(115deg,#97121a 0%,#c51c24 58%,#e33a2d 100%)}
+.store-hero-inner{max-width:1180px;min-height:310px;grid-template-columns:1.3fr .7fr;gap:36px}
+.store-hero-content{padding:38px 0}
+.store-hero h1{font-size:clamp(38px,5vw,58px)}
+.store-hero-visual{height:270px}
+.store-hero-logo{width:190px;height:180px}
+.store-hero-glow{width:230px;height:230px}
+.store-hero-stamp{right:calc(50% - 125px);bottom:18px;width:68px;height:68px}
+.offers-section{max-width:1240px;padding:42px 24px 22px}
+.offers-heading{margin-bottom:20px}
+.offers-heading h2,.menu-section-intro h2{font-size:clamp(24px,2.7vw,31px)}
+.offers-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.offer-card{border-radius:16px;box-shadow:0 5px 18px #35160d0b}
+.offer-card>img{aspect-ratio:1.08/1;object-fit:cover}
+.offer-card-content{padding:14px}
+.offer-title-row{align-items:flex-start;flex-direction:column;gap:3px}
+.offer-title-row h3{font-size:17px}
+.offer-title-row>strong{font-size:22px}
+.offer-card-content>p{font-size:12px;min-height:55px;margin:6px 0 11px}
+.offer-card-content>a{padding:10px;font-size:12px}
+.menu-section-intro{padding:44px 20px 20px;background:#fff}
+.menu-category-nav{top:72px;padding:12px clamp(16px,4vw,60px);gap:8px;box-shadow:0 3px 12px #25140d08}
+.menu-category-nav a{padding:9px 15px;font-size:12px}
+.store-menu{max-width:1240px;padding:12px 24px 60px}
+.store-category{padding:27px 0 32px;scroll-margin-top:130px}
+.store-category-heading{margin-bottom:17px;border-right-width:4px}
+.store-category-heading h2{font-size:24px}
+.store-product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.store-product{border-radius:16px;box-shadow:0 4px 18px #31170e0a}
+.product-photo-wrap{height:190px;background:#fff4ed}
+.product-photo{object-fit:cover}
+.product-photo-placeholder{height:100%;min-height:190px;border:0}
+.store-product-body{padding:14px 16px 16px}
+.store-product h3{font-size:18px}
+.store-price-list{margin-top:10px}
+.store-price{padding:7px 0}
+.store-price strong{font-size:17px}
+.product-order-link{margin-top:10px}
+.store-footer{margin-top:15px}
+@media(max-width:1000px){
+ .offers-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .store-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+ .store-header{height:64px}
+ .store-hero-inner{grid-template-columns:1fr;min-height:0;gap:4px;padding:22px 0 30px}
+ .store-hero-content{grid-row:2;padding:0}
+ .store-hero-visual{grid-row:1;height:125px}
+ .store-hero-logo{width:120px;height:115px}
+ .store-hero-glow{width:112px;height:112px}
+ .store-hero-stamp{width:52px;height:52px;right:calc(50% - 84px);bottom:0}
+ .store-hero h1{font-size:36px}
+ .offers-section{padding:28px 14px 14px}
+ .offers-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ .offer-card>img{aspect-ratio:1/1}
+ .offer-card-content{padding:10px}
+ .offer-title-row h3{font-size:14px}
+ .offer-title-row>strong{font-size:18px}
+ .offer-card-content>p{font-size:11px;min-height:66px}
+ .menu-category-nav{top:64px}
+ .store-menu{padding:10px 14px 42px}
+ .store-category{padding:20px 0 25px;scroll-margin-top:115px}
+ .store-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .product-photo-wrap,.product-photo-placeholder{height:132px;min-height:132px}
+ .store-product-body{padding:11px}
+ .store-product h3{font-size:15px}
+ .store-product-en{font-size:10px}
+ .store-price span{font-size:11px}
+ .store-price strong{font-size:15px}
+ .product-order-link{font-size:11px;padding:9px}
+}
+@media(max-width:390px){
+ .store-product-grid{grid-template-columns:1fr}
+ .product-photo-wrap,.product-photo-placeholder{height:180px;min-height:180px}
+}
