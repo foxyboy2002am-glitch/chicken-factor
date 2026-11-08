@@ -82,14 +82,14 @@ export default async function MenuPage() {
     <main className="store-page">
       <header className="store-header">
         <a className="store-logo" href="/menu" aria-label="Chicken Factor - الصفحة الرئيسية">
-          <img src="/offers/brand-logo.webp" alt="Chicken Factor" />
+          <img src="/profile_chicken_factor.png" alt="Chicken Factor" />
           <b>CHICKEN FACTOR</b>
         </a>
         <a className="store-hotline" href="tel:15407">الخط الساخن <strong>15407</strong></a>
       </header>
 
       <section className="store-hero">
-        <img className="store-hero-logo" src="/offers/brand-logo.webp" alt="شعار تشيكن فاكتور" />
+        <img className="store-hero-logo" src="/profile_chicken_factor.png" alt="شعار تشيكن فاكتور" />
         <p className="store-eyebrow">FRESH • CRISPY • DELICIOUS</p>
         <h1>تشيكن فاكتور</h1>
         <p>اطلب وجبتك المفضلة واستمتع بأقوى العروض.</p>
@@ -164,7 +164,7 @@ export default async function MenuPage() {
         </>
       )}
       <footer className="store-footer">
-        <img src="/offers/brand-logo.webp" alt="" />
+        <img src="/profile_chicken_factor.png" alt="" />
         <b>CHICKEN FACTOR</b><span>للطلب والاستفسار</span><a href="tel:15407">15407</a>
         <small>الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
       </footer>
