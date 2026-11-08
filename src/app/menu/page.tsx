@@ -114,12 +114,23 @@ export default async function MenuPage() {
       </header>
 
       <section className="store-hero">
-        <img className="store-hero-logo" src="/profile_chicken_factor.webp" alt="شعار تشيكن فاكتور" />
-        <p className="store-eyebrow">FRESH • CRISPY • DELICIOUS</p>
-        <p className="store-farm-slogan">فراخنا من إنتاج مزارعنا</p>
-        <h1>تشيكن فاكتور</h1>
-        <p>اطلب وجبتك المفضلة واستمتع بأقوى العروض.</p>
-        <a href="#offers" className="store-primary-link">شوف العروض</a>
+        <div className="store-hero-inner">
+          <div className="store-hero-content">
+            <span className="store-eyebrow">FRESH • CRISPY • DELICIOUS</span>
+            <p className="store-farm-slogan">فراخنا من إنتاج مزارعنا</p>
+            <h1>الطعم اللي <em>يلمّنا!</em></h1>
+            <p className="store-hero-description">اختار وجبتك المفضلة من تشيكن فاكتور واستمتع بعروضنا.</p>
+            <div className="store-hero-actions">
+              <a href="#offers" className="store-primary-link">اكتشف العروض <span>←</span></a>
+              <a className="store-hero-call" href="tel:15407">اطلب على <strong>15407</strong></a>
+            </div>
+          </div>
+          <div className="store-hero-visual">
+            <div className="store-hero-glow"></div>
+            <img className="store-hero-logo" src="/profile_chicken_factor.webp" alt="شعار تشيكن فاكتور" />
+            <span className="store-hero-stamp">CHICKEN<br/>FACTOR</span>
+          </div>
+        </div>
       </section>
 
       <section className="offers-section" id="offers">
