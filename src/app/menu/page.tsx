@@ -2,7 +2,21 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
 
-const categoryImages: Record<string, string> = {\n  "individual-meals": "/offers/friends-625.webp",\n  "family-meals": "/offers/mix-6-525.webp",\n  "rice-meals": "/offers/rizo-150.webp",\n  "drumstick-meals": "/offers/friends-625.webp",\n  "strips-family": "/offers/mix-6-525.webp",\n  sandwiches: "/offers/control-199.webp",\n  "chicken-burgers": "/offers/control-199.webp",\n  "beef-burgers": "/offers/control-199.webp",\n  extras: "/offers/mix-6-525.webp",\n  sauces: "/offers/friends-625.webp",\n  drinks: "/offers/rizo-150.webp",\n  "selected-pieces": "/offers/friends-625.webp",\n  "wing-swaps": "/offers/friends-625.webp",\n};\n\nconst promotions = [
+const categoryImages: Record<string, string> = {
+  "individual-meals": "/offers/friends-625.webp",
+  "family-meals": "/offers/mix-6-525.webp",
+  "rice-meals": "/offers/rizo-150.webp",
+  "drumstick-meals": "/offers/friends-625.webp",
+  "strips-family": "/offers/mix-6-525.webp",
+  sandwiches: "/offers/control-199.webp",
+  "chicken-burgers": "/offers/control-199.webp",
+  "beef-burgers": "/offers/control-199.webp",
+  extras: "/offers/mix-6-525.webp",
+  sauces: "/offers/friends-625.webp",
+  drinks: "/offers/rizo-150.webp",
+  "selected-pieces": "/offers/friends-625.webp",
+  "wing-swaps": "/offers/friends-625.webp",
+};\n\nconst promotions = [
   {
     id: "friends-625",
     title: "عرض الصحاب",
