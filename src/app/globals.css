@@ -321,3 +321,7 @@
  .store-hero-actions{justify-content:center;gap:13px}
  .store-hero .store-primary-link{padding:11px 17px}
 }
+
+/* WhatsApp ordering */
+.variant-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;margin-top:7px;padding:6px 10px;border-radius:8px;background:#e8f7ed;color:#176b3a;font-size:12px;font-weight:800;text-decoration:none}
+.variant-whatsapp-link:hover{background:#d6f0df}
