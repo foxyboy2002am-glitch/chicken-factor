@@ -178,7 +178,7 @@ export default async function MenuPage() {
                         <p className="store-product-en">{product.name_en}</p>
                         {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
                         <div className="store-price-list">
-                          {product.variants.map((variant) => (
+                          {product.variants.map((variant: any) => (
                             <div className="store-price" key={variant.id}>
                               <span>{variant.name_ar}</span>
                               <strong>{Number(variant.base_price).toLocaleString("ar-EG")} <small>جنيه</small></strong>
