@@ -160,7 +160,7 @@ export default async function MenuPage() {
                   {category.products.map((product) => (
                     <article className="store-product" key={product.id}>
                       <div className="product-photo-wrap">
-                        <img className="product-photo" src={category.image} alt={product.name_ar} loading="lazy" />
+                        <img className="product-photo" src={categoryImages[category.slug] ?? "/offers/friends-625.webp"} alt={product.name_ar} loading="lazy" />
                         <span className="product-photo-badge">CHICKEN FACTOR</span>
                       </div>
                       <div className="store-product-body">
