@@ -321,3 +321,11 @@
  .store-hero-actions{justify-content:center;gap:13px}
  .store-hero .store-primary-link{padding:11px 17px}
 }
+
+/* Admin order operations */
+.order-status-form{display:flex;align-items:center;gap:6px;min-width:205px}
+.order-status-form select{max-width:145px;border:1px solid #ddd;border-radius:8px;padding:7px;background:#fff;font-size:12px}
+.order-status-form button,.secondary-button{border:1px solid #e6c7c7;border-radius:8px;padding:7px 10px;background:#fff7f5;color:#a3161d;font-size:12px;font-weight:800;cursor:pointer}
+.order-details{min-width:220px;padding:10px 0;white-space:normal}
+.order-details p{margin:6px 0;font-size:12px}
+.data-form .muted{grid-column:1/-1;line-height:1.8}
