@@ -197,3 +197,13 @@
  .store-hero-stamp{width:57px;height:57px;font-size:8px;right:calc(50% - 90px);bottom:5px;border-width:3px}
  .offers-section{padding-top:30px}
 }
+
+
+/* Product cards: remove misleading repeated offer posters until real SKU photos are added */
+.product-photo-placeholder{height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px;background:radial-gradient(circle at 50% 25%,#fff4e8 0,#ffe9dc 48%,#f9d6c9 100%);border-bottom:1px solid #f2dfd5;text-align:center}
+.product-placeholder-kicker{font:900 10px/1 Arial,sans-serif;letter-spacing:2px;color:#c81920}
+.product-placeholder-name{font-size:clamp(19px,2vw,25px);font-weight:900;color:#4b211b;line-height:1.4}
+.product-photo-placeholder .product-photo-badge{position:static;background:#c81920;color:#fff;box-shadow:none;font-size:8px;letter-spacing:1px}
+.store-product{border-radius:18px}
+.store-product-body{padding:15px 18px 18px}
+@media(max-width:600px){.product-photo-placeholder{height:125px}.product-placeholder-name{font-size:21px}}
