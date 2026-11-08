@@ -53,11 +53,13 @@ export default async function MenuPage() {
   let categories: any[] = [];
   let products: any[] = [];
   let variants: any[] = [];
+  let activeOffers: any[] = [];
   let queryError: string | null = null;
 
   try {
     const supabase = await createSupabaseServerClient();
-    const [categoriesResult, productsResult, variantsResult] = await Promise.all([
+    const now = new Date().toISOString();
+    const [categoriesResult, productsResult, variantsResult, offersResult, offerBranchesResult] = await Promise.all([
       supabase.from("categories")
         .select("id, slug, name_ar, name_en, sort_order")
         .eq("is_active", true)
@@ -70,9 +72,16 @@ export default async function MenuPage() {
         .select("id, product_id, name_ar, name_en, base_price, sort_order")
         .eq("is_active", true)
         .order("sort_order"),
+      supabase.from("offers")
+        .select("id, name_ar, name_en, description_ar, discount_type, discount_value, starts_at, ends_at")
+        .eq("is_active", true)
+        .lte("starts_at", now)
+        .gte("ends_at", now)
+        .order("created_at", { ascending: false }),
+      supabase.from("offer_branches").select("offer_id"),
     ]);
 
-    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error;
+    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error ?? offersResult.error ?? offerBranchesResult.error;
     if (error) {
       queryError = error.message;
       console.error("[Chicken Factor menu] Supabase query failed:", error.message, error.code);
@@ -80,6 +89,8 @@ export default async function MenuPage() {
     categories = categoriesResult.data ?? [];
     products = productsResult.data ?? [];
     variants = variantsResult.data ?? [];
+    const branchScopedOfferIds = new Set((offerBranchesResult.data ?? []).map((row) => row.offer_id));
+    activeOffers = (offersResult.data ?? []).filter((offer) => !branchScopedOfferIds.has(offer.id));
   } catch (error) {
     queryError = error instanceof Error ? error.message : "Unknown Supabase server error";
     console.error("[Chicken Factor menu] Supabase initialization failed:", error);
@@ -132,6 +143,36 @@ export default async function MenuPage() {
           </div>
         </div>
       </section>
+
+      {activeOffers.length > 0 ? (
+        <section className="offers-section database-offers-section" aria-label="العروض السارية من الإدارة">
+          <div className="offers-heading">
+            <div><span>LIVE OFFERS</span><h2>عروض سارية الآن</h2></div>
+          </div>
+          <div className="offers-grid">
+            {activeOffers.map((offer) => {
+              const value = Number(offer.discount_value);
+              const discountText = offer.discount_type === "percentage"
+                ? `${value}% خصم`
+                : offer.discount_type === "bundle_price"
+                  ? `سعر الباقة ${value.toLocaleString("ar-EG")} جنيه`
+                  : `${value.toLocaleString("ar-EG")} جنيه خصم`;
+              return (
+                <article className="offer-card database-offer-card" key={offer.id}>
+                  <div className="offer-card-content">
+                    <div className="offer-title-row">
+                      <h3>{offer.name_ar}</h3>
+                      <strong>{discountText}</strong>
+                    </div>
+                    {offer.description_ar ? <p>{offer.description_ar}</p> : null}
+                    <small>ساري حتى {new Date(offer.ends_at).toLocaleString("ar-EG")}</small>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       <section className="offers-section" id="offers">
         <div className="offers-heading">
