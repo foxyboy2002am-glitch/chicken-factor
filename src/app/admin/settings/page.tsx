@@ -11,6 +11,13 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   ]);
   const cash = methods?.find(m => m.code === "cash");
   const paymob = methods?.find(m => m.code === "paymob");
+  const paymobConfig = {
+    apiKey: Boolean(process.env.PAYMOB_API_KEY),
+    integrationId: Boolean(process.env.PAYMOB_INTEGRATION_ID),
+    iframeId: Boolean(process.env.PAYMOB_IFRAME_ID),
+    hmacSecret: Boolean(process.env.PAYMOB_HMAC_SECRET),
+    serviceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+  };
   return <main className="dashboard-content" dir="rtl">
     <div className="page-heading"><div><p className="eyebrow">STORE SETTINGS</p><h1>إعدادات المتجر وطرق الدفع</h1><p className="muted">تحكم في طرق الدفع الظاهرة للعملاء. بيانات البطاقات لا يتم تخزينها في موقعك.</p></div></div>
     {params.success ? <p className="notice success">تم حفظ الإعدادات.</p> : null}
