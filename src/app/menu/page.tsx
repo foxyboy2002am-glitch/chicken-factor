@@ -2,11 +2,40 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
 
+const promotions = [
+  {
+    id: "friends-625",
+    title: "عرض الصحاب",
+    price: 625,
+    image: "/offers/friends-625.webp",
+    description: "11 قطعة دجاج + 6 خبز + كولسلو + ثومية + بطاطس",
+  },
+  {
+    id: "rizo-150",
+    title: "عرض الريزو",
+    price: 150,
+    image: "/offers/rizo-150.webp",
+    description: "2 طبق ريزو",
+  },
+  {
+    id: "control-199",
+    title: "عرض السيطرة",
+    price: 199,
+    image: "/offers/control-199.webp",
+    description: "1 تشيكن كلاسيك سنجل + 1 توستر رول سنجل",
+  },
+  {
+    id: "mix-6-525",
+    title: "عرض ميكس 6",
+    price: 525,
+    image: "/offers/mix-6-525.webp",
+    description: "6 قطع دجاج + 6 قطع استربس + كولسلو + ثومية + بطاطس + 6 خبز",
+  },
+];
+
 export default async function MenuPage() {
   const supabase = await createSupabaseServerClient();
 
-  // Fetch each table independently. This avoids PostgREST embedded-relation
-  // lookup failures while keeping the same public RLS-protected reads.
   const [categoriesResult, productsResult, variantsResult] = await Promise.all([
     supabase.from("categories")
       .select("id, name_ar, name_en, sort_order")
@@ -52,22 +81,55 @@ export default async function MenuPage() {
   return (
     <main className="store-page">
       <header className="store-header">
-        <a className="store-logo" href="/menu"><span>CF</span><b>CHICKEN FACTOR</b></a>
+        <a className="store-logo" href="/menu" aria-label="Chicken Factor - الصفحة الرئيسية">
+          <img src="/profile_chicken_factor.png" alt="Chicken Factor" />
+          <b>CHICKEN FACTOR</b>
+        </a>
         <a className="store-hotline" href="tel:15407">الخط الساخن <strong>15407</strong></a>
       </header>
+
       <section className="store-hero">
+        <img className="store-hero-logo" src="/profile_chicken_factor.png" alt="شعار تشيكن فاكتور" />
         <p className="store-eyebrow">FRESH • CRISPY • DELICIOUS</p>
-        <h1>منيو تشيكن فاكتور</h1>
-        <p>اختار وجبتك المفضلة وشوف الأحجام والأسعار.</p>
-        <a href="#menu-categories" className="store-primary-link">استكشف المنيو</a>
+        <h1>تشيكن فاكتور</h1>
+        <p>اطلب وجبتك المفضلة واستمتع بأقوى العروض.</p>
+        <a href="#offers" className="store-primary-link">شوف العروض</a>
       </section>
+
+      <section className="offers-section" id="offers">
+        <div className="offers-heading">
+          <div><span>HOT DEALS</span><h2>عروض تشيكن فاكتور</h2></div>
+          <a href="tel:15407">اطلب الآن <strong>15407</strong></a>
+        </div>
+        <div className="offers-grid">
+          {promotions.map((offer) => (
+            <article className="offer-card" key={offer.id}>
+              <img src={offer.image} alt={offer.title} loading="lazy" />
+              <div className="offer-card-content">
+                <div className="offer-title-row">
+                  <h3>{offer.title}</h3>
+                  <strong>{offer.price} <small>جنيه</small></strong>
+                </div>
+                <p>{offer.description}</p>
+                <a href="tel:15407">اطلب العرض <span>15407</span></a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {queryError ? (
         <p className="store-error">حصلت مشكلة في الاتصال بالمنيو. حاول مرة أخرى بعد قليل.</p>
       ) : grouped.length === 0 ? (
         <p className="store-error">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
       ) : (
         <>
-          <nav id="menu-categories" className="menu-category-nav" aria-label="أقسام المنيو">
+          <div className="menu-section-intro" id="menu-categories">
+            <span>OUR MENU</span>
+            <h2>المنيو الكامل</h2>
+            <p>اختار القسم وشوف المنتجات والأسعار.</p>
+          </div>
+          <nav className="menu-category-nav" aria-label="أقسام المنيو">
             {grouped.map((category) => <a key={category.id} href={`#${category.id}`}>{category.name_ar}</a>)}
           </nav>
           <div className="store-menu">
@@ -101,7 +163,11 @@ export default async function MenuPage() {
           </div>
         </>
       )}
-      <footer className="store-footer"><b>CHICKEN FACTOR</b><span>للطلب والاستفسار</span><a href="tel:15407">15407</a><small>الأسعار بالجنيه المصري وقد تختلف حسب الفرع.</small></footer>
+      <footer className="store-footer">
+        <img src="/profile_chicken_factor.png" alt="" />
+        <b>CHICKEN FACTOR</b><span>للطلب والاستفسار</span><a href="tel:15407">15407</a>
+        <small>الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
+      </footer>
     </main>
   );
 }
