@@ -10,7 +10,9 @@ function localDateTime(value: string) {
 }
 
 function discountLabel(type: string, value: number) {
-  return type === "percentage" ? `${value}% خصم` : `${new Intl.NumberFormat("ar-EG").format(value)} جنيه خصم`;
+  if (type === "percentage") return `${value}% خصم`;
+  if (type === "bundle_price") return `سعر الباقة ${new Intl.NumberFormat("ar-EG").format(value)} جنيه`;
+  return `${new Intl.NumberFormat("ar-EG").format(value)} جنيه خصم`;
 }
 
 export default async function OffersPage({ searchParams }: Props) {
@@ -43,7 +45,7 @@ export default async function OffersPage({ searchParams }: Props) {
           <label>اسم العرض بالإنجليزي<input name="name_en" required minLength={2} /></label>
           <label>وصف العرض بالعربي<input name="description_ar" /></label>
           <label>وصف العرض بالإنجليزي<input name="description_en" /></label>
-          <label>نوع الخصم<select name="discount_type" defaultValue="percentage"><option value="percentage">نسبة مئوية %</option><option value="fixed">مبلغ ثابت بالجنيه</option></select></label>
+          <label>نوع الخصم<select name="discount_type" defaultValue="percentage"><option value="percentage">نسبة مئوية %</option><option value="fixed">مبلغ خصم ثابت بالجنيه</option><option value="bundle_price">سعر نهائي للباقة</option></select></label>
           <label>قيمة الخصم<input name="discount_value" type="number" min="0.01" max="100000" step="0.01" required /></label>
           <label>بداية العرض<input name="starts_at" type="datetime-local" required /></label>
           <label>نهاية العرض<input name="ends_at" type="datetime-local" required /></label>
