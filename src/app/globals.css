@@ -288,3 +288,36 @@
  .store-product-grid{grid-template-columns:1fr}
  .product-photo-wrap,.product-photo-placeholder{height:180px;min-height:180px}
 }
+
+
+/* Food-first hero overrides */
+.store-hero{padding:30px 24px;background:linear-gradient(115deg,#8f1018 0%,#bd171f 58%,#d52a25 100%);color:#fff;overflow:hidden;position:relative;text-align:initial;border:0}
+.store-hero-inner{max-width:1180px;min-height:350px;grid-template-columns:1.05fr .95fr;gap:36px}
+.store-hero-content{padding:32px 0;text-align:right}
+.store-hero .store-eyebrow{display:inline-block;color:#ffe18a;background:#ffffff16;border:1px solid #ffffff2b;border-radius:30px;padding:7px 13px;font-size:10px;letter-spacing:2px}
+.store-hero .store-farm-slogan{color:#ffe18a!important;margin:15px 0 4px!important;font-size:15px!important}
+.store-hero h1{color:#fff;font-size:clamp(40px,5vw,62px);font-weight:900;line-height:1.2;margin:8px 0 12px;letter-spacing:-1px}
+.store-hero h1 em{font-style:normal;color:#ffd34e}
+.store-hero-description{font-size:16px;color:#ffebe5;margin:0 0 24px}
+.store-hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.store-hero .store-primary-link{background:#ffd34e;color:#8f1018;box-shadow:0 9px 22px #39070c38;border-radius:12px;padding:13px 23px}
+.store-hero-call{font-size:13px;color:#ffe8e2}
+.store-hero-call strong{font-size:19px;color:#fff;direction:ltr;display:inline-block;margin-right:5px}
+.store-hero-visual{height:310px;position:relative;display:grid;place-items:center;isolation:isolate}
+.store-hero-food{width:min(100%,440px);height:285px;object-fit:contain;filter:drop-shadow(0 18px 24px #4a080c66);border-radius:20px}
+.store-hero-logo{position:absolute;right:4px;top:5px;width:78px;height:72px;object-fit:contain;background:#fff;border:3px solid #fff;border-radius:14px;box-shadow:0 8px 22px #4a080c40}
+.store-hero-sticker{position:absolute;bottom:12px;left:4%;display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:#ffd34e;color:#9c1119;border:5px solid #bd171f;box-shadow:0 7px 18px #4a080c40;font:900 10px/1.1 Arial,sans-serif;text-align:center;transform:rotate(-12deg)}
+@media(max-width:700px){
+ .store-hero{padding:18px 17px 30px}
+ .store-hero-inner{min-height:0;grid-template-columns:1fr;gap:4px}
+ .store-hero-visual{grid-row:1;height:205px}
+ .store-hero-food{height:190px;width:min(100%,340px)}
+ .store-hero-logo{width:60px;height:56px;right:4%;top:3px}
+ .store-hero-sticker{width:58px;height:58px;font-size:8px;bottom:0;left:5%;border-width:3px}
+ .store-hero-content{grid-row:2;text-align:center;padding:8px 0 0}
+ .store-hero .store-farm-slogan{font-size:13px!important;margin-top:10px!important}
+ .store-hero h1{font-size:38px;margin:5px 0 8px}
+ .store-hero-description{font-size:13px;margin-bottom:17px}
+ .store-hero-actions{justify-content:center;gap:13px}
+ .store-hero .store-primary-link{padding:11px 17px}
+}

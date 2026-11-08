@@ -137,9 +137,9 @@ export default async function MenuPage() {
             </div>
           </div>
           <div className="store-hero-visual">
-            <div className="store-hero-glow"></div>
+            <img className="store-hero-food" src="/offers/mix-6-525.webp" alt="وجبة تشيكن فاكتور" />
             <img className="store-hero-logo" src="/profile_chicken_factor.webp" alt="شعار تشيكن فاكتور" />
-            <span className="store-hero-stamp">CHICKEN<br/>FACTOR</span>
+            <span className="store-hero-sticker">FRESH<br/>&amp; CRISPY</span>
           </div>
         </div>
       </section>
