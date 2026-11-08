@@ -1,6 +1,8 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { updateOrderStatus } from "@/app/actions/orders";
 
 const statusLabels: Record<string, string> = {
+  pending_confirmation: "جديد - في انتظار التأكيد",
   pending: "جديد",
   confirmed: "تم التأكيد",
   preparing: "قيد التحضير",
@@ -8,6 +10,8 @@ const statusLabels: Record<string, string> = {
   out_for_delivery: "خرج للتوصيل",
   completed: "مكتمل",
   cancelled: "ملغي",
+  rejected: "مرفوض",
+  payment_failed: "فشل الدفع",
 };
 
 const paymentLabels: Record<string, string> = {
@@ -20,7 +24,7 @@ const paymentLabels: Record<string, string> = {
 const money = (value: number) =>
   new Intl.NumberFormat("ar-EG", { style: "currency", currency: "EGP" }).format(value);
 
-export default async function OrdersPage() {
+export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {\n  const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: orders, error } = await supabase
     .from("orders")
@@ -28,7 +32,7 @@ export default async function OrdersPage() {
     .order("created_at", { ascending: false })
     .limit(200);
 
-  const rows = orders ?? [];
+  const rows = orders ?? [];\n  const messages: Record<string,string> = { validation: "بيانات تحديث الطلب غير صحيحة.", "not-found": "الطلب غير موجود.", update: "تعذر تحديث حالة الطلب." };
 
   return (
     <main className="dashboard-content" dir="rtl">
@@ -41,7 +45,7 @@ export default async function OrdersPage() {
         <span className="status-pill">{rows.length} طلب</span>
       </div>
 
-      {error ? (
+      {params.success ? <p className="notice success">تم تحديث حالة الطلب.</p> : null}\n      {params.error ? <p className="notice error">{messages[params.error] || "حدث خطأ أثناء تنفيذ العملية."}</p> : null}\n      {error ? (
         <section className="content-card">
           <p className="notice error">تعذر تحميل الطلبات من قاعدة البيانات. تأكد من صلاحيات قراءة جدول الطلبات وتفاصيلها.</p>
         </section>
@@ -61,7 +65,7 @@ export default async function OrdersPage() {
                 <th>حالة الدفع</th>
                 <th>الإجمالي</th>
                 <th>التاريخ</th>
-                <th>التفاصيل</th>
+                <th>تحديث الحالة</th><th>التفاصيل</th>
               </tr>
             </thead>
             <tbody>
@@ -91,7 +95,7 @@ export default async function OrdersPage() {
                   </td>
                 </tr>
               ))}
-              {!rows.length && !error ? <tr><td colSpan={9} className="empty">لا توجد طلبات مسجلة حتى الآن.</td></tr> : null}
+              {!rows.length && !error ? <tr><td colSpan={10} className="empty">لا توجد طلبات مسجلة حتى الآن.</td></tr> : null}
             </tbody>
           </table>
         </div>
