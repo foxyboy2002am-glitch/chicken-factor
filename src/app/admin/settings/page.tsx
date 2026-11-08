@@ -1,15 +1,19 @@
 import { updatePaymentMethods } from "@/app/actions/payment-settings";
+import { updateStoreContactSettings } from "@/app/actions/store-contact";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {
   const params = await searchParams;
   const supabase = await createSupabaseServerClient();
-  const { data: methods, error } = await supabase.from("payment_method_settings").select("code,name_ar,description_ar,is_enabled").order("sort_order");
+  const [{ data: methods, error }, { data: contact }] = await Promise.all([
+    supabase.from("payment_method_settings").select("code,name_ar,description_ar,is_enabled").order("sort_order"),
+    supabase.from("store_contact_settings").select("whatsapp_number").eq("id", 1).maybeSingle(),
+  ]);
   const cash = methods?.find(m => m.code === "cash");
   const paymob = methods?.find(m => m.code === "paymob");
   return <main className="dashboard-content" dir="rtl">
     <div className="page-heading"><div><p className="eyebrow">STORE SETTINGS</p><h1>إعدادات المتجر وطرق الدفع</h1><p className="muted">تحكم في طرق الدفع الظاهرة للعملاء. بيانات البطاقات لا يتم تخزينها في موقعك.</p></div></div>
-    {params.success ? <p className="notice success">تم حفظ طرق الدفع.</p> : null}
+    {params.success ? <p className="notice success">تم حفظ الإعدادات.</p> : null}
     {params.error || error ? <p className="notice error">تعذر تحميل أو حفظ الإعدادات. تأكد من تطبيق إعدادات قاعدة البيانات.</p> : null}
     <section className="content-card">
       <h2>طرق الدفع المتاحة</h2>
