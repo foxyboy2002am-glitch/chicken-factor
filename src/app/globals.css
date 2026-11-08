@@ -325,3 +325,5 @@
 /* WhatsApp ordering */
 .variant-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;margin-top:7px;padding:6px 10px;border-radius:8px;background:#e8f7ed;color:#176b3a;font-size:12px;font-weight:800;text-decoration:none}
 .variant-whatsapp-link:hover{background:#d6f0df}
+
+.payment-config-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;list-style:none;padding:0;margin:14px 0}.payment-config-list li{padding:10px 12px;border:1px solid #eadfda;border-radius:10px;background:#fffaf8;font-size:13px;font-weight:700;direction:ltr;text-align:left}
