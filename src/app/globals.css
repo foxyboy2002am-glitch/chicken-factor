@@ -18,9 +18,9 @@
 /* Chicken Factor brand identity and offer gallery */
 .store-header{height:82px;padding-inline:max(4vw,20px)}
 .store-logo{display:flex;align-items:center;gap:12px;color:#b91c1c;font-size:13px;font-weight:900;letter-spacing:1.2px}
-.store-logo img{width:58px;height:58px;object-fit:contain;border-radius:50%;background:#fff}
+.store-logo img{width:58px;height:58px;object-fit:contain;border-radius:8px;background:#fff}
 .store-hero{position:relative;padding:42px 20px 55px;background:radial-gradient(circle at 50% 0%,#fff 0,#fff7ed 48%,#fff0ed 100%)}
-.store-hero-logo{width:116px;height:104px;object-fit:contain;border-radius:18px;background:#fff;margin-bottom:10px}
+.store-hero-logo{width:132px;height:112px;object-fit:contain;border-radius:12px;background:#fff;margin-bottom:10px}
 .store-hero h1{color:#a90f16}
 .offers-section{max-width:1200px;margin:0 auto;padding:42px 22px 24px}
 .offers-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:20px}
@@ -42,7 +42,7 @@
 .menu-section-intro{text-align:center;padding:42px 20px 18px}
 .menu-section-intro p{color:#777;margin:5px 0 0;font-size:13px}
 .store-category{scroll-margin-top:82px}
-.store-footer img{width:48px;height:48px;object-fit:contain;border-radius:50%;background:#fff}
+.store-footer img{width:56px;height:52px;object-fit:contain;border-radius:8px;background:#fff}
 @media(max-width:650px){
  .store-header{height:68px;padding-inline:15px}
  .store-logo{font-size:11px;gap:7px}
