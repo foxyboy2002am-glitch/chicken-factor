@@ -54,12 +54,13 @@ export default async function MenuPage() {
   let products: any[] = [];
   let variants: any[] = [];
   let activeOffers: any[] = [];
+  let whatsappNumber = "";
   let queryError: string | null = null;
 
   const supabase = await createSupabaseServerClient();
   try {
     const now = new Date().toISOString();
-    const [categoriesResult, productsResult, variantsResult, offersResult, offerBranchesResult] = await Promise.all([
+    const [categoriesResult, productsResult, variantsResult, offersResult, offerBranchesResult, contactResult] = await Promise.all([
       supabase.from("categories")
         .select("id, slug, name_ar, name_en, sort_order")
         .eq("is_active", true)
@@ -79,9 +80,10 @@ export default async function MenuPage() {
         .gte("ends_at", now)
         .order("created_at", { ascending: false }),
       supabase.from("offer_branches").select("offer_id"),
+      supabase.from("store_contact_settings").select("whatsapp_number").eq("id", 1).maybeSingle(),
     ]);
 
-    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error ?? offersResult.error ?? offerBranchesResult.error;
+    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error ?? offersResult.error ?? offerBranchesResult.error ?? contactResult.error;
     if (error) {
       queryError = error.message;
       console.error("[Chicken Factor menu] Supabase query failed:", error.message, error.code);
@@ -91,6 +93,7 @@ export default async function MenuPage() {
     variants = variantsResult.data ?? [];
     const branchScopedOfferIds = new Set((offerBranchesResult.data ?? []).map((row) => row.offer_id));
     activeOffers = (offersResult.data ?? []).filter((offer) => !branchScopedOfferIds.has(offer.id));
+    whatsappNumber = String(contactResult.data?.whatsapp_number ?? "").replace(/\D/g, "");
   } catch (error) {
     queryError = error instanceof Error ? error.message : "Unknown Supabase server error";
     console.error("[Chicken Factor menu] Supabase initialization failed:", error);
@@ -242,15 +245,21 @@ export default async function MenuPage() {
                         <p className="store-product-en">{product.name_en}</p>
                         {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
                         <div className="store-price-list">
-                          {product.variants.map((variant: any) => (
-                            <div className="store-price" key={variant.id}>
-                              <span>{variant.name_ar}</span>
-                              <strong>{Number(variant.base_price).toLocaleString("ar-EG")} <small>جنيه</small></strong>
-                            </div>
-                          ))}
+                          {product.variants.map((variant: any) => {
+                            const price = Number(variant.base_price);
+                            const message = `مرحباً، أريد طلب:\n${product.name_ar} - ${variant.name_ar}\nالسعر: ${price} جنيه`;
+                            const whatsappUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` : null;
+                            return (
+                              <div className="store-price" key={variant.id}>
+                                <span>{variant.name_ar}</span>
+                                <strong>{price.toLocaleString("ar-EG")} <small>جنيه</small></strong>
+                                {whatsappUrl ? <a className="variant-whatsapp-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">اطلب هذا الحجم عبر واتساب</a> : null}
+                              </div>
+                            );
+                          })}
                           {!product.variants.length ? <span className="store-product-desc">السعر غير متاح حالياً</span> : null}
                         </div>
-                        <a className="product-order-link" href="tel:15407">اطلب الآن <span>15407</span></a>
+                        {whatsappNumber ? <a className="product-order-link" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أريد الاستفسار عن ${product.name_ar}`)}`} target="_blank" rel="noopener noreferrer">اطلب عبر واتساب</a> : <a className="product-order-link" href="tel:15407">اطلب الآن <span>15407</span></a>}
                       </div>
                     </article>
                   ))}

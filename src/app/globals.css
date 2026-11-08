@@ -321,3 +321,11 @@
  .store-hero-actions{justify-content:center;gap:13px}
  .store-hero .store-primary-link{padding:11px 17px}
 }
+
+/* WhatsApp ordering */
+.variant-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;margin-top:7px;padding:6px 10px;border-radius:8px;background:#e8f7ed;color:#176b3a;font-size:12px;font-weight:800;text-decoration:none}
+.variant-whatsapp-link:hover{background:#d6f0df}
+
+.payment-config-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;list-style:none;padding:0;margin:14px 0}.payment-config-list li{padding:10px 12px;border:1px solid #eadfda;border-radius:10px;background:#fffaf8;font-size:13px;font-weight:700;direction:ltr;text-align:left}
+
+.report-filter-form{display:flex;align-items:end;flex-wrap:wrap;gap:12px}.report-filter-form label{display:grid;gap:6px;min-width:180px;font-size:13px;font-weight:700}.report-filter-form input{min-height:42px;padding:8px 10px;border:1px solid #e5d8d2;border-radius:9px}.report-filter-form button{min-height:42px;padding:0 18px;border:0;border-radius:9px;background:#c91824;color:#fff;font-weight:800;cursor:pointer}.report-filter-form>a{padding:10px;color:#b81722;font-weight:700;text-decoration:none}.report-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.report-breakdown-row{display:flex;justify-content:space-between;gap:12px;padding:12px;border:1px solid #eee2dc;border-radius:10px;background:#fffaf8}.report-breakdown-row strong{font-variant-numeric:tabular-nums}
