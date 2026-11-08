@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Chicken Factor",
-  description: "Chicken Factor online ordering and restaurant management",
+  title: "Chicken Factor | تشيكن فاكتور",
+  description: "منيو وعروض تشيكن فاكتور - اطلب وجبتك المفضلة.",
+  icons: {
+    icon: "/profile_chicken_factor.png",
+    shortcut: "/profile_chicken_factor.png",
+    apple: "/profile_chicken_factor.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
