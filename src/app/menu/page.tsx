@@ -50,31 +50,40 @@ const promotions = [
 ];
 
 export default async function MenuPage() {
-  const supabase = await createSupabaseServerClient();
+  let categories: any[] = [];
+  let products: any[] = [];
+  let variants: any[] = [];
+  let queryError: string | null = null;
 
-  const [categoriesResult, productsResult, variantsResult] = await Promise.all([
-    supabase.from("categories")
-      .select("id, slug, name_ar, name_en, sort_order")
-      .eq("is_active", true)
-      .order("sort_order"),
-    supabase.from("products")
-      .select("id, sku, name_ar, name_en, description_ar, category_id, sort_order")
-      .eq("is_active", true)
-      .order("sort_order"),
-    supabase.from("product_variants")
-      .select("id, product_id, name_ar, name_en, base_price, sort_order")
-      .eq("is_active", true)
-      .order("sort_order"),
-  ]);
+  try {
+    const supabase = await createSupabaseServerClient();
+    const [categoriesResult, productsResult, variantsResult] = await Promise.all([
+      supabase.from("categories")
+        .select("id, slug, name_ar, name_en, sort_order")
+        .eq("is_active", true)
+        .order("sort_order"),
+      supabase.from("products")
+        .select("id, sku, name_ar, name_en, description_ar, category_id, sort_order")
+        .eq("is_active", true)
+        .order("sort_order"),
+      supabase.from("product_variants")
+        .select("id, product_id, name_ar, name_en, base_price, sort_order")
+        .eq("is_active", true)
+        .order("sort_order"),
+    ]);
 
-  const queryError = categoriesResult.error ?? productsResult.error ?? variantsResult.error;
-  if (queryError) {
-    console.error("[Chicken Factor menu] Supabase query failed:", queryError.message, queryError.code);
+    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error;
+    if (error) {
+      queryError = error.message;
+      console.error("[Chicken Factor menu] Supabase query failed:", error.message, error.code);
+    }
+    categories = categoriesResult.data ?? [];
+    products = productsResult.data ?? [];
+    variants = variantsResult.data ?? [];
+  } catch (error) {
+    queryError = error instanceof Error ? error.message : "Unknown Supabase server error";
+    console.error("[Chicken Factor menu] Supabase initialization failed:", error);
   }
-
-  const categories = categoriesResult.data ?? [];
-  const products = productsResult.data ?? [];
-  const variants = variantsResult.data ?? [];
 
   const variantsByProduct = new Map<string, typeof variants>();
   for (const variant of variants) {
@@ -136,7 +145,7 @@ export default async function MenuPage() {
       </section>
 
       {queryError ? (
-        <p className="store-error">حصلت مشكلة في الاتصال بالمنيو. حاول مرة أخرى بعد قليل.</p>
+        <p className="store-error">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel.</p>
       ) : grouped.length === 0 ? (
         <p className="store-error">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
       ) : (
