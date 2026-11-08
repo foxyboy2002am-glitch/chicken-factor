@@ -56,8 +56,8 @@ export default async function MenuPage() {
   let activeOffers: any[] = [];
   let queryError: string | null = null;
 
+  const supabase = await createSupabaseServerClient();
   try {
-    const supabase = await createSupabaseServerClient();
     const now = new Date().toISOString();
     const [categoriesResult, productsResult, variantsResult, offersResult, offerBranchesResult] = await Promise.all([
       supabase.from("categories")
