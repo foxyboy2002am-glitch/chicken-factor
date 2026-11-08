@@ -83,7 +83,7 @@ export default async function MenuPage() {
       supabase.from("store_contact_settings").select("whatsapp_number").eq("id", 1).maybeSingle(),
     ]);
 
-    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error ?? offersResult.error ?? offerBranchesResult.error;
+    const error = categoriesResult.error ?? productsResult.error ?? variantsResult.error ?? offersResult.error ?? offerBranchesResult.error ?? contactResult.error;
     if (error) {
       queryError = error.message;
       console.error("[Chicken Factor menu] Supabase query failed:", error.message, error.code);
