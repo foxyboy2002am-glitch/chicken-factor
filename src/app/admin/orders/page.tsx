@@ -24,7 +24,8 @@ const paymentLabels: Record<string, string> = {
 const money = (value: number) =>
   new Intl.NumberFormat("ar-EG", { style: "currency", currency: "EGP" }).format(value);
 
-export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {\n  const params = await searchParams;
+export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {
+  const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: orders, error } = await supabase
     .from("orders")
@@ -32,7 +33,8 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
     .order("created_at", { ascending: false })
     .limit(200);
 
-  const rows = orders ?? [];\n  const messages: Record<string,string> = { validation: "بيانات تحديث الطلب غير صحيحة.", "not-found": "الطلب غير موجود.", update: "تعذر تحديث حالة الطلب." };
+  const rows = orders ?? [];
+  const messages: Record<string,string> = { validation: "بيانات تحديث الطلب غير صحيحة.", "not-found": "الطلب غير موجود.", update: "تعذر تحديث حالة الطلب." };
 
   return (
     <main className="dashboard-content" dir="rtl">
@@ -45,7 +47,9 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
         <span className="status-pill">{rows.length} طلب</span>
       </div>
 
-      {params.success ? <p className="notice success">تم تحديث حالة الطلب.</p> : null}\n      {params.error ? <p className="notice error">{messages[params.error] || "حدث خطأ أثناء تنفيذ العملية."}</p> : null}\n      {error ? (
+      {params.success ? <p className="notice success">تم تحديث حالة الطلب.</p> : null}
+      {params.error ? <p className="notice error">{messages[params.error] || "حدث خطأ أثناء تنفيذ العملية."}</p> : null}
+      {error ? (
         <section className="content-card">
           <p className="notice error">تعذر تحميل الطلبات من قاعدة البيانات. تأكد من صلاحيات قراءة جدول الطلبات وتفاصيلها.</p>
         </section>
@@ -79,6 +83,15 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   <td>{paymentLabels[String(order.payment_status)] ?? String(order.payment_status)}</td>
                   <td>{money(Number(order.total ?? 0))}</td>
                   <td>{new Date(order.created_at).toLocaleString("ar-EG")}</td>
+                  <td>
+                    <form action={updateOrderStatus} className="order-status-form">
+                      <input type="hidden" name="order_id" value={order.id} />
+                      <select name="status" defaultValue={String(order.status)} aria-label="حالة الطلب">
+                        <option value="pending_confirmation">جديد - في انتظار التأكيد</option><option value="confirmed">تم التأكيد</option><option value="preparing">قيد التحضير</option><option value="ready">جاهز</option><option value="out_for_delivery">خرج للتوصيل</option><option value="completed">مكتمل</option><option value="rejected">مرفوض</option><option value="cancelled">ملغي</option><option value="payment_failed">فشل الدفع</option>
+                      </select>
+                      <button type="submit" className="secondary-button">تحديث</button>
+                    </form>
+                  </td>
                   <td>
                     <details>
                       <summary>عرض</summary>
