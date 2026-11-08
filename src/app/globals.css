@@ -156,3 +156,44 @@
 .store-footer>span{font-size:13px;color:#eee}
 .store-copyright{flex-basis:100%;width:100%;margin-top:10px;padding-top:17px;border-top:1px solid #ffffff24;text-align:center;color:#c9bdb7;font-family:Arial,sans-serif;font-size:12px;letter-spacing:.3px}
 @media(max-width:600px){.store-farm-slogan{font-size:13px!important}.store-copyright{font-size:11px}}
+
+
+/* 2026 storefront hero refinement */
+.store-hero{padding:0 24px;background:linear-gradient(115deg,#8f1018 0%,#bd171f 58%,#d52a25 100%);color:#fff;overflow:hidden;position:relative}
+.store-hero:before,.store-hero:after{content:"";position:absolute;border:1px solid #ffffff18;border-radius:50%;pointer-events:none}
+.store-hero:before{width:520px;height:520px;right:-160px;top:-300px}
+.store-hero:after{width:390px;height:390px;left:-170px;bottom:-290px}
+.store-hero-inner{position:relative;z-index:1;max-width:1160px;min-height:360px;margin:auto;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:50px}
+.store-hero-content{text-align:right;padding:54px 0}
+.store-hero .store-eyebrow{display:inline-block;color:#ffe18a;background:#ffffff16;border:1px solid #ffffff2b;border-radius:30px;padding:7px 13px;font-size:10px;letter-spacing:2px}
+.store-hero .store-farm-slogan{color:#ffe18a!important;margin:16px 0 5px!important;font-size:16px!important}
+.store-hero h1{color:#fff;font-size:clamp(42px,6vw,68px);font-weight:900;line-height:1.2;margin:5px 0 12px;letter-spacing:-1.5px}
+.store-hero h1 em{font-style:normal;color:#ffd34e}
+.store-hero-description{font-size:16px;color:#ffebe5;margin:0 0 25px}
+.store-hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.store-hero .store-primary-link{background:#ffd34e;color:#8f1018;box-shadow:0 9px 22px #39070c38;border-radius:12px;padding:13px 23px}
+.store-hero .store-primary-link span{font-size:20px;margin-right:8px}
+.store-hero-call{font-size:13px;color:#ffe8e2}
+.store-hero-call strong{font-size:19px;color:#fff;direction:ltr;display:inline-block;margin-right:5px}
+.store-hero-visual{height:320px;position:relative;display:grid;place-items:center}
+.store-hero-glow{position:absolute;width:290px;height:290px;border-radius:50%;background:#ffffff18;border:1px solid #ffffff2b;box-shadow:0 0 0 22px #ffffff09,0 0 0 46px #ffffff06}
+.store-hero-logo{position:relative;width:250px;height:230px;object-fit:contain;margin:0;filter:drop-shadow(0 16px 22px #4a080c55);mix-blend-mode:screen}
+.store-hero-stamp{position:absolute;bottom:27px;right:calc(50% - 155px);display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:#ffd34e;color:#9c1119;border:5px solid #bd171f;box-shadow:0 7px 18px #4a080c40;font:900 10px/1.1 Arial,sans-serif;text-align:center;transform:rotate(-12deg)}
+.offers-section{padding-top:42px}
+.offers-heading h2{color:#241b18}
+@media(max-width:700px){
+ .store-hero{padding:0 18px}
+ .store-hero-inner{min-height:0;grid-template-columns:1fr;gap:0;text-align:center;padding:27px 0 35px}
+ .store-hero-content{grid-row:2;text-align:center;padding:0}
+ .store-hero .store-eyebrow{font-size:9px}
+ .store-hero .store-farm-slogan{font-size:14px!important;margin-top:12px!important}
+ .store-hero h1{font-size:39px;margin:6px 0 9px}
+ .store-hero-description{font-size:13px;margin-bottom:18px}
+ .store-hero-actions{justify-content:center;gap:14px}
+ .store-hero .store-primary-link{padding:11px 18px}
+ .store-hero-visual{grid-row:1;height:150px}
+ .store-hero-glow{width:130px;height:130px;box-shadow:0 0 0 12px #ffffff09,0 0 0 24px #ffffff06}
+ .store-hero-logo{width:135px;height:125px}
+ .store-hero-stamp{width:57px;height:57px;font-size:8px;right:calc(50% - 90px);bottom:5px;border-width:3px}
+ .offers-section{padding-top:30px}
+}
