@@ -17,7 +17,9 @@ export async function middleware(request: NextRequest) {
         cookiesToSet: {
           name: string;
           value: string;
-          options?: Parameters<typeof request.cookies.set>[2];
+          // NextRequest's cookie setter exposes overloaded tuple signatures,
+          // so use an explicit boundary type for Supabase's cookie options.
+          options?: any;
         }[],
       ) {
         cookiesToSet.forEach(({ name, value }) => {
