@@ -158,9 +158,141 @@
 @media(max-width:600px){.store-farm-slogan{font-size:13px!important}.store-copyright{font-size:11px}}
 
 
-/* Food-first hero: clear hierarchy, real meal photography, compact vertical rhythm */
+/* 2026 storefront hero refinement */
+.store-hero{padding:0 24px;background:linear-gradient(115deg,#8f1018 0%,#bd171f 58%,#d52a25 100%);color:#fff;overflow:hidden;position:relative}
+.store-hero:before,.store-hero:after{content:"";position:absolute;border:1px solid #ffffff18;border-radius:50%;pointer-events:none}
+.store-hero:before{width:520px;height:520px;right:-160px;top:-300px}
+.store-hero:after{width:390px;height:390px;left:-170px;bottom:-290px}
+.store-hero-inner{position:relative;z-index:1;max-width:1160px;min-height:360px;margin:auto;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:50px}
+.store-hero-content{text-align:right;padding:54px 0}
+.store-hero .store-eyebrow{display:inline-block;color:#ffe18a;background:#ffffff16;border:1px solid #ffffff2b;border-radius:30px;padding:7px 13px;font-size:10px;letter-spacing:2px}
+.store-hero .store-farm-slogan{color:#ffe18a!important;margin:16px 0 5px!important;font-size:16px!important}
+.store-hero h1{color:#fff;font-size:clamp(42px,6vw,68px);font-weight:900;line-height:1.2;margin:5px 0 12px;letter-spacing:-1.5px}
+.store-hero h1 em{font-style:normal;color:#ffd34e}
+.store-hero-description{font-size:16px;color:#ffebe5;margin:0 0 25px}
+.store-hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.store-hero .store-primary-link{background:#ffd34e;color:#8f1018;box-shadow:0 9px 22px #39070c38;border-radius:12px;padding:13px 23px}
+.store-hero .store-primary-link span{font-size:20px;margin-right:8px}
+.store-hero-call{font-size:13px;color:#ffe8e2}
+.store-hero-call strong{font-size:19px;color:#fff;direction:ltr;display:inline-block;margin-right:5px}
+.store-hero-visual{height:320px;position:relative;display:grid;place-items:center}
+.store-hero-glow{position:absolute;width:290px;height:290px;border-radius:50%;background:#ffffff18;border:1px solid #ffffff2b;box-shadow:0 0 0 22px #ffffff09,0 0 0 46px #ffffff06}
+.store-hero-logo{position:relative;width:250px;height:230px;object-fit:contain;margin:0;filter:drop-shadow(0 16px 22px #4a080c55);mix-blend-mode:screen}
+.store-hero-stamp{position:absolute;bottom:27px;right:calc(50% - 155px);display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:#ffd34e;color:#9c1119;border:5px solid #bd171f;box-shadow:0 7px 18px #4a080c40;font:900 10px/1.1 Arial,sans-serif;text-align:center;transform:rotate(-12deg)}
+.offers-section{padding-top:42px}
+.offers-heading h2{color:#241b18}
+@media(max-width:700px){
+ .store-hero{padding:0 18px}
+ .store-hero-inner{min-height:0;grid-template-columns:1fr;gap:0;text-align:center;padding:27px 0 35px}
+ .store-hero-content{grid-row:2;text-align:center;padding:0}
+ .store-hero .store-eyebrow{font-size:9px}
+ .store-hero .store-farm-slogan{font-size:14px!important;margin-top:12px!important}
+ .store-hero h1{font-size:39px;margin:6px 0 9px}
+ .store-hero-description{font-size:13px;margin-bottom:18px}
+ .store-hero-actions{justify-content:center;gap:14px}
+ .store-hero .store-primary-link{padding:11px 18px}
+ .store-hero-visual{grid-row:1;height:150px}
+ .store-hero-glow{width:130px;height:130px;box-shadow:0 0 0 12px #ffffff09,0 0 0 24px #ffffff06}
+ .store-hero-logo{width:135px;height:125px}
+ .store-hero-stamp{width:57px;height:57px;font-size:8px;right:calc(50% - 90px);bottom:5px;border-width:3px}
+ .offers-section{padding-top:30px}
+}
+
+
+/* Product cards: remove misleading repeated offer posters until real SKU photos are added */
+.product-photo-placeholder{height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px;background:radial-gradient(circle at 50% 25%,#fff4e8 0,#ffe9dc 48%,#f9d6c9 100%);border-bottom:1px solid #f2dfd5;text-align:center}
+.product-placeholder-kicker{font:900 10px/1 Arial,sans-serif;letter-spacing:2px;color:#c81920}
+.product-placeholder-name{font-size:clamp(19px,2vw,25px);font-weight:900;color:#4b211b;line-height:1.4}
+.product-photo-placeholder .product-photo-badge{position:static;background:#c81920;color:#fff;box-shadow:none;font-size:8px;letter-spacing:1px}
+.store-product{border-radius:18px}
+.store-product-body{padding:15px 18px 18px}
+@media(max-width:600px){.product-photo-placeholder{height:125px}.product-placeholder-name{font-size:21px}}
+
+
+/* Professional menu refresh — consistent hierarchy, real product imagery, cleaner spacing */
+.store-page{background:#fff;color:#241b18}
+.store-header{height:72px;padding-inline:clamp(18px,5vw,72px);box-shadow:0 2px 14px #2d160d0a}
+.store-logo img{width:48px;height:48px}
+.store-hero{background:linear-gradient(115deg,#97121a 0%,#c51c24 58%,#e33a2d 100%)}
+.store-hero-inner{max-width:1180px;min-height:310px;grid-template-columns:1.3fr .7fr;gap:36px}
+.store-hero-content{padding:38px 0}
+.store-hero h1{font-size:clamp(38px,5vw,58px)}
+.store-hero-visual{height:270px}
+.store-hero-logo{width:190px;height:180px}
+.store-hero-glow{width:230px;height:230px}
+.store-hero-stamp{right:calc(50% - 125px);bottom:18px;width:68px;height:68px}
+.offers-section{max-width:1240px;padding:42px 24px 22px}
+.offers-heading{margin-bottom:20px}
+.offers-heading h2,.menu-section-intro h2{font-size:clamp(24px,2.7vw,31px)}
+.offers-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.offer-card{border-radius:16px;box-shadow:0 5px 18px #35160d0b}
+.offer-card>img{aspect-ratio:1.08/1;object-fit:cover}
+.offer-card-content{padding:14px}
+.offer-title-row{align-items:flex-start;flex-direction:column;gap:3px}
+.offer-title-row h3{font-size:17px}
+.offer-title-row>strong{font-size:22px}
+.offer-card-content>p{font-size:12px;min-height:55px;margin:6px 0 11px}
+.offer-card-content>a{padding:10px;font-size:12px}
+.menu-section-intro{padding:44px 20px 20px;background:#fff}
+.menu-category-nav{top:72px;padding:12px clamp(16px,4vw,60px);gap:8px;box-shadow:0 3px 12px #25140d08}
+.menu-category-nav a{padding:9px 15px;font-size:12px}
+.store-menu{max-width:1240px;padding:12px 24px 60px}
+.store-category{padding:27px 0 32px;scroll-margin-top:130px}
+.store-category-heading{margin-bottom:17px;border-right-width:4px}
+.store-category-heading h2{font-size:24px}
+.store-product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.store-product{border-radius:16px;box-shadow:0 4px 18px #31170e0a}
+.product-photo-wrap{height:190px;background:#fff4ed}
+.product-photo{object-fit:cover}
+.product-photo-placeholder{height:100%;min-height:190px;border:0}
+.store-product-body{padding:14px 16px 16px}
+.store-product h3{font-size:18px}
+.store-price-list{margin-top:10px}
+.store-price{padding:7px 0}
+.store-price strong{font-size:17px}
+.product-order-link{margin-top:10px}
+.store-footer{margin-top:15px}
+@media(max-width:1000px){
+ .offers-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .store-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+ .store-header{height:64px}
+ .store-hero-inner{grid-template-columns:1fr;min-height:0;gap:4px;padding:22px 0 30px}
+ .store-hero-content{grid-row:2;padding:0}
+ .store-hero-visual{grid-row:1;height:125px}
+ .store-hero-logo{width:120px;height:115px}
+ .store-hero-glow{width:112px;height:112px}
+ .store-hero-stamp{width:52px;height:52px;right:calc(50% - 84px);bottom:0}
+ .store-hero h1{font-size:36px}
+ .offers-section{padding:28px 14px 14px}
+ .offers-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ .offer-card>img{aspect-ratio:1/1}
+ .offer-card-content{padding:10px}
+ .offer-title-row h3{font-size:14px}
+ .offer-title-row>strong{font-size:18px}
+ .offer-card-content>p{font-size:11px;min-height:66px}
+ .menu-category-nav{top:64px}
+ .store-menu{padding:10px 14px 42px}
+ .store-category{padding:20px 0 25px;scroll-margin-top:115px}
+ .store-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .product-photo-wrap,.product-photo-placeholder{height:132px;min-height:132px}
+ .store-product-body{padding:11px}
+ .store-product h3{font-size:15px}
+ .store-product-en{font-size:10px}
+ .store-price span{font-size:11px}
+ .store-price strong{font-size:15px}
+ .product-order-link{font-size:11px;padding:9px}
+}
+@media(max-width:390px){
+ .store-product-grid{grid-template-columns:1fr}
+ .product-photo-wrap,.product-photo-placeholder{height:180px;min-height:180px}
+}
+
+
+/* Food-first hero overrides — merged on top of current main styles */
 .store-hero{padding:30px 24px;background:linear-gradient(115deg,#8f1018 0%,#bd171f 58%,#d52a25 100%);color:#fff;overflow:hidden;position:relative;text-align:initial;border:0}
-.store-hero-inner{max-width:1180px;min-height:350px;margin:auto;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:36px}
+.store-hero-inner{max-width:1180px;min-height:350px;grid-template-columns:1.05fr .95fr;gap:36px}
 .store-hero-content{padding:32px 0;text-align:right}
 .store-hero .store-eyebrow{display:inline-block;color:#ffe18a;background:#ffffff16;border:1px solid #ffffff2b;border-radius:30px;padding:7px 13px;font-size:10px;letter-spacing:2px}
 .store-hero .store-farm-slogan{color:#ffe18a!important;margin:15px 0 4px!important;font-size:15px!important}
@@ -172,7 +304,6 @@
 .store-hero-call{font-size:13px;color:#ffe8e2}
 .store-hero-call strong{font-size:19px;color:#fff;direction:ltr;display:inline-block;margin-right:5px}
 .store-hero-visual{height:310px;position:relative;display:grid;place-items:center;isolation:isolate}
-.store-hero-visual:before{content:"";position:absolute;width:min(27vw,300px);aspect-ratio:1;border-radius:50%;background:#ffffff19;border:1px solid #ffffff35;box-shadow:0 0 0 18px #ffffff0b,0 0 0 38px #ffffff08;z-index:-1}
 .store-hero-food{width:min(100%,440px);height:285px;object-fit:contain;filter:drop-shadow(0 18px 24px #4a080c66);border-radius:20px}
 .store-hero-logo{position:absolute;right:4px;top:5px;width:78px;height:72px;object-fit:contain;background:#fff;border:3px solid #fff;border-radius:14px;box-shadow:0 8px 22px #4a080c40}
 .store-hero-sticker{position:absolute;bottom:12px;left:4%;display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:#ffd34e;color:#9c1119;border:5px solid #bd171f;box-shadow:0 7px 18px #4a080c40;font:900 10px/1.1 Arial,sans-serif;text-align:center;transform:rotate(-12deg)}
@@ -181,7 +312,6 @@
  .store-hero-inner{min-height:0;grid-template-columns:1fr;gap:4px}
  .store-hero-visual{grid-row:1;height:205px}
  .store-hero-food{height:190px;width:min(100%,340px)}
- .store-hero-visual:before{width:160px}
  .store-hero-logo{width:60px;height:56px;right:4%;top:3px}
  .store-hero-sticker{width:58px;height:58px;font-size:8px;bottom:0;left:5%;border-width:3px}
  .store-hero-content{grid-row:2;text-align:center;padding:8px 0 0}
