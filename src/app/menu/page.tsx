@@ -91,6 +91,7 @@ export default async function MenuPage() {
       <section className="store-hero">
         <img className="store-hero-logo" src="/profile_chicken_factor.webp" alt="شعار تشيكن فاكتور" />
         <p className="store-eyebrow">FRESH • CRISPY • DELICIOUS</p>
+        <p className="store-farm-slogan">فراخنا من إنتاج مزارعنا</p>
         <h1>تشيكن فاكتور</h1>
         <p>اطلب وجبتك المفضلة واستمتع بأقوى العروض.</p>
         <a href="#offers" className="store-primary-link">شوف العروض</a>
@@ -172,8 +173,9 @@ export default async function MenuPage() {
       )}
       <footer className="store-footer">
         <img src="/profile_chicken_factor.webp" alt="" />
-        <b>CHICKEN FACTOR</b><span>للطلب والاستفسار</span><a href="tel:15407">15407</a>
+        <b>CHICKEN FACTOR</b><span>فراخنا من إنتاج مزارعنا</span><span>للطلب والاستفسار</span><a href="tel:15407">15407</a>
         <small>الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
+        <div className="store-copyright" dir="ltr">© 2026 Wonder Tech. All rights reserved.</div>
       </footer>
     </main>
   );
