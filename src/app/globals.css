@@ -59,3 +59,93 @@
  .offer-title-row>strong{font-size:21px}
  .menu-section-intro{padding-top:30px}
 }
+
+
+/* Storefront visual refresh — food-first menu cards */
+.store-page{background:#fffaf5;color:#201b19;overflow:hidden}
+.store-header{position:sticky;top:0;z-index:20;height:78px;background:#fff;box-shadow:0 4px 22px #35120d0c;border-bottom:1px solid #f4e8df}
+.store-logo{gap:10px;font-size:14px;font-weight:900;letter-spacing:1px}
+.store-logo img{width:62px;height:62px;object-fit:contain;border-radius:0;background:transparent}
+.store-hotline{display:flex;align-items:center;gap:8px;font-weight:700}
+.store-hotline strong{font-size:21px}
+.store-hero{padding:48px 20px 62px;background:radial-gradient(ellipse at 50% 0%,#fff 0%,#fff5e6 50%,#ffebe6 100%);border-bottom:0}
+.store-hero-logo{width:156px;height:132px;object-fit:contain;background:transparent;border-radius:0;filter:drop-shadow(0 9px 14px #7c27151a)}
+.store-hero h1{font-size:clamp(36px,5vw,58px);color:#bd171d;letter-spacing:-1px;margin:7px 0 12px}
+.store-hero>p:not(.store-eyebrow){font-size:16px;color:#6e625e;margin-bottom:26px}
+.store-primary-link{padding:14px 32px;border-radius:13px;background:#c81920;box-shadow:0 8px 18px #c819202e;transition:transform .2s,box-shadow .2s}
+.store-primary-link:hover{transform:translateY(-2px);box-shadow:0 12px 22px #c8192038}
+.offers-section{max-width:1240px;padding:54px 24px 30px}
+.offers-heading{align-items:center;margin-bottom:25px}
+.offers-heading h2,.menu-section-intro h2{font-size:clamp(25px,3vw,34px);font-weight:900}
+.offers-grid{gap:22px}
+.offer-card{border:1px solid #f1dfd7;border-radius:22px;box-shadow:0 12px 35px #5d1a0e0c;transition:transform .22s,box-shadow .22s}
+.offer-card:hover{transform:translateY(-4px);box-shadow:0 18px 38px #5d1a0e16}
+.offer-card>img{aspect-ratio:1.35/1;object-fit:cover;object-position:center 48%}
+.offer-card-content{padding:18px 20px 20px}
+.offer-title-row h3{font-size:21px;font-weight:900}
+.offer-title-row>strong{font-size:26px}
+.offer-card-content>p{font-size:14px;min-height:48px}
+.offer-card-content>a{border-radius:12px;padding:12px;background:#c81920}
+.menu-section-intro{padding:58px 20px 24px;background:#fff;text-align:center}
+.menu-section-intro h2{margin:5px 0}
+.menu-section-intro p{font-size:14px;color:#81746e}
+.menu-category-nav{top:78px;padding:16px max(4vw,18px);gap:11px;border-top:1px solid #f5ece6;border-bottom:1px solid #f1e5de;box-shadow:0 5px 18px #3b1c1008;scrollbar-width:none}
+.menu-category-nav::-webkit-scrollbar{display:none}
+.menu-category-nav a{padding:10px 18px;border-color:#f0e1d9;background:#fff;font-size:13px;transition:all .18s}
+.menu-category-nav a:hover{background:#c81920;border-color:#c81920}
+.store-menu{max-width:1280px;padding:24px 24px 72px}
+.store-category{padding:32px 0 42px;scroll-margin-top:145px}
+.store-category-heading{border-right:6px solid #c81920;padding-right:17px;margin-bottom:22px}
+.store-category-heading span{font-size:10px;letter-spacing:2px;color:#b78c7d;font-weight:800}
+.store-category-heading h2{font-size:27px;font-weight:900;margin-top:2px}
+.store-category-heading>b{background:#fff0e9;color:#c81920;padding:9px 15px}
+.store-product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.store-product{padding:0;overflow:hidden;border:1px solid #f0e5df;border-radius:20px;background:#fff;box-shadow:0 8px 26px #32160c0a;transition:transform .2s,box-shadow .2s}
+.store-product:hover{transform:translateY(-4px);box-shadow:0 16px 34px #32160c13}
+.product-photo-wrap{position:relative;height:205px;overflow:hidden;background:#f8e9df}
+.product-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center 48%;transition:transform .35s}
+.store-product:hover .product-photo{transform:scale(1.045)}
+.product-photo-badge{position:absolute;bottom:12px;right:12px;padding:6px 10px;border-radius:30px;background:#fff;color:#c81920;font-size:9px;font-weight:900;letter-spacing:1px;box-shadow:0 3px 12px #0002}
+.store-product-body{padding:16px 18px 18px}
+.store-product-top{margin-bottom:8px}
+.store-product-mark{width:30px;height:30px;border-radius:9px;background:#c81920}
+.store-product-code{font-size:9px;color:#b6a59c}
+.store-product h3{font-size:20px;font-weight:900;margin:3px 0 0;color:#211b18}
+.store-product-en{font-size:11px;color:#9b8b83;margin:0 0 9px}
+.store-product-desc{font-size:13px;color:#81736b;line-height:1.8}
+.store-price-list{margin-top:13px;padding-top:9px;border-top:1px solid #f3e9e4}
+.store-price{padding:8px 0}
+.store-price span{font-size:13px;color:#6e625c}
+.store-price strong{font-size:19px;color:#c81920;font-weight:900}
+.product-order-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;padding:11px;border-radius:11px;background:#fff0e9;color:#c81920;font-size:13px;font-weight:900;transition:background .2s,color .2s}
+.product-order-link:hover{background:#c81920;color:#fff}
+.product-order-link span{direction:ltr}
+.store-error{box-shadow:0 8px 25px #00000008}
+.store-footer{background:#211a18;padding:32px 20px;gap:15px}
+.store-footer img{width:64px;height:58px;object-fit:contain;background:transparent}
+.store-footer b{color:#ffd34e;font-size:15px}
+@media(max-width:900px){.store-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product-photo-wrap{height:190px}}
+@media(max-width:600px){
+ .store-header{height:66px;padding-inline:13px}
+ .store-logo img{width:48px;height:48px}
+ .store-logo{font-size:10px;letter-spacing:.7px}
+ .store-hotline{font-size:10px;gap:4px}
+ .store-hotline strong{font-size:17px}
+ .store-hero{padding:34px 15px 43px}
+ .store-hero-logo{width:112px;height:100px}
+ .store-hero h1{font-size:37px}
+ .store-hero>p:not(.store-eyebrow){font-size:14px}
+ .offers-section{padding:35px 14px 18px}
+ .offers-grid{grid-template-columns:1fr;gap:16px}
+ .offer-card>img{aspect-ratio:1.2/1}
+ .menu-section-intro{padding:42px 15px 17px}
+ .menu-category-nav{top:66px;padding:11px 12px;gap:8px}
+ .menu-category-nav a{padding:9px 13px;font-size:12px}
+ .store-menu{padding:15px 13px 48px}
+ .store-category{padding:23px 0 30px;scroll-margin-top:125px}
+ .store-category-heading h2{font-size:22px}
+ .store-product-grid{grid-template-columns:1fr;gap:15px}
+ .product-photo-wrap{height:220px}
+ .store-product-body{padding:15px}
+ .store-product h3{font-size:19px}
+}

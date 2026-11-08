@@ -5,9 +5,9 @@ export const metadata: Metadata = {
   title: "Chicken Factor | تشيكن فاكتور",
   description: "منيو وعروض تشيكن فاكتور - اطلب وجبتك المفضلة.",
   icons: {
-    icon: "/profile_chicken_factor.png",
-    shortcut: "/profile_chicken_factor.png",
-    apple: "/profile_chicken_factor.png",
+    icon: "/profile_chicken_factor.webp",
+    shortcut: "/profile_chicken_factor.webp",
+    apple: "/profile_chicken_factor.webp",
   },
 };
 

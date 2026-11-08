@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
 
-const promotions = [
+const categoryImages: Record<string, string> = {\n  "individual-meals": "/offers/friends-625.webp",\n  "family-meals": "/offers/mix-6-525.webp",\n  "rice-meals": "/offers/rizo-150.webp",\n  "drumstick-meals": "/offers/friends-625.webp",\n  "strips-family": "/offers/mix-6-525.webp",\n  sandwiches: "/offers/control-199.webp",\n  "chicken-burgers": "/offers/control-199.webp",\n  "beef-burgers": "/offers/control-199.webp",\n  extras: "/offers/mix-6-525.webp",\n  sauces: "/offers/friends-625.webp",\n  drinks: "/offers/rizo-150.webp",\n  "selected-pieces": "/offers/friends-625.webp",\n  "wing-swaps": "/offers/friends-625.webp",\n};\n\nconst promotions = [
   {
     id: "friends-625",
     title: "عرض الصحاب",
@@ -38,7 +38,7 @@ export default async function MenuPage() {
 
   const [categoriesResult, productsResult, variantsResult] = await Promise.all([
     supabase.from("categories")
-      .select("id, name_ar, name_en, sort_order")
+      .select("id, slug, name_ar, name_en, sort_order")
       .eq("is_active", true)
       .order("sort_order"),
     supabase.from("products")
@@ -82,14 +82,14 @@ export default async function MenuPage() {
     <main className="store-page">
       <header className="store-header">
         <a className="store-logo" href="/menu" aria-label="Chicken Factor - الصفحة الرئيسية">
-          <img src="/profile_chicken_factor.png" alt="Chicken Factor" />
+          <img src="/profile_chicken_factor.webp" alt="Chicken Factor" />
           <b>CHICKEN FACTOR</b>
         </a>
         <a className="store-hotline" href="tel:15407">الخط الساخن <strong>15407</strong></a>
       </header>
 
       <section className="store-hero">
-        <img className="store-hero-logo" src="/profile_chicken_factor.png" alt="شعار تشيكن فاكتور" />
+        <img className="store-hero-logo" src="/profile_chicken_factor.webp" alt="شعار تشيكن فاكتور" />
         <p className="store-eyebrow">FRESH • CRISPY • DELICIOUS</p>
         <h1>تشيكن فاكتور</h1>
         <p>اطلب وجبتك المفضلة واستمتع بأقوى العروض.</p>
@@ -142,18 +142,25 @@ export default async function MenuPage() {
                 <div className="store-product-grid">
                   {category.products.map((product) => (
                     <article className="store-product" key={product.id}>
-                      <div className="store-product-top"><span className="store-product-mark">CF</span><span className="store-product-code">{product.sku}</span></div>
-                      <h3>{product.name_ar}</h3>
-                      <p className="store-product-en">{product.name_en}</p>
-                      {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
-                      <div className="store-price-list">
-                        {product.variants.map((variant) => (
-                          <div className="store-price" key={variant.id}>
-                            <span>{variant.name_ar}</span>
-                            <strong>{Number(variant.base_price).toLocaleString("ar-EG")} <small>جنيه</small></strong>
-                          </div>
-                        ))}
-                        {!product.variants.length ? <span className="store-product-desc">السعر غير متاح حالياً</span> : null}
+                      <div className="product-photo-wrap">
+                        <img className="product-photo" src={category.image} alt={product.name_ar} loading="lazy" />
+                        <span className="product-photo-badge">CHICKEN FACTOR</span>
+                      </div>
+                      <div className="store-product-body">
+                        <div className="store-product-top"><span className="store-product-code">{product.sku}</span><span className="store-product-mark">CF</span></div>
+                        <h3>{product.name_ar}</h3>
+                        <p className="store-product-en">{product.name_en}</p>
+                        {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
+                        <div className="store-price-list">
+                          {product.variants.map((variant) => (
+                            <div className="store-price" key={variant.id}>
+                              <span>{variant.name_ar}</span>
+                              <strong>{Number(variant.base_price).toLocaleString("ar-EG")} <small>جنيه</small></strong>
+                            </div>
+                          ))}
+                          {!product.variants.length ? <span className="store-product-desc">السعر غير متاح حالياً</span> : null}
+                        </div>
+                        <a className="product-order-link" href="tel:15407">اطلب الآن <span>15407</span></a>
                       </div>
                     </article>
                   ))}
@@ -164,7 +171,7 @@ export default async function MenuPage() {
         </>
       )}
       <footer className="store-footer">
-        <img src="/profile_chicken_factor.png" alt="" />
+        <img src="/profile_chicken_factor.webp" alt="" />
         <b>CHICKEN FACTOR</b><span>للطلب والاستفسار</span><a href="tel:15407">15407</a>
         <small>الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
       </footer>
