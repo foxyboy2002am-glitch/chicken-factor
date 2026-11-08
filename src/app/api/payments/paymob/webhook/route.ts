@@ -30,10 +30,11 @@ function validHmac(obj: Record<string, unknown>, received: string, secret: strin
 
 export async function POST(request: NextRequest) {
   const secret = process.env.PAYMOB_HMAC_SECRET;
+  const expectedIntegrationId = process.env.PAYMOB_INTEGRATION_ID;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!secret || !supabaseUrl || !serviceKey) {
+  if (!secret || !expectedIntegrationId || !supabaseUrl || !serviceKey) {
     console.error("[Paymob webhook] Missing server environment configuration.");
     return NextResponse.json({ error: "Webhook is not configured" }, { status: 503 });
   }
@@ -49,6 +50,10 @@ export async function POST(request: NextRequest) {
   const receivedHmac = String(payload.hmac ?? request.nextUrl.searchParams.get("hmac") ?? "");
   if (!obj || !receivedHmac || !validHmac(obj, receivedHmac, secret)) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
+
+  if (String(obj.integration_id ?? "") !== expectedIntegrationId) {
+    return NextResponse.json({ error: "Unexpected integration" }, { status: 403 });
   }
 
   const providerOrderId = String((obj.order as Record<string, unknown> | undefined)?.id ?? "");
