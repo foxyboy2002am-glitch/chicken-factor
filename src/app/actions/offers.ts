@@ -23,7 +23,7 @@ const offerSchema = z.object({
   name_en: z.string().trim().min(2).max(150),
   description_ar: z.string().trim().max(1000).optional(),
   description_en: z.string().trim().max(1000).optional(),
-  discount_type: z.enum(["percentage", "fixed"]),
+  discount_type: z.enum(["percentage", "fixed", "bundle_price"]),
   discount_value: z.coerce.number().positive().max(100000),
   starts_at: z.string().min(1),
   ends_at: z.string().min(1),
