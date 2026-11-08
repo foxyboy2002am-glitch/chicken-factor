@@ -149,3 +149,10 @@
  .store-product-body{padding:15px}
  .store-product h3{font-size:19px}
 }
+
+/* Farm-to-table brand slogan and Wonder Tech footer credit */
+.store-farm-slogan{margin:4px 0 0!important;color:#c81920!important;font-size:15px!important;font-weight:900;letter-spacing:.2px}
+.store-footer{row-gap:13px}
+.store-footer>span{font-size:13px;color:#eee}
+.store-copyright{flex-basis:100%;width:100%;margin-top:10px;padding-top:17px;border-top:1px solid #ffffff24;text-align:center;color:#c9bdb7;font-family:Arial,sans-serif;font-size:12px;letter-spacing:.3px}
+@media(max-width:600px){.store-farm-slogan{font-size:13px!important}.store-copyright{font-size:11px}}

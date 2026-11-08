@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
 
   if (!url || !key) return response;
 
+  try {
   const supabase = createServerClient(url, key, {
     cookies: {
       getAll() {
@@ -34,6 +35,9 @@ export async function middleware(request: NextRequest) {
   });
 
   await supabase.auth.getUser();
+  } catch (error) {
+    console.error("[Chicken Factor middleware] Supabase session refresh failed:", error);
+  }
   return response;
 }
 
