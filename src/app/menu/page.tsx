@@ -4,19 +4,49 @@ export const revalidate = 60;
 
 export default async function MenuPage() {
   const supabase = await createSupabaseServerClient();
-  const [{ data: categories }, { data: products, error }] = await Promise.all([
-    supabase.from("categories").select("id, name_ar, name_en, sort_order")
-      .eq("is_active", true).order("sort_order"),
+
+  // Fetch each table independently. This avoids PostgREST embedded-relation
+  // lookup failures while keeping the same public RLS-protected reads.
+  const [categoriesResult, productsResult, variantsResult] = await Promise.all([
+    supabase.from("categories")
+      .select("id, name_ar, name_en, sort_order")
+      .eq("is_active", true)
+      .order("sort_order"),
     supabase.from("products")
-      .select("id, sku, name_ar, name_en, description_ar, category_id, sort_order, product_variants(id, name_ar, name_en, base_price, sort_order)")
-      .eq("is_active", true).order("sort_order"),
+      .select("id, sku, name_ar, name_en, description_ar, category_id, sort_order")
+      .eq("is_active", true)
+      .order("sort_order"),
+    supabase.from("product_variants")
+      .select("id, product_id, name_ar, name_en, base_price, sort_order")
+      .eq("is_active", true)
+      .order("sort_order"),
   ]);
 
-  const grouped = (categories ?? []).map((category) => ({
+  const queryError = categoriesResult.error ?? productsResult.error ?? variantsResult.error;
+  if (queryError) {
+    console.error("[Chicken Factor menu] Supabase query failed:", queryError.message, queryError.code);
+  }
+
+  const categories = categoriesResult.data ?? [];
+  const products = productsResult.data ?? [];
+  const variants = variantsResult.data ?? [];
+
+  const variantsByProduct = new Map<string, typeof variants>();
+  for (const variant of variants) {
+    const current = variantsByProduct.get(variant.product_id) ?? [];
+    current.push(variant);
+    variantsByProduct.set(variant.product_id, current);
+  }
+
+  const grouped = categories.map((category) => ({
     ...category,
-    products: (products ?? [])
+    products: products
       .filter((product) => product.category_id === category.id)
-      .sort((a, b) => a.sort_order - b.sort_order),
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((product) => ({
+        ...product,
+        variants: variantsByProduct.get(product.id) ?? [],
+      })),
   })).filter((category) => category.products.length > 0);
 
   return (
@@ -31,8 +61,10 @@ export default async function MenuPage() {
         <p>اختار وجبتك المفضلة وشوف الأحجام والأسعار.</p>
         <a href="#menu-categories" className="store-primary-link">استكشف المنيو</a>
       </section>
-      {error ? (
-        <p className="store-error">تعذر تحميل المنيو حالياً. حاول مرة أخرى بعد قليل.</p>
+      {queryError ? (
+        <p className="store-error">حصلت مشكلة في الاتصال بالمنيو. حاول مرة أخرى بعد قليل.</p>
+      ) : grouped.length === 0 ? (
+        <p className="store-error">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
       ) : (
         <>
           <nav id="menu-categories" className="menu-category-nav" aria-label="أقسام المنيو">
@@ -46,28 +78,23 @@ export default async function MenuPage() {
                   <b>{category.products.length} صنف</b>
                 </div>
                 <div className="store-product-grid">
-                  {category.products.map((product) => {
-                    const variants = Array.isArray(product.product_variants)
-                      ? [...product.product_variants].sort((a, b) => a.sort_order - b.sort_order)
-                      : [];
-                    return (
-                      <article className="store-product" key={product.id}>
-                        <div className="store-product-top"><span className="store-product-mark">CF</span><span className="store-product-code">{product.sku}</span></div>
-                        <h3>{product.name_ar}</h3>
-                        <p className="store-product-en">{product.name_en}</p>
-                        {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
-                        <div className="store-price-list">
-                          {variants.map((variant) => (
-                            <div className="store-price" key={variant.id}>
-                              <span>{variant.name_ar}</span>
-                              <strong>{Number(variant.base_price).toLocaleString("ar-EG")} <small>جنيه</small></strong>
-                            </div>
-                          ))}
-                          {!variants.length ? <span className="store-product-desc">السعر غير متاح حالياً</span> : null}
-                        </div>
-                      </article>
-                    );
-                  })}
+                  {category.products.map((product) => (
+                    <article className="store-product" key={product.id}>
+                      <div className="store-product-top"><span className="store-product-mark">CF</span><span className="store-product-code">{product.sku}</span></div>
+                      <h3>{product.name_ar}</h3>
+                      <p className="store-product-en">{product.name_en}</p>
+                      {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
+                      <div className="store-price-list">
+                        {product.variants.map((variant) => (
+                          <div className="store-price" key={variant.id}>
+                            <span>{variant.name_ar}</span>
+                            <strong>{Number(variant.base_price).toLocaleString("ar-EG")} <small>جنيه</small></strong>
+                          </div>
+                        ))}
+                        {!product.variants.length ? <span className="store-product-desc">السعر غير متاح حالياً</span> : null}
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </section>
             ))}
