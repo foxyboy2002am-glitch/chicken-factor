@@ -7,7 +7,7 @@ type Variant = { id: string; name_ar: string; name_en?: string | null; base_pric
 type Product = { id: string; sku?: string | null; name_ar: string; name_en?: string | null; description_ar?: string | null; imageUrl?: string | null; variants: Variant[] };
 type Category = { id: string; slug: string; name_ar: string; name_en?: string | null; products: Product[] };
 
-export default function MenuBrowser({ categories, whatsappNumber }: { categories: Category[]; whatsappNumber: string }) {
+export default function MenuBrowser({ categories }: { categories: Category[] }) {
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
   const [query, setQuery] = useState("");
   const active = categories.find((category) => category.id === activeId) ?? categories[0];
@@ -58,7 +58,6 @@ export default function MenuBrowser({ categories, whatsappNumber }: { categories
                   })}
                   {!product.variants.length ? <p className="cf-unavailable">السعر غير متاح حالياً</p> : null}
                 </div>
-                {whatsappNumber ? <a className="cf-product-whatsapp" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أريد الاستفسار عن ${product.name_ar}`)}`} target="_blank" rel="noopener noreferrer">استفسر عن المنتج عبر واتساب</a> : null}
               </div>
             </article>
           ))}
