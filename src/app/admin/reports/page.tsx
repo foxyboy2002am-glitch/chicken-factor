@@ -124,7 +124,9 @@ export default async function ReportsPage({
         <>
           <section className="metrics-grid">
             <article className="metric-card"><p>إجمالي الطلبات في الفترة</p><strong>{totalMatching.toLocaleString("ar-EG")}</strong></article>
-            <article className="metric-card"><p>قيمة الطلبات الإجمالية</p><strong>{money(orderValue)}</strong></article>\n            <article className="metric-card"><p>المبالغ المحصلة فعليًا</p><strong>{money(revenue)}</strong></article>\n            <article className="metric-card"><p>مبالغ معلقة للتحصيل</p><strong>{money(pendingValue)}</strong></article>
+            <article className="metric-card"><p>قيمة الطلبات الإجمالية</p><strong>{money(orderValue)}</strong></article>
+            <article className="metric-card"><p>المبالغ المحصلة فعليًا</p><strong>{money(revenue)}</strong></article>
+            <article className="metric-card"><p>مبالغ معلقة للتحصيل</p><strong>{money(pendingValue)}</strong></article>
             <article className="metric-card"><p>طلبات مكتملة</p><strong>{completedRows.length.toLocaleString("ar-EG")}</strong></article>
             <article className="metric-card"><p>مدفوعات معلقة</p><strong>{pendingPayment.length.toLocaleString("ar-EG")}</strong></article>
             <article className="metric-card"><p>مدفوعات فاشلة</p><strong>{failedPayment.length.toLocaleString("ar-EG")}</strong></article>
