@@ -55,7 +55,7 @@ export default function MenuBrowser({ categories }: { categories: Category[] }) 
                   {product.variants.map((variant) => {
                     const price = Number(variant.base_price);
                     return <div className="cf-variant-row" key={variant.id}>
-                      <div><span>{en ? (variant.name_en || variant.name_ar) : variant.name_ar}</span><strong>{price.toLocaleString("ar-EG")} <small>{en ? "EGP" : "جنيه"}</small></strong></div>
+                      <div><span>{en ? (variant.name_en || variant.name_ar) : variant.name_ar}</span><strong>{price.toLocaleString(en ? "en-EG" : "ar-EG")} <small>{en ? "EGP" : "جنيه"}</small></strong></div>
                       <AddToCartButton productId={product.id} variantId={variant.id} productName={product.name_ar} variantName={variant.name_ar} price={price} sku={product.sku} />
                     </div>;
                   })}
