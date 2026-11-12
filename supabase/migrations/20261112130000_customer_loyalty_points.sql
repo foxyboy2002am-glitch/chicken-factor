@@ -18,7 +18,6 @@ alter table public.orders
 create index idx_customers_name on public.customers using gin (to_tsvector('simple', full_name));
 create index idx_customers_phone on public.customers(phone_normalized);
 create index idx_orders_customer_profile_created on public.orders(customer_profile_id, created_at desc);
-create index idx_loyalty_ledger_customer_created on public.customer_points_ledger(customer_id, created_at desc);
 
 create table public.customer_points_ledger (
   id uuid primary key default gen_random_uuid(),
@@ -32,6 +31,7 @@ create table public.customer_points_ledger (
 );
 
 create index idx_customer_points_order on public.customer_points_ledger(order_id);
+create index idx_loyalty_ledger_customer_created on public.customer_points_ledger(customer_id, created_at desc);
 create index idx_customer_points_created on public.customer_points_ledger(created_at desc);
 
 alter table public.customers enable row level security;
