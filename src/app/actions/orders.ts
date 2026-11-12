@@ -3,38 +3,86 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 
-const allowedStatuses = ["pending_confirmation","confirmed","preparing","ready","out_for_delivery","completed","rejected","cancelled","payment_failed"] as const;
+const statuses = ["pending_confirmation","confirmed","preparing","ready","out_for_delivery","completed","rejected","cancelled","payment_failed"] as const;
+const paymentStatuses = ["pending","paid","failed","refunded","partially_refunded"] as const;
 
-async function requireAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user) redirect("/login");
-  const { data: roles, error: roleError } = await supabase.from("user_roles").select("role,branch_id").eq("user_id", user.id);
-  if (roleError) throw new Error("تعذر التحقق من صلاحيات الحساب.");
-  if (!roles?.some((r) => ["admin","super_admin"].includes(r.role) && r.branch_id === null)) redirect("/login?error=unauthorized");
-  return { supabase, user };
+async function recordHistory(supabase: any, orderId: string, oldStatus: string, newStatus: string, userId: string, note?: string) {
+  const { error } = await supabase.from("order_status_history").insert({
+    order_id: orderId, old_status: oldStatus, new_status: newStatus, changed_by: userId, note: note || null,
+  });
+  if (error) console.error("[orders] history insert failed", error.message);
 }
 
 export async function updateOrderStatus(formData: FormData) {
-  const { supabase, user } = await requireAdmin();
-  const parsed = z.object({ order_id: z.string().uuid(), status: z.enum(allowedStatuses), note: z.string().trim().max(500).optional() }).safeParse(Object.fromEntries(formData));
+  const { supabase, user, roles } = await requireBackoffice();
+  const parsed = z.object({ order_id:z.string().uuid(), status:z.enum(statuses), note:z.string().trim().max(500).optional() }).safeParse(Object.fromEntries(formData));
   if (!parsed.success) redirect("/admin/orders?error=validation");
+  const roleSet = new Set(roles.map(r=>r.role));
+  if (!["admin","super_admin","call_center","operations","branch_manager","branch_staff"].some(r=>roleSet.has(r))) redirect("/login?error=unauthorized");
   const { data: current, error: readError } = await supabase.from("orders").select("id,status").eq("id",parsed.data.order_id).single();
   if (readError || !current) redirect("/admin/orders?error=not-found");
   if (current.status === parsed.data.status) redirect("/admin/orders?success=unchanged");
-  const { error } = await supabase.from("orders").update({
-    status: parsed.data.status,
-    ...(parsed.data.status === "confirmed" ? { accepted_at: new Date().toISOString() } : {}),
-    ...(parsed.data.status === "completed" ? { completed_at: new Date().toISOString() } : {}),
-  }).eq("id",parsed.data.order_id);
-  if (error) redirect("/admin/orders?error=update");
-  const { error: historyError } = await supabase.from("order_status_history").insert({
-    order_id: parsed.data.order_id, old_status: current.status, new_status: parsed.data.status,
-    changed_by: user.id, note: parsed.data.note || null,
-  });
-  if (historyError) console.error("[orders] status history insert failed", historyError.message);
-  revalidatePath("/admin/orders"); revalidatePath("/admin/reports"); revalidatePath("/admin");
+  const patch:any = { status:parsed.data.status };
+  if(parsed.data.status==="confirmed") patch.accepted_at=new Date().toISOString();
+  if(parsed.data.status==="completed") patch.completed_at=new Date().toISOString();
+  const { error } = await supabase.from("orders").update(patch).eq("id",parsed.data.order_id);
+  if(error) redirect("/admin/orders?error=update");
+  await recordHistory(supabase,parsed.data.order_id,current.status,parsed.data.status,user.id,parsed.data.note);
+  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports","/admin"].forEach(revalidatePath);
   redirect("/admin/orders?success=updated");
+}
+
+export async function assignOrderBranch(formData: FormData) {
+  const { supabase, user, roles } = await requireBackoffice(["admin","super_admin","call_center","operations"]);
+  const parsed=z.object({order_id:z.string().uuid(),branch_id:z.string().uuid()}).safeParse(Object.fromEntries(formData));
+  if(!parsed.success) redirect("/admin/call-center?error=validation");
+  const {data: current,error:readError}=await supabase.from("orders").select("id,branch_id,status").eq("id",parsed.data.order_id).single();
+  if(readError||!current) redirect("/admin/call-center?error=not-found");
+  const {data: branch,error:branchError}=await supabase.from("branches").select("id,is_active").eq("id",parsed.data.branch_id).single();
+  if(branchError||!branch?.is_active) redirect("/admin/call-center?error=branch");
+  const {error}=await supabase.from("orders").update({branch_id:parsed.data.branch_id}).eq("id",parsed.data.order_id);
+  if(error) redirect("/admin/call-center?error=assign");
+  await recordHistory(supabase,parsed.data.order_id,current.status,current.status,user.id,"تم تحويل الطلب إلى فرع آخر");
+  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports"].forEach(revalidatePath);
+  redirect("/admin/call-center?success=assigned");
+}
+
+export async function setPaymentStatus(formData: FormData) {
+  const {supabase,roles}=await requireBackoffice(["admin","super_admin","accountant"]);
+  const parsed=z.object({order_id:z.string().uuid(),payment_id:z.string().uuid(),status:z.enum(paymentStatuses)}).safeParse(Object.fromEntries(formData));
+  if(!parsed.success) redirect("/admin/accounts?error=validation");
+  const {error:paymentError}=await supabase.from("payments").update({status:parsed.data.status,updated_at:new Date().toISOString()}).eq("id",parsed.data.payment_id).eq("order_id",parsed.data.order_id);
+  if(paymentError) redirect("/admin/accounts?error=payment");
+  const {error:orderError}=await supabase.from("orders").update({payment_status:parsed.data.status}).eq("id",parsed.data.order_id);
+  if(orderError) redirect("/admin/accounts?error=order");
+  ["/admin/accounts","/admin/reports","/admin/orders"].forEach(revalidatePath);
+  redirect("/admin/accounts?success=updated");
+}
+
+export async function createCallCenterOrder(formData: FormData) {
+  const {supabase}=await requireBackoffice(["admin","super_admin","call_center"]);
+  const parsed=z.object({
+    branch_id:z.string().uuid(),fulfillment:z.enum(["delivery","pickup"]),
+    customer_name:z.string().trim().min(2).max(120),customer_phone:z.string().trim().min(10).max(20),
+    area:z.string().trim().max(120).optional(),street:z.string().trim().max(180).optional(),
+    building:z.string().trim().max(40).optional(),floor:z.string().trim().max(40).optional(),
+    landmark:z.string().trim().max(180).optional(),notes:z.string().trim().max(500).optional(),
+    variant_id:z.array(z.string().uuid()).min(1).max(30),quantity:z.array(z.coerce.number().int().min(1).max(20)).min(1).max(30)
+  }).safeParse(Object.fromEntries(formData));
+  if(!parsed.success || parsed.data.variant_id.length!==parsed.data.quantity.length) redirect("/admin/call-center?error=validation");
+  const items=parsed.data.variant_id.map((variant_id,i)=>({variant_id,quantity:parsed.data.quantity[i]}));
+  const address=parsed.data.fulfillment==="delivery"?{
+    area:parsed.data.area||"",street:parsed.data.street||"",building:parsed.data.building||"",
+    floor:parsed.data.floor||"",landmark:parsed.data.landmark||""
+  }:null;
+  const {data,error}=await supabase.rpc("create_call_center_order",{
+    _branch_id:parsed.data.branch_id,_fulfillment:parsed.data.fulfillment,
+    _customer_name:parsed.data.customer_name,_customer_phone:parsed.data.customer_phone,
+    _address:address,_notes:parsed.data.notes||"",_items:items
+  });
+  if(error){console.error("[call-center] order creation failed",error.message);redirect("/admin/call-center?error=create");}
+  revalidatePath("/admin/call-center");revalidatePath("/admin/orders");revalidatePath("/admin/tracking");revalidatePath("/admin/reports");
+  redirect("/admin/call-center?success=created&order="+encodeURIComponent(String(data.order_number)));
 }
