@@ -1649,3 +1649,6 @@ html[lang="en"] .cf-product-content{text-align:left}
   .admin-users-list-heading { align-items: flex-start; flex-direction: column; }
   .admin-users-page .data-form { grid-template-columns: minmax(0,1fr); }
 }
+
+.cf-offers-controls { direction: rtl; }
+.cf-branch-selection-note { display: block; margin: -8px 0 8px; color: #94796d; font-size: 10px; line-height: 1.6; }
