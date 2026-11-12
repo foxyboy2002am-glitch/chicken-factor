@@ -14,7 +14,7 @@ export default function AddToCartButton(props: Props) {
       const raw = window.localStorage.getItem(CART_KEY);
       const parsed: unknown = raw ? JSON.parse(raw) : [];
       const cart = Array.isArray(parsed) ? parsed : [];
-      const existing = cart.find((item: { variantId?: string }) => item.variantId === props.variantId);
+      const existing = cart.find((item: { variantId?: string; quantity?: number }) => item.variantId === props.variantId);
 
       if (existing) {
         existing.quantity = Math.min(20, Math.max(1, Number(existing.quantity || 1)) + 1);
