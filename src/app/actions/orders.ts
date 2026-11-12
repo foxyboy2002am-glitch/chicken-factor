@@ -57,10 +57,10 @@ export async function setPaymentStatus(formData: FormData) {
   const {supabase}=await requireBackoffice(["admin","super_admin","accountant"]);
   const parsed=z.object({order_id:z.string().uuid(),payment_id:z.string().uuid(),status:z.enum(paymentStatuses)}).safeParse(Object.fromEntries(formData));
   if(!parsed.success) redirect("/admin/accounts?error=validation");
-  const {error:paymentError}=await supabase.from("payments").update({status:parsed.data.status,updated_at:new Date().toISOString()}).eq("id",parsed.data.payment_id).eq("order_id",parsed.data.order_id);
-  if(paymentError) redirect("/admin/accounts?error=payment");
-  const {error:orderError}=await supabase.from("orders").update({payment_status:parsed.data.status}).eq("id",parsed.data.order_id);
-  if(orderError) redirect("/admin/accounts?error=order");
+  const {error}=await supabase.rpc("set_order_payment_status",{
+    _order_id:parsed.data.order_id,_payment_id:parsed.data.payment_id,_status:parsed.data.status
+  });
+  if(error) redirect("/admin/accounts?error=payment");
   ["/admin/accounts","/admin/reports","/admin/orders"].forEach(revalidatePath);
   redirect("/admin/accounts?success=updated");
 }
