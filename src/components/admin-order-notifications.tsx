@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
 
 type NewOrder = {
@@ -14,7 +15,10 @@ type NewOrder = {
 };
 
 export default function AdminOrderNotifications() {
+  const router = useRouter();
   const [orders, setOrders] = useState<NewOrder[]>([]);
+  const [unread, setUnread] = useState(0);
+  const [toasts, setToasts] = useState<NewOrder[]>([]);
   const [open, setOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [connection, setConnection] = useState<"connecting" | "live" | "offline">("connecting");
@@ -38,6 +42,10 @@ export default function AdminOrderNotifications() {
         if (!order?.id || seenRef.current.has(order.id)) return;
         seenRef.current.add(order.id);
         setOrders((current) => [order, ...current].slice(0, 30));
+        setUnread((current) => current + 1);
+        setToasts((current) => [order, ...current].slice(0, 2));
+        window.setTimeout(() => setToasts((current) => current.filter((item) => item.id !== order.id)), 7000);
+        router.refresh();
 
         if (soundRef.current) {
           try {
@@ -80,7 +88,7 @@ export default function AdminOrderNotifications() {
       void supabase.removeChannel(channel);
       if (audioRef.current && audioRef.current.state !== "closed") void audioRef.current.close();
     };
-  }, []);
+  }, [router]);
 
   async function toggleSound() {
     if (!soundEnabled) {
@@ -121,9 +129,9 @@ export default function AdminOrderNotifications() {
       <button type="button" className={`admin-sound-toggle ${soundEnabled ? "enabled" : ""}`} onClick={toggleSound} aria-pressed={soundEnabled} title={soundEnabled ? "إيقاف صوت التنبيه" : "تفعيل صوت التنبيه"}>
         <span aria-hidden="true">{soundEnabled ? "♫" : "♪"}</span><small>{soundEnabled ? "الصوت يعمل" : "تفعيل الصوت"}</small>
       </button>
-      <button type="button" className="admin-notification-trigger" onClick={() => setOpen((value) => !value)} aria-label={`الإشعارات، ${orders.length} طلب جديد`} aria-expanded={open}>
+      <button type="button" className="admin-notification-trigger" onClick={() => setOpen((value) => !value)} aria-label={`الإشعارات، ${unread} طلب جديد`} aria-expanded={open} onClick={() => { setOpen((value) => !value); setUnread(0); }}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></svg>
-        {orders.length > 0 ? <b>{orders.length > 99 ? "99+" : orders.length}</b> : null}
+        {unread > 0 ? <b>{unread > 99 ? "99+" : unread}</b> : null}
       </button>
       {open ? (
         <>
@@ -143,7 +151,7 @@ export default function AdminOrderNotifications() {
           </section>
         </>
       ) : null}
-      {orders.slice(0, 2).map((order) => (
+      {toasts.map((order) => (
         <a href="/admin/orders" className="admin-order-toast" key={order.id}>
           <span>🍗</span><div><strong>طلب جديد #{order.order_number}</strong><small>{order.customer_name || order.customer_phone} · {money(order.total)}</small></div>
         </a>
