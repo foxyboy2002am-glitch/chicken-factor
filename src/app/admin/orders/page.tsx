@@ -81,7 +81,8 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   <td>#{order.order_number}</td>
                   <td>{order.customer_name || "—"}</td>
                   <td>{order.customer_phone || "—"}</td>
-                  <td>{order.source === "call_center" ? "كول سنتر" : "الموقع"}</td>\n                  <td>{Array.isArray(order.branches) ? order.branches[0]?.name_ar : (order.branches as any)?.name_ar || "—"}</td>
+                  <td>{order.source === "call_center" ? "كول سنتر" : "الموقع"}</td>
+                  <td>{Array.isArray(order.branches) ? order.branches[0]?.name_ar : (order.branches as any)?.name_ar || "—"}</td>
                   <td>{order.fulfillment === "delivery" ? "توصيل" : order.fulfillment === "pickup" ? "استلام من الفرع" : order.fulfillment || "—"}</td>
                   <td>{statusLabels[String(order.status)] ?? String(order.status)}</td>
                   <td>{paymentLabels[String(order.payment_status)] ?? String(order.payment_status)}</td>
