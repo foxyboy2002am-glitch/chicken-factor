@@ -27,9 +27,14 @@ export async function inviteBackofficeUser(formData:FormData){
     if(error||!data.user) redirect("/admin/users?error=invite");
     userId=data.user.id;
   }
-  const {error:roleError}=await admin.from("user_roles").upsert({
+  const roleQuery=admin.from("user_roles").select("id").eq("user_id",userId).eq("role",parsed.data.role);
+  const {data:existingRole,error:lookupError}=branchRole
+    ? await roleQuery.eq("branch_id",parsed.data.branch_id!).maybeSingle()
+    : await roleQuery.is("branch_id",null).maybeSingle();
+  if(lookupError) redirect("/admin/users?error=role");
+  const {error:roleError}=existingRole?{error:null}:await admin.from("user_roles").insert({
     user_id:userId,role:parsed.data.role,branch_id:branchRole?parsed.data.branch_id:null
-  },{onConflict:"user_id,role,branch_id"});
+  });
   if(roleError){
     console.error("[users] role assignment failed",roleError.message);
     redirect("/admin/users?error=role");
