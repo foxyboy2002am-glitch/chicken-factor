@@ -20,10 +20,14 @@ export async function updateOrderStatus(formData: FormData) {
   const parsed = z.object({ order_id:z.string().uuid(), status:z.enum(statuses), note:z.string().trim().max(500).optional() }).safeParse(Object.fromEntries(formData));
   if (!parsed.success) redirect("/admin/orders?error=validation");
   const roleSet = new Set(roles.map(r=>r.role));
-  if (!["admin","super_admin","call_center","operations","branch_manager","branch_staff"].some(r=>roleSet.has(r))) redirect("/login?error=unauthorized");
+  const isGlobalOperator = ["admin","super_admin","call_center","operations"].some(r=>roleSet.has(r));
+  const branchRole = roles.find(r=>["branch_manager","branch_staff"].includes(r.role));
+  if (!isGlobalOperator && !branchRole) redirect("/login?error=unauthorized");
   const { data: current, error: readError } = await supabase.from("orders").select("id,status").eq("id",parsed.data.order_id).single();
   if (readError || !current) redirect("/admin/orders?error=not-found");
   if (current.status === parsed.data.status) redirect("/admin/orders?success=unchanged");
+  const branchTransitions:Record<string,string[]>={pending_confirmation:["confirmed","rejected"],confirmed:["preparing","cancelled"],preparing:["ready","cancelled"],ready:["out_for_delivery","completed"],out_for_delivery:["completed","cancelled"]};
+  if (!isGlobalOperator && !branchTransitions[current.status]?.includes(parsed.data.status)) redirect("/admin/orders?error=transition");
   const patch:any = { status:parsed.data.status };
   if(parsed.data.status==="confirmed") patch.accepted_at=new Date().toISOString();
   if(parsed.data.status==="completed") patch.completed_at=new Date().toISOString();
@@ -35,7 +39,7 @@ export async function updateOrderStatus(formData: FormData) {
 }
 
 export async function assignOrderBranch(formData: FormData) {
-  const { supabase, user, roles } = await requireBackoffice(["admin","super_admin","call_center","operations"]);
+  const { supabase, user } = await requireBackoffice(["admin","super_admin","call_center","operations"]);
   const parsed=z.object({order_id:z.string().uuid(),branch_id:z.string().uuid()}).safeParse(Object.fromEntries(formData));
   if(!parsed.success) redirect("/admin/call-center?error=validation");
   const {data: current,error:readError}=await supabase.from("orders").select("id,branch_id,status").eq("id",parsed.data.order_id).single();
@@ -50,7 +54,7 @@ export async function assignOrderBranch(formData: FormData) {
 }
 
 export async function setPaymentStatus(formData: FormData) {
-  const {supabase,roles}=await requireBackoffice(["admin","super_admin","accountant"]);
+  const {supabase}=await requireBackoffice(["admin","super_admin","accountant"]);
   const parsed=z.object({order_id:z.string().uuid(),payment_id:z.string().uuid(),status:z.enum(paymentStatuses)}).safeParse(Object.fromEntries(formData));
   if(!parsed.success) redirect("/admin/accounts?error=validation");
   const {error:paymentError}=await supabase.from("payments").update({status:parsed.data.status,updated_at:new Date().toISOString()}).eq("id",parsed.data.payment_id).eq("order_id",parsed.data.order_id);
