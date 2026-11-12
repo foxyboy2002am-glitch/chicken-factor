@@ -1247,3 +1247,15 @@ html[lang="en"] .cf-product-content{text-align:left}
   .store-hero-visual { height: 180px !important; }
   .store-hero-food { width: 174px !important; height: 174px !important; }
 }
+
+
+/* Keep the Fresh & Crispy sticker separate from the logo tile. */
+.store-hero-sticker {
+  top: 92px !important;
+  right: 0 !important;
+  left: auto !important;
+  z-index: 4;
+}
+@media (max-width: 650px) {
+  .store-hero-sticker { display: none !important; }
+}
