@@ -6,7 +6,9 @@ import { useStoreLanguage } from "@/components/store-language";
 type Props = { offerId: string; offerName: string; price: number };
 
 export default function OfferAddToCartButton({ offerId, offerName, price }: Props) {
-  const { language } = useStoreLanguage();\n  const en = language === "en";\n  const [added, setAdded] = useState(false);
+  const { language } = useStoreLanguage();
+  const en = language === "en";
+  const [added, setAdded] = useState(false);
 
   function addOffer() {
     try {
