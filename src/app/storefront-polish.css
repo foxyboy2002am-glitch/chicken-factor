@@ -1,0 +1,143 @@
+/* Chicken Factor storefront polish — simple, warm, food-first */
+.store-page{
+  --cf-red:#bd1821;
+  --cf-red-dark:#97131b;
+  --cf-gold:#ffd45a;
+  background:#fffaf6!important;
+  color:#28201d;
+}
+.store-page:before,.store-page:after,
+.store-hero:before,.store-hero:after,
+.offers-section:before{display:none!important}
+.store-header{
+  position:sticky;top:0;z-index:30;height:72px!important;
+  padding-inline:clamp(14px,4vw,48px)!important;
+  background:#fff!important;border-bottom:1px solid #f1e6df!important;
+  box-shadow:0 3px 14px #32160c0a!important;
+}
+.store-logo{gap:9px!important;font-size:12px!important;letter-spacing:.5px!important}
+.store-logo img{width:50px!important;height:50px!important}
+.store-header-actions{display:flex;align-items:center;gap:12px}
+.store-hotline{font-size:12px!important}
+.store-hotline strong{font-size:18px!important}
+.store-hero{
+  padding:30px clamp(16px,4vw,48px)!important;
+  background:linear-gradient(120deg,#a9141d,#c51e26)!important;
+  border:0!important;color:#fff!important;
+}
+.store-hero-inner{
+  max-width:1160px;margin:auto;display:grid;
+  grid-template-columns:1.1fr .9fr;align-items:center;gap:24px;
+}
+.store-hero-content{text-align:right}
+.store-eyebrow{color:#ffe08a!important;font-size:10px!important;letter-spacing:1.5px!important}
+.store-farm-slogan{color:#ffe7c8!important;font-size:13px!important}
+.store-hero h1{color:#fff!important;font-size:clamp(30px,4vw,46px)!important;margin:8px 0!important}
+.store-hero h1 em{color:#ffd45a!important;font-style:normal}
+.store-hero-description{color:#ffebe5!important;font-size:14px!important;line-height:1.8}
+.store-primary-link{
+  display:inline-flex;align-items:center;gap:9px;
+  background:#ffd45a!important;color:#711018!important;
+  border-radius:12px!important;padding:11px 19px!important;
+  box-shadow:none!important;font-size:13px;font-weight:900;
+}
+.store-hero-call{color:#fff!important;font-size:12px}
+.store-hero-call strong{color:#ffe08a}
+.store-hero-visual{position:relative;min-height:230px;display:grid;place-items:center}
+.store-hero-food{width:min(100%,350px);max-height:260px;object-fit:contain;border-radius:18px;filter:drop-shadow(0 14px 18px #4b070c35)}
+.store-hero-logo,.store-hero-sticker{display:none!important}
+.offers-section{padding:34px clamp(14px,4vw,40px) 16px!important}
+.offers-heading{margin-bottom:16px!important}
+.offers-heading h2,.menu-section-intro h2{font-size:clamp(22px,3vw,29px)!important}
+.offers-heading>a{background:#fff0e9!important;color:var(--cf-red)!important}
+.offer-card,.database-offer-card{
+  border:1px solid #f0e4dc!important;border-radius:16px!important;
+  box-shadow:0 5px 18px #32160c09!important;overflow:hidden;
+}
+.offer-card:hover,.database-offer-card:hover{transform:translateY(-2px)!important;box-shadow:0 9px 22px #32160c10!important}
+.offer-card-content{padding:14px!important}
+.offer-title-row h3{font-size:17px!important}
+.offer-title-row>strong{font-size:20px!important}
+.offer-card-content>p{font-size:12px!important;min-height:0!important}
+.cf-offer-add,.cf-offer-info .cf-offer-add{
+  background:#ffd45a!important;color:#711018!important;
+  border-radius:10px!important;box-shadow:none!important;
+}
+.menu-section-intro{padding:35px 16px 14px!important;background:transparent!important}
+.menu-section-intro p{font-size:12px!important}
+.cf-menu-browser{
+  max-width:1200px!important;padding:18px clamp(13px,3vw,28px) 48px!important;
+  background:transparent!important;border-radius:0!important;
+}
+.cf-menu-toolbar{align-items:center!important;margin-bottom:14px!important}
+.cf-menu-toolbar h2{font-size:24px!important}
+.cf-menu-toolbar p{font-size:12px!important}
+.cf-menu-search{border-radius:11px!important;background:#fff!important}
+.cf-category-tabs{
+  top:72px!important;gap:7px!important;padding:10px 0 12px!important;
+  background:#fffaf6!important;border-bottom:1px solid #eee3dc!important;
+}
+.cf-category-tabs button{padding:8px 12px!important;font-size:11px!important}
+.cf-category-tabs button.is-active{box-shadow:none!important}
+.cf-active-category{
+  padding:18px 0!important;border-radius:0!important;
+  background:transparent!important;animation:none!important;
+}
+.cf-active-category:before,.cf-active-category:after{display:none!important}
+.cf-active-heading{margin-bottom:13px!important}
+.cf-active-heading h3{font-size:21px!important}
+.cf-product-grid{gap:13px!important}
+.cf-product-card{
+  border:1px solid #eee3dc!important;border-radius:15px!important;
+  box-shadow:0 4px 14px #32160c08!important;animation:none!important;
+}
+.cf-product-card:hover{transform:translateY(-2px)!important;box-shadow:0 8px 20px #32160c10!important}
+.cf-product-visual{height:165px!important;background:#fff1e8!important}
+.cf-product-visual>img{object-fit:contain!important;padding:5px}
+.cf-product-content{padding:12px!important}
+.cf-product-content h4{font-size:16px!important}
+.cf-product-description{font-size:11px!important}
+.cf-variant-row{padding:7px 0!important}
+.cf-add-cart{min-width:100px!important;background:#ffd45a!important;color:#711018!important;border-radius:9px!important;box-shadow:none!important}
+.cf-add-cart:hover{transform:translateY(-1px)!important;box-shadow:none!important}
+.store-footer{background:#241c19!important;padding:25px 16px!important}
+.store-footer b{color:#ffd45a!important}
+.store-copyright{font-size:11px!important}
+@media(max-width:760px){
+  .store-header{height:64px!important;padding-inline:10px!important}
+  .store-logo{font-size:9px!important;gap:5px!important}
+  .store-logo img{width:42px!important;height:42px!important}
+  .store-header-actions{gap:6px}
+  .store-hotline{font-size:10px!important}
+  .store-hotline strong{font-size:15px!important}
+  .store-hero{padding:24px 15px!important}
+  .store-hero-inner{grid-template-columns:1fr;gap:10px}
+  .store-hero-content{text-align:center}
+  .store-hero h1{font-size:32px!important}
+  .store-hero-description{font-size:12px!important}
+  .store-hero-visual{min-height:130px}
+  .store-hero-food{max-height:150px;width:min(70%,250px)}
+  .store-hero-actions{justify-content:center;flex-wrap:wrap}
+  .offers-section{padding:25px 13px 10px!important}
+  .offers-heading{align-items:flex-start!important;flex-direction:column!important}
+  .offers-grid{grid-template-columns:1fr!important;gap:12px!important}
+  .offer-card>img{aspect-ratio:1.45/1!important;object-fit:cover}
+  .cf-menu-browser{padding:16px 12px 38px!important}
+  .cf-menu-toolbar{align-items:stretch!important;flex-direction:column!important;gap:10px!important}
+  .cf-menu-toolbar h2{font-size:21px!important}
+  .cf-category-tabs{top:64px!important}
+  .cf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .cf-product-visual{height:112px!important;min-height:112px!important}
+  .cf-product-content{padding:9px!important}
+  .cf-product-content h4{font-size:13px!important}
+  .cf-product-meta{font-size:8px!important}
+  .cf-product-description{font-size:10px!important}
+  .cf-variant-row{gap:5px!important}
+  .cf-variant-row>div>span{font-size:10px!important}
+  .cf-variant-row>div>strong{font-size:14px!important}
+  .cf-add-cart{min-width:0!important;width:100%!important;min-height:34px!important;font-size:10px!important}
+}
+@media(max-width:360px){.cf-product-grid{grid-template-columns:1fr!important}.cf-product-visual{height:150px!important}}
+@media(prefers-reduced-motion:reduce){
+  .store-page *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
