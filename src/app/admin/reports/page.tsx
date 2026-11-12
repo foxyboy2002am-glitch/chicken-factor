@@ -114,7 +114,7 @@ export default async function ReportsPage({
           <label>إلى تاريخ<input type="date" name="to" defaultValue={dayString(to)} /></label>
           <button type="submit">تطبيق الفترة</button>
           <a href="/admin/reports">آخر 30 يوم</a>
-        </form>
+        </form><PrintReportButton /></div>
         {invalidRange ? <p className="notice error">تاريخ البداية يجب أن يكون قبل تاريخ النهاية.</p> : null}
         {errorMessage ? <p className="notice error">تعذر تحميل التقارير. راجع صلاحيات قاعدة البيانات ثم أعد المحاولة.</p> : null}
         {limited ? <p className="notice error">الفترة تحتوي على أكثر من 10,000 طلب؛ تم إيقاف التحميل لحماية أداء لوحة الإدارة. قلل الفترة الزمنية.</p> : null}
