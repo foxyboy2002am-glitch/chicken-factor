@@ -7,7 +7,7 @@ begin
   if not public.has_backoffice_role(array['call_center']::public.app_role[]) then raise exception 'not_authorized' using errcode='42501'; end if;
   if _fulfillment not in ('delivery','pickup') then raise exception 'invalid_fulfillment'; end if;
   if length(trim(_customer_name))<2 or length(regexp_replace(_customer_phone,'[^0-9]','','g'))<10 then raise exception 'invalid_customer'; end if;
-  if jsonb_typeof(_items)<>'array' or jsonb_array_length(_items)<1 or jsonb_array_length(_items)>30 then raise exception 'invalid_items'; end if;
+  if _items is null or coalesce(jsonb_typeof(_items),'')<>'array' or jsonb_array_length(_items)<1 or jsonb_array_length(_items)>30 then raise exception 'invalid_items'; end if;
   if _fulfillment='delivery' and (_address is null or coalesce(trim(_address->>'area'),'')='' or coalesce(trim(_address->>'street'),'')='') then raise exception 'address_required'; end if;
   if not exists(select 1 from public.branches b where b.id=_branch_id and b.is_active and ((_fulfillment='delivery' and b.accepts_delivery) or (_fulfillment='pickup' and b.accepts_pickup))) then raise exception 'branch_unavailable'; end if;
   insert into public.orders(branch_id,fulfillment,payment_method,payment_status,status,customer_name,customer_phone,delivery_address_snapshot,customer_notes,subtotal,discount_total,delivery_fee,total,idempotency_key,source,created_by)
