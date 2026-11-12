@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./storefront-polish.css";
 
 export const metadata: Metadata = {
   title: "Chicken Factor | تشيكن فاكتور",
