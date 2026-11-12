@@ -1,3 +1,4 @@
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { createCategory, createProduct, updateProduct } from "@/app/actions/catalog";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -5,6 +6,7 @@ type Props = { searchParams: Promise<{ error?: string; success?: string }> };
 
 export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
+  await requireBackoffice(["admin","super_admin"]);
   const supabase = await createSupabaseServerClient();
   const [{ data: categories }, { data: products }] = await Promise.all([
     supabase.from("categories").select("id, name_ar, name_en").order("name_ar"),
