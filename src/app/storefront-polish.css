@@ -141,3 +141,18 @@
 @media(prefers-reduced-motion:reduce){
   .store-page *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+
+.store-social-links{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin:16px auto 2px;color:#f4e9e2;font-size:12px;
+}
+.store-social-links>a{
+  width:34px;height:34px;display:grid;place-items:center;
+  border:1px solid #ffffff30;border-radius:50%;
+  color:#fff;background:#ffffff0b;transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+.store-social-links>a:hover{background:#bd1821;border-color:#bd1821;transform:translateY(-2px)}
+.store-social-links svg{width:16px;height:16px;fill:currentColor;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.store-social-links a[aria-label="Instagram"] svg{fill:none}
+.store-social-links .social-icon-fill{fill:currentColor;stroke:none}
