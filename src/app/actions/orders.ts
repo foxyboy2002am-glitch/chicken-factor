@@ -69,10 +69,14 @@ export async function createCallCenterOrder(formData: FormData) {
     area:z.string().trim().max(120).optional(),street:z.string().trim().max(180).optional(),
     building:z.string().trim().max(40).optional(),floor:z.string().trim().max(40).optional(),
     landmark:z.string().trim().max(180).optional(),notes:z.string().trim().max(500).optional(),
-    variant_id:z.array(z.string().uuid()).min(1).max(30),quantity:z.array(z.coerce.number().int().min(1).max(20)).min(1).max(30)
+    items_json:z.string().min(2).max(12000)
   }).safeParse(Object.fromEntries(formData));
-  if(!parsed.success || parsed.data.variant_id.length!==parsed.data.quantity.length) redirect("/admin/call-center?error=validation");
-  const items=parsed.data.variant_id.map((variant_id,i)=>({variant_id,quantity:parsed.data.quantity[i]}));
+  if(!parsed.success) redirect("/admin/call-center?error=validation");
+  let rawItems: unknown;
+  try { rawItems=JSON.parse(parsed.data.items_json); } catch { redirect("/admin/call-center?error=validation"); }
+  const itemResult=z.array(z.object({variant_id:z.string().uuid(),quantity:z.number().int().min(1).max(20)})).min(1).max(30).safeParse(rawItems);
+  if(!itemResult.success) redirect("/admin/call-center?error=validation");
+  const items=itemResult.data;
   const address=parsed.data.fulfillment==="delivery"?{
     area:parsed.data.area||"",street:parsed.data.street||"",building:parsed.data.building||"",
     floor:parsed.data.floor||"",landmark:parsed.data.landmark||""
