@@ -1043,3 +1043,145 @@ html[lang="en"] .cf-product-content{text-align:left}
   .store-primary-link { padding-inline: 13px; font-size: 12px; }
   .cf-floating-cart { left: 9px !important; }
 }
+
+
+/* Restore the original square food artwork and tighten the mobile hero. */
+@media (max-width: 650px) {
+  .store-hero {
+    padding: 19px 16px 25px;
+  }
+  .store-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+  }
+  .store-hero-visual {
+    grid-row: 1;
+    width: 100%;
+    height: 178px;
+    min-height: 0;
+    margin: 0 auto;
+  }
+  .store-hero-food {
+    display: block;
+    width: 174px;
+    height: 174px;
+    max-width: 58vw;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border: 0;
+    border-radius: 18px !important;
+    box-shadow: 0 12px 28px #0005;
+    transform: none;
+  }
+  .store-hero-logo {
+    width: 48px;
+    height: 48px;
+    left: max(5%, calc(50% - 143px));
+    bottom: 3px;
+    padding: 4px;
+    border-radius: 12px;
+  }
+  .store-hero-sticker {
+    width: 52px;
+    height: 52px;
+    right: max(5%, calc(50% - 143px));
+    top: 3px;
+    font-size: 7px;
+  }
+  .store-hero-content {
+    grid-row: 2;
+    padding: 0;
+    text-align: center;
+  }
+  .store-eyebrow {
+    padding: 5px 10px;
+    font-size: 8px;
+    letter-spacing: 1.4px;
+  }
+  .store-farm-slogan {
+    margin: 9px 0 2px;
+    font-size: 10px;
+  }
+  .store-hero h1 {
+    margin: 3px 0 7px;
+    font-size: clamp(29px, 7.7vw, 35px);
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+  }
+  .store-hero-description {
+    max-width: 330px;
+    margin: 0 auto;
+    font-size: 10px;
+    line-height: 1.65;
+  }
+  .store-hero-actions {
+    justify-content: center;
+    gap: 10px;
+    margin-top: 13px;
+  }
+  .store-primary-link {
+    min-height: 44px;
+    padding: 9px 15px;
+    border-radius: 11px;
+    font-size: 13px;
+  }
+  .store-hero-call { font-size: 9px; }
+  .store-hero-call strong { font-size: 14px; }
+
+  /* Compact circular cart: no longer sits over offer cards or their CTA. */
+  .cf-floating-cart {
+    left: 12px !important;
+    right: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+  .cf-floating-cart-trigger {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    position: relative;
+    width: 54px;
+    min-width: 54px;
+    height: 54px;
+    min-height: 54px;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+    box-shadow: 0 6px 20px #8e101744;
+  }
+  .cf-cart-trigger-icon {
+    width: auto;
+    height: auto;
+    background: transparent;
+    font-size: 21px;
+  }
+  .cf-cart-trigger-copy { display: none; }
+  .cf-cart-count {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    font-size: 9px;
+    border: 2px solid #fff;
+  }
+  .cf-cart-panel {
+    left: 12px !important;
+    right: auto !important;
+    bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+    width: min(360px, calc(100vw - 24px));
+    max-height: min(65dvh, 520px);
+  }
+  .cf-cart-backdrop {
+    background: #1b10104a;
+  }
+  .offers-section {
+    padding-bottom: 85px;
+  }
+}
+@media (max-width: 380px) {
+  .store-hero-visual { height: 160px; }
+  .store-hero-food { width: 156px; height: 156px; }
+  .store-hero h1 { font-size: 28px; }
+  .cf-floating-cart { left: 9px !important; }
+}
