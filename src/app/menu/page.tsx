@@ -1,7 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import MenuBrowser from "@/components/menu-browser";
 import CartButton from "@/components/cart-button";
-import OfferAddToCartButton from "@/components/offer-add-to-cart-button";
+import OffersCarousel from "@/components/offers-carousel";
 import { StoreLanguageProvider, LanguageSwitcher } from "@/components/store-language";
 import { promotions } from "@/lib/promotions";
 
@@ -157,21 +157,7 @@ export default async function MenuPage() {
           <div><span>HOT DEALS</span><h2 data-ar="عروض تشيكن فاكتور" data-en="Chicken Factor offers">عروض تشيكن فاكتور</h2></div>
           <a href="tel:15407"><span data-ar="اطلب الآن" data-en="Order now">اطلب الآن</span> <strong>15407</strong></a>
         </div>
-        <div className="offers-grid">
-          {promotions.map((offer) => (
-            <article className="offer-card" key={offer.id}>
-              <img src={offer.image} alt={offer.title} loading="lazy" />
-              <div className="offer-card-content">
-                <div className="offer-title-row">
-                  <h3 data-ar={offer.title} data-en={offer.nameEn}>{offer.title}</h3>
-                  <strong>{offer.price} <small data-ar="جنيه" data-en="EGP">جنيه</small></strong>
-                </div>
-                <p data-ar={offer.description} data-en={offer.descriptionEn}>{offer.description}</p>
-                <OfferAddToCartButton offerId={offer.id} offerName={offer.title} offerNameEn={offer.nameEn} price={offer.price} />
-              </div>
-            </article>
-          ))}
-        </div>
+        <OffersCarousel offers={promotions} />
       </section>
 
       {queryError ? (
