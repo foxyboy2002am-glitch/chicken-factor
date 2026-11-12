@@ -61,12 +61,13 @@ export default function OffersCarousel({ offers }: { offers: readonly Offer[] })
       <div className="cf-offers-toolbar">
         <span>{en ? "SWIPE TO EXPLORE" : "اسحب لاكتشاف العروض"}</span>
       </div>
-      <div className="cf-offers-controls" aria-label={en ? "Offer navigation" : "التنقل بين العروض"}>
-        <button type="button" onClick={() => goTo(active + 1)} aria-label={en ? "Next offer" : "العرض التالي"}>›</button>
-        <button type="button" onClick={() => goTo(active - 1)} aria-label={en ? "Previous offer" : "العرض السابق"}>‹</button>
-      </div>
-      <div className="cf-offers-track" ref={trackRef} dir="ltr" onTouchStart={() => setPaused(true)} onTouchEnd={() => setPaused(false)}>
-        {offers.map((offer, index) => (
+      <div className="cf-offers-viewport">
+        <div className="cf-offers-controls" aria-label={en ? "Offer navigation" : "التنقل بين العروض"}>
+          <button type="button" onClick={() => goTo(active + 1)} aria-label={en ? "Next offer" : "العرض التالي"}>›</button>
+          <button type="button" onClick={() => goTo(active - 1)} aria-label={en ? "Previous offer" : "العرض السابق"}>‹</button>
+        </div>
+        <div className="cf-offers-track" ref={trackRef} dir="ltr" onTouchStart={() => setPaused(true)} onTouchEnd={() => setPaused(false)}>
+          {offers.map((offer, index) => (
           <article className="cf-offer-slide" key={offer.id}>
             <div className="cf-offer-image-wrap">
               <img src={offer.image} alt={en ? offer.nameEn : offer.title} loading={index < 2 ? "eager" : "lazy"} />
@@ -81,7 +82,8 @@ export default function OffersCarousel({ offers }: { offers: readonly Offer[] })
               <OfferAddToCartButton offerId={offer.id} offerName={offer.title} offerNameEn={offer.nameEn} price={offer.price} />
             </div>
           </article>
-        ))}
+          ))}
+        </div>
       </div>
       <div className="cf-offers-pagination" aria-label={en ? "Offer slides" : "صفحات العروض"}>
         {offers.map((offer, index) => <button key={offer.id} type="button" className={active === index ? "is-active" : ""} onClick={() => goTo(index)} aria-label={en ? `Go to offer ${index + 1}` : `انتقل للعرض ${index + 1}`} />)}
