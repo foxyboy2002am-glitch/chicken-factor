@@ -32,6 +32,7 @@ export default function AddToCartButton(props: Props) {
 
       window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
       window.dispatchEvent(new Event("cf-cart-updated"));
+      window.dispatchEvent(new CustomEvent("cf-cart-fly", { detail: { emoji: "🍗" } }));
       setAdded(true);
       window.setTimeout(() => setAdded(false), 1500);
     } catch (error) {
@@ -42,7 +43,7 @@ export default function AddToCartButton(props: Props) {
 
   return (
     <button type="button" className={added ? "cf-add-cart is-added" : "cf-add-cart"} onClick={add} aria-label={`أضف ${props.productName} ${props.variantName} إلى السلة`}>
-      {added ? "اتضاف للسلة ✓" : "＋ أضف للسلة"}
+      {added ? "اتضافت! ✓" : "🛒 أضف للسلة"}
     </button>
   );
 }
