@@ -1,3 +1,4 @@
+import AutoRefresh from "@/components/auto-refresh";
 import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { assignOrderBranch, updateOrderStatus } from "@/app/actions/orders";
 import CallCenterEntry from "./order-entry";
@@ -14,7 +15,7 @@ export default async function CallCenterPage({searchParams}:{searchParams:Promis
   ]);
   const messages:Record<string,string>={validation:"راجع بيانات العميل والأصناف والكميات.",create:"تعذر تسجيل الطلب. تحقق من الفرع والمنتجات ثم حاول مرة أخرى.",assign:"تعذر تحويل الطلب للفرع.",branch:"الفرع غير متاح.", "not-found":"الطلب غير موجود."};
   return <main className="dashboard-content" dir="rtl">
-    <div className="page-heading"><div><p className="eyebrow">CALL CENTER</p><h1>مركز استقبال الطلبات</h1><p className="muted">استقبال طلبات الموقع وتسجيل طلبات الهاتف وتوجيهها للفروع.</p></div><span className="status-pill">{orders?.length??0} طلب حديث</span></div>
+    <div className="page-heading"><div><p className="eyebrow">CALL CENTER</p><h1>مركز استقبال الطلبات</h1><p className="muted">استقبال طلبات الموقع وتسجيل طلبات الهاتف وتوجيهها للفروع.</p></div><div className="live-tools"><AutoRefresh/><span className="status-pill">{orders?.length??0} طلب حديث</span></div></div>
     {params.error?<p className="notice error">{messages[params.error]||"حدث خطأ أثناء تنفيذ العملية."}</p>:null}
     {params.success==="created"?<p className="notice success">تم تسجيل الطلب رقم #{params.order} وإرساله إلى الفرع.</p>:null}
     {params.success==="assigned"?<p className="notice success">تم تحويل الطلب إلى الفرع المحدد.</p>:null}
