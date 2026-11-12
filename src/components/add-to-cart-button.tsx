@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useStoreLanguage } from "@/components/store-language";
 
 type Props = { productId: string; variantId: string; productName: string; variantName: string; price: number; sku?: string | null };
 
 const CART_KEY = "cf-store-cart-v1";
 
 export default function AddToCartButton(props: Props) {
+  const { language } = useStoreLanguage();
+  const en = language === "en";
   const [added, setAdded] = useState(false);
 
   function add() {
@@ -37,13 +40,13 @@ export default function AddToCartButton(props: Props) {
       window.setTimeout(() => setAdded(false), 1500);
     } catch (error) {
       console.error("[Chicken Factor cart] Could not update cart:", error);
-      window.alert("تعذر إضافة المنتج للسلة. تأكد من إعدادات المتصفح وحاول مرة أخرى.");
+      window.alert(en ? "Could not add this item to your cart. Please check your browser settings and try again." : "تعذر إضافة المنتج للسلة. تأكد من إعدادات المتصفح وحاول مرة أخرى.");
     }
   }
 
   return (
-    <button type="button" className={added ? "cf-add-cart is-added" : "cf-add-cart"} onClick={add} aria-label={`أضف ${props.productName} ${props.variantName} إلى السلة`}>
-      {added ? "اتضافت! ✓" : "🛒 أضف للسلة"}
+    <button type="button" className={added ? "cf-add-cart is-added" : "cf-add-cart"} onClick={add} aria-label={en ? `Add ${props.productName} ${props.variantName} to cart` : `أضف ${props.productName} ${props.variantName} إلى السلة`}>
+      {added ? (en ? "Added! ✓" : "اتضافت! ✓") : (en ? "🛒 Add to cart" : "🛒 أضف للسلة")}
     </button>
   );
 }

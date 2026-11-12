@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useStoreLanguage } from "@/components/store-language";
 
-type Props = { offerId: string; offerName: string; price: number };
+type Props = { offerId: string; offerName: string; offerNameEn?: string; price: number };
 
-export default function OfferAddToCartButton({ offerId, offerName, price }: Props) {
+export default function OfferAddToCartButton({ offerId, offerName, offerNameEn, price }: Props) {
   const { language } = useStoreLanguage();
   const en = language === "en";
   const [added, setAdded] = useState(false);
@@ -24,7 +24,7 @@ export default function OfferAddToCartButton({ offerId, offerName, price }: Prop
           offerId,
           productId: "",
           variantId: "",
-          productName: offerName,
+          productName: en ? (offerNameEn || offerName) : offerName,
           variantName: "عرض كامل",
           price,
           sku: `OFFER-${offerId}`,
