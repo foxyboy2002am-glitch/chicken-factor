@@ -87,7 +87,7 @@ export default async function MenuPage() {
       .map((product) => ({
         ...product,
         variants: variantsByProduct.get(product.id) ?? [],
-        imageUrl: product.image_path ? supabase.storage.from("product-images").getPublicUrl(product.image_path).data.publicUrl : null,
+        imageUrl: product.image_path ? (product.image_path.startsWith("http") ? product.image_path : supabase.storage.from("product-images").getPublicUrl(product.image_path).data.publicUrl) : null,
       })),
   })).filter((category) => category.products.length > 0);
 
