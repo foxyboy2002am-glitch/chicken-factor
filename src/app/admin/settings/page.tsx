@@ -1,9 +1,11 @@
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { updatePaymentMethods } from "@/app/actions/payment-settings";
 import { updateStoreContactSettings } from "@/app/actions/store-contact";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {
   const params = await searchParams;
+  await requireBackoffice(["admin","super_admin"]);
   const supabase = await createSupabaseServerClient();
   const [{ data: methods, error }, { data: contact }] = await Promise.all([
     supabase.from("payment_method_settings").select("code,name_ar,description_ar,is_enabled").order("sort_order"),

@@ -1,3 +1,4 @@
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { createOffer, updateOffer, toggleOffer } from "@/app/actions/offers";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -17,6 +18,7 @@ function discountLabel(type: string, value: number) {
 
 export default async function OffersPage({ searchParams }: Props) {
   const params = await searchParams;
+  await requireBackoffice(["admin","super_admin"]);
   const supabase = await createSupabaseServerClient();
   const { data: offers, error } = await supabase.from("offers")
     .select("id, name_ar, name_en, description_ar, description_en, discount_type, discount_value, starts_at, ends_at, is_active, created_at")

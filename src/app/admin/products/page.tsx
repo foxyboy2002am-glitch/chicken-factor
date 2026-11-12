@@ -1,3 +1,4 @@
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { createCategory, createProduct, updateProduct } from "@/app/actions/catalog";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -5,11 +6,13 @@ type Props = { searchParams: Promise<{ error?: string; success?: string }> };
 
 export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
+  await requireBackoffice(["admin","super_admin"]);
   const supabase = await createSupabaseServerClient();
   const [{ data: categories }, { data: products }] = await Promise.all([
     supabase.from("categories").select("id, name_ar, name_en").order("name_ar"),
     supabase.from("products").select("id, name_ar, name_en, sku, image_path, is_active, category_id, product_variants(id, name_ar, name_en, base_price)").order("created_at", { ascending: false }),
   ]);
+  const productRows = (products ?? []).map(p => ({ ...p, image_url: p.image_path ? (p.image_path.startsWith("http") ? p.image_path : supabase.storage.from("product-images").getPublicUrl(p.image_path).data.publicUrl) : null }));
 
   return <main className="dashboard-content">
     <div className="page-heading"><div><p className="eyebrow">MENU MANAGEMENT</p><h1>المنتجات والمنيو</h1><p className="muted">إضافة وتعديل المنتجات والأسعار والصور والتصنيفات.</p></div></div>
@@ -30,8 +33,8 @@ export default async function ProductsPage({ searchParams }: Props) {
     </section>
     <section className="content-card"><h2>المنتجات المسجلة <span className="count">{products?.length ?? 0}</span></h2>
       <div className="table-wrap"><table><thead><tr><th>المنتج</th><th>التصنيف</th><th>السعر</th><th>الحالة</th><th>تعديل</th></tr></thead><tbody>
-      {products?.map(p => { const v = Array.isArray(p.product_variants) ? p.product_variants[0] : null; return <tr key={p.id}>
-        <td>{p.image_path ? <img src={p.image_path} alt={p.name_ar} width="64" height="64" style={{objectFit:"cover",borderRadius:8}} /> : null}<strong>{p.name_ar}</strong><small>{p.name_en}</small></td>
+      {productRows.map(p => { const v = Array.isArray(p.product_variants) ? p.product_variants[0] : null; return <tr key={p.id}>
+        <td>{p.image_url ? <img src={p.image_url} alt={p.name_ar} width="64" height="64" style={{objectFit:"cover",borderRadius:8}} /> : null}<strong>{p.name_ar}</strong><small>{p.name_en}</small></td>
         <td>{categories?.find(c=>c.id===p.category_id)?.name_ar ?? "—"}</td><td>{v ? Number(v.base_price).toFixed(2)+" EGP" : "—"}</td><td>{p.is_active ? "نشط" : "متوقف"}</td>
         <td><details><summary>تعديل المنتج</summary><form action={updateProduct} className="data-form compact" encType="multipart/form-data">
           <input type="hidden" name="product_id" value={p.id}/><input type="hidden" name="variant_id" value={v?.id ?? ""}/>

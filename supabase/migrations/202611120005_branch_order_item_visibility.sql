@@ -1,0 +1,2 @@
+create policy "branch teams read assigned order items" on public.order_items for select to authenticated
+using (exists(select 1 from public.orders o where o.id=order_id and public.can_access_branch(o.branch_id)));

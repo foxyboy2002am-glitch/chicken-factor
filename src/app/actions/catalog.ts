@@ -40,7 +40,7 @@ async function uploadProductImage(supabase: Awaited<ReturnType<typeof createSupa
   const path = `${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage.from("product-images").upload(path, value, { contentType: value.type, upsert: false });
   if (error) throw new Error("فشل رفع صورة المنتج.");
-  return supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+  return path;
 }
 
 export async function createBranch(formData: FormData) {
@@ -72,11 +72,20 @@ export async function createProduct(formData: FormData) {
     description_ar: parsed.data.description_ar || null, description_en: parsed.data.description_en || null,
     sku: parsed.data.sku || null, image_path: imagePath,
   }).select("id").single();
-  if (error || !product) redirect("/admin/products?error=product-save");
+  if (error || !product) {
+    console.error("[catalog] product insert failed", { code: error?.code, message: error?.message });
+    if (imagePath) await supabase.storage.from("product-images").remove([imagePath]);
+    redirect("/admin/products?error=product-save");
+  }
   const { error: variantError } = await supabase.from("product_variants").insert({
     product_id: product.id, name_ar: parsed.data.variant_name_ar, name_en: parsed.data.variant_name_en, base_price: parsed.data.price,
   });
-  if (variantError) { await supabase.from("products").delete().eq("id", product.id); redirect("/admin/products?error=variant-save"); }
+  if (variantError) {
+    console.error("[catalog] initial variant insert failed", { code: variantError.code, message: variantError.message });
+    await supabase.from("products").delete().eq("id", product.id);
+    if (imagePath) await supabase.storage.from("product-images").remove([imagePath]);
+    redirect("/admin/products?error=variant-save");
+  }
   revalidatePath("/admin"); revalidatePath("/admin/products"); revalidatePath("/menu"); redirect("/admin/products?success=product");
 }
 
