@@ -167,7 +167,7 @@ export default async function MenuPage() {
                   <strong>{offer.price} <small data-ar="جنيه" data-en="EGP">جنيه</small></strong>
                 </div>
                 <p data-ar={offer.description} data-en={offer.descriptionEn}>{offer.description}</p>
-                <OfferAddToCartButton offerId={offer.id} offerName={offer.title} price={offer.price} />
+                <OfferAddToCartButton offerId={offer.id} offerName={offer.title} offerNameEn={offer.nameEn} price={offer.price} />
               </div>
             </article>
           ))}
