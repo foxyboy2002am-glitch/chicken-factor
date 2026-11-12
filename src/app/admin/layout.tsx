@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
         {canTrack ? <a href="/admin/tracking">متابعة الفروع</a> : null}
         {canAccounts ? <a href="/admin/accounts">الحسابات</a> : null}
         {canManage ? <><a href="/admin/branches">الفروع</a><a href="/admin/products">المنتجات والمنيو</a><a href="/admin/offers">العروض والخصومات</a><a href="/admin/settings">الإعدادات</a></> : null}
-        <a href="/admin/orders">الطلبات</a><a href="/admin/reports">التقارير</a>
+        <a href="/admin/orders">الطلبات</a><a href="/admin/customers">العملاء والولاء</a><a href="/admin/reports">التقارير</a>
         {canUsers ? <a href="/admin/users">المستخدمون والصلاحيات</a> : null}
       </nav>
       <form action={signOut}><button className="signout" type="submit">تسجيل الخروج</button></form>

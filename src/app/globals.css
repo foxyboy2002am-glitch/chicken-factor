@@ -1691,3 +1691,28 @@ html[lang="en"] .cf-product-content{text-align:left}
   .cf-offers-controls { inset-inline: -8px; }
   .cf-offers-controls button { width: 36px; height: 36px; font-size: 25px; }
 }
+
+
+/* Customer CRM and loyalty reporting */
+.customer-directory .page-heading { align-items:center; }
+.customer-directory .report-card-heading { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:18px; }
+.customer-directory .report-card-heading h2 { margin:0 0 5px; font-size:19px; font-weight:900; }
+.customer-directory .report-card-heading p { margin:0; color:#8b7b73; font-size:11px; line-height:1.7; }
+.customer-directory .report-card-heading > span { color:#a51b22; font-size:12px; font-weight:900; }
+.customer-search { display:flex; gap:9px; margin:18px 0; }
+.customer-search input { flex:1; min-width:0; min-height:44px; padding:10px 13px; border:1px solid #eaded7; border-radius:11px; background:#fffdfa; }
+.customer-search button { min-width:86px; border:0; border-radius:11px; padding:9px 17px; background:#b71922; color:white; font-weight:900; cursor:pointer; }
+.customer-search a { align-self:center; color:#a51b22; font-size:12px; font-weight:800; }
+.customer-points-pill { display:inline-flex; padding:6px 10px; border-radius:20px; background:#fff4d9; color:#94620d; font-size:11px; font-weight:900; white-space:nowrap; }
+.customer-pagination { display:flex; justify-content:space-between; align-items:center; gap:12px; padding-top:15px; color:#88776f; font-size:11px; }
+.customer-pagination > div { display:flex; gap:8px; }
+.customer-pagination a { padding:8px 13px; border:1px solid #eaded7; border-radius:9px; color:#a51b22; font-weight:800; }
+.reports-pro .report-card-heading > a { color:#b71922; font-size:12px; font-weight:900; white-space:nowrap; }
+@media (max-width:650px) {
+ .customer-directory .page-heading { align-items:stretch; flex-direction:column; }
+ .customer-directory .report-card-heading { align-items:flex-start; flex-direction:column; }
+ .customer-search { flex-wrap:wrap; }
+ .customer-search input { flex-basis:100%; }
+ .customer-search button { flex:1; }
+ .customer-pagination { align-items:flex-start; flex-direction:column; }
+}

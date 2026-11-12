@@ -1,7 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import PrintReportButton from "./print-button";
-type Order={id:string;order_number:number;customer_name:string;branch_id:string;status:string;payment_status:string;fulfillment:string;source:string|null;subtotal:number|string;discount_total:number|string;delivery_fee:number|string;total:number|string;created_at:string;branches?:{name_ar:string}|{name_ar:string}[]|null};
+type Order={id:string;order_number:number;customer_name:string;customer_phone:string;customer_profile_id:string|null;branch_id:string;status:string;payment_status:string;fulfillment:string;source:string|null;subtotal:number|string;discount_total:number|string;delivery_fee:number|string;total:number|string;created_at:string;branches?:{name_ar:string}|{name_ar:string}[]|null};
 type Item={product_name_ar:string;variant_name_ar:string|null;quantity:number;line_total:number|string;orders:{created_at:string;status:string;branch_id:string}|{created_at:string;status:string;branch_id:string}[]};
 const money=(n:number)=>new Intl.NumberFormat("ar-EG",{style:"currency",currency:"EGP",maximumFractionDigits:2}).format(n);
 const count=(n:number)=>n.toLocaleString("ar-EG");
@@ -24,7 +24,7 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
   totalMatching=exact||0;if(e)error=e.message;
   if(!e&&totalMatching<=20000){
    for(let offset=0;offset<totalMatching;offset+=1000){
-    const {data,error:loadError}=await base(supabase.from("orders").select("id,order_number,customer_name,branch_id,status,payment_status,fulfillment,source,subtotal,discount_total,delivery_fee,total,created_at,branches(name_ar)").order("created_at",{ascending:false}).range(offset,Math.min(offset+999,totalMatching-1)),from,end);
+    const {data,error:loadError}=await base(supabase.from("orders").select("id,order_number,customer_name,customer_phone,customer_profile_id,branch_id,status,payment_status,fulfillment,source,subtotal,discount_total,delivery_fee,total,created_at,branches(name_ar)").order("created_at",{ascending:false}).range(offset,Math.min(offset+999,totalMatching-1)),from,end);
     if(loadError){error=loadError.message;rows=[];break;}rows.push(...(data as Order[]||[]));
    }
    if(!error){
@@ -42,6 +42,18 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
  }
  const {data:prevRows}=!invalid?await basePrev():{data:[] as any[]};
  async function basePrev(){return supabase.from("orders").select("total,payment_status,status").gte("created_at",prevFrom.toISOString()).lt("created_at",prevEnd.toISOString()).limit(20000)}
+ const [loyaltyLedger,customerCountResult,newCustomerResult,customerBalancesResult,topCustomerResult]=await Promise.all([
+  supabase.from("customer_points_ledger").select("points_delta,entry_type,eligible_amount").gte("created_at",from.toISOString()).lt("created_at",end.toISOString()),
+  supabase.from("customers").select("id",{count:"exact",head:true}),
+  supabase.from("customers").select("id",{count:"exact",head:true}).gte("created_at",from.toISOString()).lt("created_at",end.toISOString()),
+  supabase.from("customers").select("points_balance").range(0,9999),
+  supabase.from("customers").select("id,full_name,phone,points_balance").gt("points_balance",0).order("points_balance",{ascending:false}).limit(10)
+ ]);
+ const earnedPoints=(loyaltyLedger.data||[]).filter(x=>x.points_delta>0).reduce((s,x)=>s+Number(x.points_delta),0);
+ const reversedPoints=Math.abs((loyaltyLedger.data||[]).filter(x=>x.points_delta<0).reduce((s,x)=>s+Number(x.points_delta),0));
+ const loyaltyNet=earnedPoints-reversedPoints;
+ const pointsOutstanding=(customerBalancesResult.data||[]).reduce((s,x)=>s+Number(x.points_balance||0),0);
+ const uniqueCustomers=new Set(rows.map(o=>o.customer_profile_id).filter(Boolean)).size;
  const totalValue=rows.reduce((s,o)=>s+Number(o.total||0),0);
  const collected=rows.filter(o=>o.payment_status==="paid").reduce((s,o)=>s+Number(o.total||0),0);
  const pending=rows.filter(o=>o.payment_status==="pending").reduce((s,o)=>s+Number(o.total||0),0);
@@ -64,7 +76,7 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
  const maxBranch=Math.max(1,...topBranches.map(x=>x.value)),maxProduct=Math.max(1,...topProducts.map(x=>x.qty));
  const pct=(n:number,d:number)=>d?Math.round(n/d*100):0;
  return <main className="dashboard-content reports-pro" dir="rtl">
- <div className="page-heading"><div><p className="eyebrow">BUSINESS INTELLIGENCE</p><h1>مركز التقارير والتحليلات</h1><p className="muted">تحليل المبيعات والتحصيل والأداء التشغيلي والفروع والمنتجات.</p></div><span className="status-pill">{count(totalMatching)} طلب في الفترة</span></div>
+ <div className="page-heading"><div><p className="eyebrow">BUSINESS INTELLIGENCE</p><h1>مركز التقارير والتحليلات</h1><p className="muted">تحليل المبيعات والتحصيل والأداء التشغيلي والفروع والمنتجات والعملاء ونقاط الولاء.</p></div><span className="status-pill">{count(totalMatching)} طلب في الفترة</span></div>
  <section className="content-card"><div className="report-toolbar"><form method="get" className="report-filter-form"><label>من تاريخ<input type="date" name="from" defaultValue={day(from)}/></label><label>إلى تاريخ<input type="date" name="to" defaultValue={day(to)}/></label><button type="submit">تحديث التقرير</button><a href="/admin/reports">آخر 30 يوم</a></form><PrintReportButton/></div>
  <p className="report-period">الفترة: {day(from)} — {day(to)} · مقارنة بالفترة السابقة المماثلة</p>
  {invalid?<p className="notice error">تاريخ البداية يجب أن يكون قبل تاريخ النهاية.</p>:null}{error?<p className="notice error">تعذر تحميل بعض بيانات التقرير. {error.includes("20,000")?error:"راجع صلاحيات القراءة وحاول تقليل الفترة."}</p>:null}</section>
@@ -79,6 +91,10 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
  <article className="metric-card"><p>إجمالي الخصومات</p><strong>{money(discounts)}</strong></article>
  <article className="metric-card"><p>رسوم التوصيل</p><strong>{money(deliveryFees)}</strong></article>
  <article className="metric-card"><p>طلبات مكتملة</p><strong>{count(completed.length)}</strong><small>{pct(completed.length,rows.length)}% من الطلبات</small></article>
+ <article className="metric-card"><p>العملاء النشطون في الفترة</p><strong>{count(uniqueCustomers)}</strong><small>أرقام موبايل فريدة</small></article>
+ <article className="metric-card"><p>نقاط مكتسبة خلال الفترة</p><strong>{count(loyaltyNet)}</strong><small>{count(earnedPoints)} مكتسبة · {count(reversedPoints)} معكوسة</small></article>
+ <article className="metric-card"><p>إجمالي أرصدة النقاط</p><strong>{count(pointsOutstanding)}</strong><small>{count(customerCountResult.count||0)} عميل مسجل</small></article>
+ <article className="metric-card"><p>عملاء جدد</p><strong>{count(newCustomerResult.count||0)}</strong><small>تم تسجيلهم في الفترة</small></article>
  </section>
  <section className="reports-grid">
  <article className="content-card"><div className="report-card-heading"><div><h2>اتجاه المبيعات اليومي</h2><p>قيمة الطلبات والتحصيل يومًا بيوم</p></div><span>DAILY TREND</span></div>
@@ -94,8 +110,16 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
  <article className="content-card"><h2>طرق الاستلام ومصدر الطلب</h2><div className="report-stat-list"><div><span>توصيل</span><strong>{count(fulfillCounts.delivery||0)}</strong></div><div><span>استلام من الفرع</span><strong>{count(fulfillCounts.pickup||0)}</strong></div>{Object.entries(sourceCounts).map(([k,v])=><div key={k}><span>{k}</span><strong>{count(v)}</strong></div>)}</div></article>
  <article className="content-card"><h2>حالات الدفع</h2><div className="report-stat-list">{Object.entries(payCounts).map(([s,n])=><div key={s}><span>{payLabels[s]||s}</span><strong>{count(n)} · {pct(n,rows.length)}%</strong></div>)}</div></article>
  </section>
- <section className="content-card"><h2>تفاصيل الطلبات</h2><div className="table-wrap"><table><thead><tr><th>رقم</th><th>العميل</th><th>الفرع</th><th>المصدر</th><th>النوع</th><th>الحالة</th><th>الدفع</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody>
- {rows.slice(0,300).map(o=>{const b=Array.isArray(o.branches)?o.branches[0]:o.branches;return <tr key={o.id}><td>#{o.order_number}</td><td>{o.customer_name}</td><td>{b?.name_ar||"—"}</td><td>{o.source==="call_center"?"كول سنتر":"الموقع"}</td><td>{o.fulfillment==="delivery"?"توصيل":"استلام"}</td><td>{orderLabels[o.status]||o.status}</td><td>{payLabels[o.payment_status]||o.payment_status}</td><td>{money(Number(o.total))}</td><td>{new Date(o.created_at).toLocaleString("ar-EG")}</td></tr>})}
- {!rows.length?<tr><td colSpan={9} className="empty">لا توجد طلبات في الفترة المحددة.</td></tr>:null}</tbody></table></div><p className="muted">يعرض الجدول أحدث 300 طلب. بيانات الأصناف حتى 50,000 بند ضمن الفترة.</p></section>
+ <section className="content-card">
+  <div className="report-card-heading"><div><h2>برنامج ولاء العملاء</h2><p>كل جنيه صافٍ من قيمة الأصناف في طلب مكتمل ومدفوع = نقطة واحدة. لا تُحتسب رسوم التوصيل أو الطلبات الملغاة/المستردة.</p></div><a href="/admin/customers">قاعدة بيانات العملاء ←</a></div>
+  <div className="report-stat-list"><div><span>نقاط مكتسبة في الفترة</span><strong>{count(earnedPoints)}</strong></div><div><span>نقاط تم عكسها</span><strong>{count(reversedPoints)}</strong></div><div><span>صافي حركة النقاط</span><strong>{count(loyaltyNet)}</strong></div><div><span>إجمالي الرصيد الحالي</span><strong>{count(pointsOutstanding)}</strong></div></div>
+  <div className="table-wrap"><table><thead><tr><th>العميل</th><th>رقم الموبايل</th><th>الرصيد الحالي</th></tr></thead><tbody>
+   {(topCustomerResult.data||[]).map(customer=><tr key={customer.id}><td>{customer.full_name}</td><td dir="ltr">{customer.phone}</td><td><strong>{count(Number(customer.points_balance))} نقطة</strong></td></tr>)}
+   {!topCustomerResult.data?.length?<tr><td colSpan={3} className="empty">لا توجد أرصدة نقاط حتى الآن.</td></tr>:null}
+  </tbody></table></div>
+ </section>
+ <section className="content-card"><h2>تفاصيل الطلبات</h2><div className="table-wrap"><table><thead><tr><th>رقم</th><th>العميل</th><th>رقم الموبايل</th><th>الفرع</th><th>المصدر</th><th>النوع</th><th>الحالة</th><th>الدفع</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody>
+ {rows.slice(0,300).map(o=>{const b=Array.isArray(o.branches)?o.branches[0]:o.branches;return <tr key={o.id}><td>#{o.order_number}</td><td>{o.customer_name}</td><td dir="ltr">{o.customer_phone}</td><td>{b?.name_ar||"—"}</td><td>{o.source==="call_center"?"كول سنتر":"الموقع"}</td><td>{o.fulfillment==="delivery"?"توصيل":"استلام"}</td><td>{orderLabels[o.status]||o.status}</td><td>{payLabels[o.payment_status]||o.payment_status}</td><td>{money(Number(o.total))}</td><td>{new Date(o.created_at).toLocaleString("ar-EG")}</td></tr>})}
+ {!rows.length?<tr><td colSpan={10} className="empty">لا توجد طلبات في الفترة المحددة.</td></tr>:null}</tbody></table></div><p className="muted">يعرض الجدول أحدث 300 طلب. بيانات الأصناف حتى 50,000 بند ضمن الفترة.</p></section>
  </>:null}</main>;
 }

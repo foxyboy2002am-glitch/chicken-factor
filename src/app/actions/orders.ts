@@ -34,7 +34,7 @@ export async function updateOrderStatus(formData: FormData) {
   const { error } = await supabase.from("orders").update(patch).eq("id",parsed.data.order_id);
   if(error) redirect("/admin/orders?error=update");
   await recordHistory(supabase,parsed.data.order_id,current.status,parsed.data.status,user.id,parsed.data.note);
-  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports","/admin"].forEach(path => revalidatePath(path));
+  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports","/admin/customers","/admin"].forEach(path => revalidatePath(path));
   redirect("/admin/orders?success=updated");
 }
 
@@ -61,7 +61,7 @@ export async function setPaymentStatus(formData: FormData) {
     _order_id:parsed.data.order_id,_payment_id:parsed.data.payment_id,_status:parsed.data.status
   });
   if(error) redirect("/admin/accounts?error=payment");
-  ["/admin/accounts","/admin/reports","/admin/orders"].forEach(path => revalidatePath(path));
+  ["/admin/accounts","/admin/reports","/admin/orders","/admin/customers"].forEach(path => revalidatePath(path));
   redirect("/admin/accounts?success=updated");
 }
 
@@ -92,5 +92,6 @@ export async function createCallCenterOrder(formData: FormData) {
   });
   if(error){console.error("[call-center] order creation failed",error.message);redirect("/admin/call-center?error=create");}
   revalidatePath("/admin/call-center");revalidatePath("/admin/orders");revalidatePath("/admin/tracking");revalidatePath("/admin/reports");
+  revalidatePath("/admin/customers");
   redirect("/admin/call-center?success=created&order="+encodeURIComponent(String(data.order_number)));
 }
