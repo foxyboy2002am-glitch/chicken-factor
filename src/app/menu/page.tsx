@@ -214,7 +214,7 @@ export default async function MenuPage() {
             <p>اختار القسم وشوف المنتجات والأسعار.</p>
           </div>
           <MenuBrowser categories={grouped} whatsappNumber={whatsappNumber} />
-        
+        </>
       )}
       <footer className="store-footer">
         <img src="/profile_chicken_factor.webp" alt="" />
