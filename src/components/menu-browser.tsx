@@ -9,7 +9,9 @@ type Product = { id: string; sku?: string | null; name_ar: string; name_en?: str
 type Category = { id: string; slug: string; name_ar: string; name_en?: string | null; products: Product[] };
 
 export default function MenuBrowser({ categories }: { categories: Category[] }) {
-  const { language } = useStoreLanguage();\n  const en = language === "en";\n  const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
+  const { language } = useStoreLanguage();
+  const en = language === "en";
+  const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
   const [query, setQuery] = useState("");
   const active = categories.find((category) => category.id === activeId) ?? categories[0];
   const visibleProducts = useMemo(() => {
