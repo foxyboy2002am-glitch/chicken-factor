@@ -194,6 +194,6 @@ export default async function MenuPage() {
         <small data-ar="الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب." data-en="Prices are in Egyptian pounds. Please confirm offer availability with the branch before ordering.">الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
         <div className="store-copyright" dir="ltr">© 2026 Wonder Tech. All rights reserved.</div>
       </footer>
-    </main>
+    </main></StoreLanguageProvider>
   );
 }
