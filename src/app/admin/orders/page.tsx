@@ -89,7 +89,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   <td>{money(Number(order.total ?? 0))}</td>
                   <td>{new Date(order.created_at).toLocaleString("ar-EG")}</td>
                   <td>
-                    <div className="order-status-actions">
+                    {canChangeStatus ? <div className="order-status-actions">
                     {order.status === "pending_confirmation" ? <form action={updateOrderStatus}><input type="hidden" name="order_id" value={order.id}/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="confirm-button">تأكيد الطلب</button></form> : null}
                     <form action={updateOrderStatus} className="order-status-form">
                       <input type="hidden" name="order_id" value={order.id} />
@@ -97,7 +97,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                         <option value="pending_confirmation">جديد - في انتظار التأكيد</option><option value="confirmed">تم التأكيد</option><option value="preparing">قيد التحضير</option><option value="ready">جاهز</option><option value="out_for_delivery">خرج للتوصيل</option><option value="completed">مكتمل</option><option value="rejected">مرفوض</option><option value="cancelled">ملغي</option><option value="payment_failed">فشل الدفع</option>
                       </select>
                       <button type="submit" className="secondary-button">تحديث</button>
-                    </form></div>
+                    </form></div> : <span className="muted">عرض فقط</span>}
                   </td>
                   <td>
                     <details>
