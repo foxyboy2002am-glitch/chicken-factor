@@ -107,7 +107,7 @@ export default async function MenuPage() {
           <div className="store-hero-content">
             <span className="store-eyebrow">FRESH • CRISPY • DELICIOUS</span>
             <p className="store-farm-slogan" data-ar="فراخنا من إنتاج مزارعنا" data-en="Our chicken comes from our own farms">فراخنا من إنتاج مزارعنا</p>
-            <h1 data-ar="الطعم اللي يلمّنا!" data-en="The taste that brings us together!">الطعم اللي <em>يلمّنا!</em></h1>
+            <h1><span data-ar="الطعم اللي" data-en="The taste that">الطعم اللي</span> <em data-ar="يلمّنا!" data-en="brings us together!">يلمّنا!</em></h1>
             <p className="store-hero-description" data-ar="اختار وجبتك المفضلة من تشيكن فاكتور واستمتع بعروضنا." data-en="Choose your favorite Chicken Factor meal and enjoy our offers.">اختار وجبتك المفضلة من تشيكن فاكتور واستمتع بعروضنا.</p>
             <div className="store-hero-actions">
               <a href="#offers" className="store-primary-link"><span data-ar="اكتشف العروض" data-en="Explore offers">اكتشف العروض</span> <span>←</span></a>
