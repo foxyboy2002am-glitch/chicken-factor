@@ -15,7 +15,7 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
  const from=dateValue(params.from)||fromDefault,to=dateValue(params.to)||toDefault,invalid=from>to;
  const end=new Date(to);end.setUTCDate(end.getUTCDate()+1);
  const days=Math.max(1,Math.round((end.getTime()-from.getTime())/86400000));
- const prevTo=new Date(from),prevFrom=new Date(from);prevFrom.setUTCDate(prevFrom.getUTCDate()-days);
+ const prevEnd=new Date(from),prevFrom=new Date(from);prevFrom.setUTCDate(prevFrom.getUTCDate()-days);
  const supabase=await createSupabaseServerClient();
  let rows:Order[]=[],items:Item[]=[],totalMatching=0,error="";
  if(!invalid){
