@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type MouseEvent as ReactMouseEvent } from "react";
 import { useStoreLanguage } from "@/components/store-language";
 
 type Props = { productId: string; variantId: string; productName: string; variantName: string; price: number; sku?: string | null };
@@ -12,7 +12,7 @@ export default function AddToCartButton(props: Props) {
   const en = language === "en";
   const [added, setAdded] = useState(false);
 
-  function add() {
+  function add(event: ReactMouseEvent<HTMLButtonElement>) {
     try {
       const raw = window.localStorage.getItem(CART_KEY);
       const parsed: unknown = raw ? JSON.parse(raw) : [];
@@ -35,7 +35,8 @@ export default function AddToCartButton(props: Props) {
 
       window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
       window.dispatchEvent(new Event("cf-cart-updated"));
-      window.dispatchEvent(new CustomEvent("cf-cart-fly", { detail: { emoji: "🍗" } }));
+      const rect = event.currentTarget.getBoundingClientRect();
+      window.dispatchEvent(new CustomEvent("cf-cart-fly", { detail: { emoji: "🐔", origin: { left: rect.left, top: rect.top, width: rect.width, height: rect.height } } }));
       setAdded(true);
       window.setTimeout(() => setAdded(false), 1500);
     } catch (error) {

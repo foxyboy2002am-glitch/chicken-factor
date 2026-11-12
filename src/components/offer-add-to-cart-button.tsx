@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type MouseEvent as ReactMouseEvent } from "react";
 import { useStoreLanguage } from "@/components/store-language";
 
 type Props = { offerId: string; offerName: string; offerNameEn?: string; price: number };
@@ -10,7 +10,7 @@ export default function OfferAddToCartButton({ offerId, offerName, offerNameEn, 
   const en = language === "en";
   const [added, setAdded] = useState(false);
 
-  function addOffer() {
+  function addOffer(event: ReactMouseEvent<HTMLButtonElement>) {
     try {
       const key = "cf-store-cart-v1";
       const raw = window.localStorage.getItem(key);
@@ -33,7 +33,8 @@ export default function OfferAddToCartButton({ offerId, offerName, offerNameEn, 
       }
       window.localStorage.setItem(key, JSON.stringify(cart));
       window.dispatchEvent(new Event("cf-cart-updated"));
-      window.dispatchEvent(new CustomEvent("cf-cart-fly", { detail: { emoji: "🍗" } }));
+      const rect = event.currentTarget.getBoundingClientRect();
+      window.dispatchEvent(new CustomEvent("cf-cart-fly", { detail: { emoji: "🐔", origin: { left: rect.left, top: rect.top, width: rect.width, height: rect.height } } }));
       setAdded(true);
       window.setTimeout(() => setAdded(false), 1500);
     } catch (error) {

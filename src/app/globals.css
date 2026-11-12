@@ -1839,3 +1839,86 @@ html[lang="en"] .cf-product-content{text-align:left}
  .cf-active-category:before,.cf-active-category:after,.cf-product-art-icon,.cf-product-spark{animation:none!important}
  .cf-category-tabs button,.cf-add-cart,.offer-card,.database-offer-card{transition:none!important}
 }
+
+
+/* Real chicken flight from the selected product into the floating basket */
+.cf-flight-chicken{
+  position:fixed;z-index:2005;display:grid;place-items:center;
+  width:44px;height:44px;border-radius:14px;pointer-events:none;
+  font-size:34px;line-height:1;filter:drop-shadow(0 7px 8px #5b211b40);
+  will-change:transform,opacity;
+}
+
+/* Mobile storefront refinements: keep navigation, products and basket easy to use */
+@media(max-width:760px){
+  .store-header{
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;min-height:64px;height:auto!important;
+    padding:7px 10px!important;gap:7px!important;
+  }
+  .store-logo{min-width:0;font-size:9px!important;gap:5px!important;letter-spacing:.25px!important}
+  .store-logo img{width:40px!important;height:40px!important;flex:none}
+  .store-header-actions{grid-column:2;grid-row:1;display:flex;align-items:center;gap:6px!important;flex-wrap:nowrap}
+  .store-hotline{white-space:nowrap;font-size:10px!important}
+  .store-hotline span{display:none}
+  .store-hotline strong{font-size:14px!important;margin:0!important}
+  .store-main-nav{
+    grid-column:1/-1;order:initial;width:100%;min-width:0;
+    display:flex;justify-content:space-around;gap:4px!important;
+    margin:0!important;padding:7px 0 1px!important;
+    border-top:1px solid #f1e6df;overflow-x:auto;
+  }
+  .store-main-nav a{flex:0 0 auto;font-size:11px!important;padding:3px 8px!important}
+  .cf-category-tabs{top:104px!important}
+  .cf-floating-cart{
+    right:10px!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .cf-floating-cart-trigger{min-width:124px;padding:7px 9px;gap:7px}
+  .cf-cart-trigger-icon{width:30px;height:30px}
+  .cf-cart-panel{
+    right:10px!important;bottom:calc(66px + env(safe-area-inset-bottom,0px))!important;
+    width:calc(100vw - 20px)!important;max-height:calc(100dvh - 105px)!important;
+  }
+  .cf-menu-browser{padding-inline:10px!important}
+  .cf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .cf-product-card{min-width:0}
+  .cf-product-visual{height:136px!important;min-height:136px!important}
+  .cf-product-content{padding:9px!important}
+  .cf-product-content h4{font-size:13px!important;line-height:1.5}
+  .cf-product-description{font-size:10px!important;line-height:1.6}
+  .cf-variant-row{align-items:center;gap:7px!important;flex-wrap:wrap}
+  .cf-variant-row>div{min-width:0}
+  .cf-add-cart{width:100%!important;min-width:0!important;min-height:36px;padding:7px 6px!important;font-size:10px!important}
+}
+@media(max-width:380px){
+  .store-logo b{font-size:8px}
+  .store-hotline{display:none}
+  .cf-product-visual{height:122px!important;min-height:122px!important}
+  .cf-product-content{padding:8px!important}
+  .cf-product-meta{font-size:7px!important}
+  .cf-variant-row>div>strong{font-size:13px!important}
+  .cf-cart-panel-head h3{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){
+  .cf-flight-chicken{display:none!important}
+}
+
+
+/* Playful food-image motion adapted from the supplied reference page */
+@keyframes cf-food-shake{
+  0%,100%{transform:translate3d(0,0,0) rotate(0)}
+  20%{transform:translate3d(-3px,1px,0) rotate(-2deg)}
+  40%{transform:translate3d(3px,-2px,0) rotate(2deg)}
+  60%{transform:translate3d(-2px,-1px,0) rotate(-1.5deg)}
+  80%{transform:translate3d(2px,1px,0) rotate(1deg)}
+}
+.cf-product-visual:hover>img,.offer-card:hover>img,.store-hero-food:hover{
+  animation:cf-food-shake .48s ease-in-out;
+}
+.cf-product-art-icon{display:inline-block;transition:transform .2s ease}
+.cf-product-card:hover .cf-product-art-icon{transform:translateY(-5px) rotate(9deg) scale(1.08)}
+.cf-add-cart.is-added{animation:cf-cart-bump .45s ease}
+@media(prefers-reduced-motion:reduce){
+  .cf-product-visual:hover>img,.offer-card:hover>img,.store-hero-food:hover,
+  .cf-product-card:hover .cf-product-art-icon,.cf-add-cart.is-added{animation:none!important;transition:none!important}
+}
