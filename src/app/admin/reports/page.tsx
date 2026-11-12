@@ -33,7 +33,6 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
    }
   }else if(!e)error="الفترة تحتوي على أكثر من 20,000 طلب؛ قلل الفترة الزمنية.";
  }
- const prevEnd=new Date(from);
  const {data:prevRows}=!invalid?await basePrev():{data:[] as any[]};
  async function basePrev(){return supabase.from("orders").select("total,payment_status,status").gte("created_at",prevFrom.toISOString()).lt("created_at",prevEnd.toISOString()).limit(20000)}
  const totalValue=rows.reduce((s,o)=>s+Number(o.total||0),0);
