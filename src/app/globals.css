@@ -1652,3 +1652,42 @@ html[lang="en"] .cf-product-content{text-align:left}
 
 .cf-offers-controls { direction: rtl; }
 .cf-branch-selection-note { display: block; margin: -8px 0 8px; color: #94796d; font-size: 10px; line-height: 1.6; }
+
+
+/* Put navigation on the physical sides of the carousel viewport, not above it. */
+.cf-offers-viewport {
+  position: relative;
+  overflow: visible;
+}
+.cf-offers-controls {
+  position: absolute;
+  top: 50%;
+  inset-inline: -20px;
+  z-index: 12;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  direction: rtl;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.cf-offers-controls button {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #f0dcd4;
+  border-radius: 50%;
+  background: #fff;
+  color: #b71922;
+  box-shadow: 0 6px 20px #32130f24;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+@media (max-width: 650px) {
+  .cf-offers-controls { inset-inline: -8px; }
+  .cf-offers-controls button { width: 36px; height: 36px; font-size: 25px; }
+}
