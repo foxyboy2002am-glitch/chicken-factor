@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { getPromotion } from "@/lib/promotions";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 export const runtime = "nodejs";
 
@@ -23,9 +24,17 @@ const schema = z.object({
 }).refine(v => v.fulfillment !== "delivery" || v.address !== null, { message: "عنوان التوصيل مطلوب", path: ["address"] });
 
 export async function POST(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) return NextResponse.json({ error: "خدمة تسجيل الطلبات غير مهيأة على الخادم. يرجى التواصل مع الإدارة." }, { status: 503 });
+  // Cloudflare Worker secrets are runtime bindings; process.env alone may not expose them.
+  const cloudflareEnv = getCloudflareContext().env as {
+    NEXT_PUBLIC_SUPABASE_URL?: string;
+    SUPABASE_SERVICE_ROLE_KEY?: string;
+  };
+  const url = cloudflareEnv.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = cloudflareEnv.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) {
+    console.error("[orders] missing server configuration", { hasUrl: Boolean(url), hasServiceKey: Boolean(serviceKey) });
+    return NextResponse.json({ error: "إعدادات تسجيل الطلبات غير مكتملة على الخادم. يرجى المحاولة لاحقًا." }, { status: 503 });
+  }
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "راجع بيانات الطلب وتأكد من إدخالها بشكل صحيح." }, { status: 400 });
 
@@ -93,7 +102,7 @@ export async function POST(request: NextRequest) {
       const { data: duplicate } = await admin.from("orders").select("id,order_number,total").eq("idempotency_key", input.idempotencyKey).maybeSingle();
       if (duplicate) return NextResponse.json({ orderId: duplicate.id, orderNumber: duplicate.order_number, total: Number(duplicate.total) });
     }
-    console.error("[orders] order insert failed", orderError?.message);
+    console.error("[orders] order insert failed", { code: orderError?.code, message: orderError?.message, details: orderError?.details, hint: orderError?.hint });
     return NextResponse.json({ error: "لم نتمكن من تسجيل الطلب. حاول مرة أخرى بعد قليل." }, { status: 500 });
   }
 
