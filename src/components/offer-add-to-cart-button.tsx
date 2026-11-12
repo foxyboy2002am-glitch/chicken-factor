@@ -30,6 +30,7 @@ export default function OfferAddToCartButton({ offerId, offerName, price }: Prop
       }
       window.localStorage.setItem(key, JSON.stringify(cart));
       window.dispatchEvent(new Event("cf-cart-updated"));
+      window.dispatchEvent(new CustomEvent("cf-cart-fly", { detail: { emoji: "🍗" } }));
       setAdded(true);
       window.setTimeout(() => setAdded(false), 1500);
     } catch (error) {
@@ -39,6 +40,6 @@ export default function OfferAddToCartButton({ offerId, offerName, price }: Prop
   }
 
   return <button type="button" className={added ? "cf-offer-add is-added" : "cf-offer-add"} onClick={addOffer}>
-    {added ? "اتضاف العرض للسلة ✓" : "＋ أضف العرض للسلة"}
+    {added ? "العرض في السلة! ✓" : "🛒 أضف العرض للسلة"}
   </button>;
 }
