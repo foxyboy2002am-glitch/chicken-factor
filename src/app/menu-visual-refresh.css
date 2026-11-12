@@ -1,0 +1,122 @@
+
+
+/* Chicken Factor menu refresh: warm brand reds, cleaner product artwork and motion */
+.store-page{
+  background:
+    radial-gradient(ellipse at 4% 26%,rgba(193,22,32,.075),transparent 31%),
+    radial-gradient(ellipse at 96% 52%,rgba(193,22,32,.065),transparent 28%),
+    linear-gradient(180deg,#fffdfb 0%,#fff8f4 48%,#fffdfb 100%);
+}
+.offers-section,.menu-section-intro,.cf-menu-browser{
+  position:relative;
+}
+.offers-section:before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background:radial-gradient(circle at 8% 20%,rgba(190,20,30,.12) 0 2px,transparent 3px),
+             radial-gradient(circle at 92% 75%,rgba(190,20,30,.10) 0 3px,transparent 4px);
+  background-size:38px 38px,54px 54px;
+}
+.cf-menu-browser{
+  isolation:isolate;
+  border-radius:26px;
+  background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,244,239,.82));
+}
+.cf-active-category{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:18px 14px 22px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(193,22,32,.10),transparent 35%),
+    radial-gradient(ellipse at 0% 100%,rgba(230,72,54,.07),transparent 30%),
+    rgba(255,255,255,.58);
+}
+.cf-active-category:before,.cf-active-category:after{
+  content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;
+}
+.cf-active-category:before{
+  width:190px;height:190px;right:-95px;top:-110px;
+  border:1px solid rgba(190,20,30,.13);
+  box-shadow:0 0 0 18px rgba(190,20,30,.025),0 0 0 38px rgba(190,20,30,.018);
+  animation:cf-orbit 16s linear infinite;
+}
+.cf-active-category:after{
+  content:"🍗";width:auto;height:auto;left:18px;bottom:10px;
+  font-size:26px;opacity:.10;filter:grayscale(.15);
+  animation:cf-float-food 4.5s ease-in-out infinite;
+}
+.cf-product-card{
+  border-color:rgba(183,25,34,.13);
+  box-shadow:0 9px 25px rgba(92,20,18,.07);
+}
+.cf-product-visual{
+  height:218px!important;
+  min-height:218px;
+  background:
+    radial-gradient(circle at 82% 18%,rgba(198,23,34,.17),transparent 30%),
+    linear-gradient(145deg,#fff4ed 0%,#ffe7dc 55%,#f9d4c7 100%);
+}
+.cf-product-visual>img{
+  display:block;width:100%;height:100%;
+  object-fit:contain!important;
+  object-position:center;
+  padding:8px;
+  background:transparent;
+}
+.cf-product-art{
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 85% 15%,rgba(193,22,32,.18),transparent 30%),
+    radial-gradient(circle at 12% 90%,rgba(232,74,54,.13),transparent 35%),
+    linear-gradient(135deg,#fff9f5,#ffe8de 70%,#fbd8cb);
+}
+.cf-product-art:before,.cf-product-art:after{border-color:rgba(190,20,30,.12)}
+.cf-product-art-brand{letter-spacing:2.5px}
+.cf-product-art strong{position:relative;z-index:1;text-shadow:0 1px #fff}
+.cf-product-art-icon{
+  position:relative;z-index:1;
+  display:inline-block;
+  animation:cf-food-bob 2.8s ease-in-out infinite;
+}
+.cf-product-spark{animation:cf-sparkle 2.4s ease-in-out infinite}
+.cf-product-fresh{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:absolute!important;
+  top:12px!important;right:12px!important;bottom:auto!important;left:auto!important;
+  width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;
+  max-width:max-content!important;max-height:none!important;
+  padding:6px 10px!important;margin:0!important;
+  border:1px solid rgba(255,255,255,.65)!important;
+  border-radius:999px!important;
+  background:rgba(91,35,31,.78)!important;
+  color:#fff!important;
+  font:900 8px/1.2 Arial,sans-serif!important;
+  letter-spacing:1px!important;
+  white-space:nowrap!important;
+  writing-mode:horizontal-tb!important;
+  transform:none!important;
+  box-shadow:0 5px 14px rgba(61,17,15,.16)!important;
+  backdrop-filter:blur(8px);
+  z-index:3;
+}
+.cf-category-tabs button{transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.cf-category-tabs button:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(183,25,34,.10)}
+.cf-category-tabs button.is-active{box-shadow:0 8px 20px rgba(183,25,34,.20)}
+.cf-add-cart{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.cf-add-cart:hover{transform:translateY(-2px);box-shadow:0 7px 16px rgba(183,25,34,.22)}
+.store-primary-link,.offer-card,.database-offer-card{transition:transform .25s ease,box-shadow .25s ease}
+.offer-card:hover,.database-offer-card:hover{transform:translateY(-5px);box-shadow:0 16px 32px rgba(100,18,18,.12)}
+@keyframes cf-food-bob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-8px) rotate(5deg)}}
+@keyframes cf-float-food{0%,100%{transform:translateY(0) rotate(-9deg)}50%{transform:translateY(-12px) rotate(9deg)}}
+@keyframes cf-orbit{to{transform:rotate(360deg)}}
+@media(max-width:650px){
+ .cf-active-category{padding:12px 8px 18px;border-radius:17px}
+ .cf-product-visual{height:180px!important;min-height:180px}
+ .cf-product-fresh{top:8px!important;right:8px!important;font-size:7px!important;padding:5px 8px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .cf-active-category:before,.cf-active-category:after,.cf-product-art-icon,.cf-product-spark{animation:none!important}
+ .cf-category-tabs button,.cf-add-cart,.offer-card,.database-offer-card{transition:none!important}
+}
