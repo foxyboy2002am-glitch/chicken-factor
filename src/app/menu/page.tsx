@@ -99,7 +99,7 @@ export default async function MenuPage() {
           <img src="/profile_chicken_factor.webp" alt="Chicken Factor" />
           <b>CHICKEN FACTOR</b>
         </a>
-        <div className="store-header-actions"><LanguageSwitcher /><a className="store-hotline" href="tel:15407"><span data-ar="الخط الساخن" data-en="Hotline">الخط الساخن</span> <strong>15407</strong></a></div>
+        <div className="store-header-actions"><LanguageSwitcher /><CartButton /><a className="store-hotline" href="tel:15407"><span data-ar="الخط الساخن" data-en="Hotline">الخط الساخن</span> <strong>15407</strong></a></div>
       </header>
 
       <section className="store-hero">
