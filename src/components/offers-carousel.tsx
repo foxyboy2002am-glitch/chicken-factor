@@ -37,11 +37,11 @@ export default function OffersCarousel({ offers }: { offers: readonly Offer[] })
     const onScroll = () => {
       const cards = Array.from(track.querySelectorAll<HTMLElement>(".cf-offer-slide"));
       if (!cards.length) return;
-      const center = track.scrollLeft + track.clientWidth * 0.35;
+      const anchor = track.scrollLeft + 12;
       let closest = 0;
       let distance = Number.POSITIVE_INFINITY;
       cards.forEach((card, index) => {
-        const current = Math.abs(card.offsetLeft - track.offsetLeft - center);
+        const current = Math.abs(card.offsetLeft - track.offsetLeft - anchor);
         if (current < distance) { distance = current; closest = index; }
       });
       setActive(closest);
@@ -52,7 +52,7 @@ export default function OffersCarousel({ offers }: { offers: readonly Offer[] })
 
   useEffect(() => {
     if (paused || offers.length < 2) return;
-    const timer = window.setInterval(() => goTo(active + 1), 4800);
+    const timer = window.setInterval(() => goTo(active + 1), 5200);
     return () => window.clearInterval(timer);
   }, [active, goTo, offers.length, paused]);
 
@@ -60,10 +60,10 @@ export default function OffersCarousel({ offers }: { offers: readonly Offer[] })
     <div className="cf-offers-carousel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={() => setPaused(false)}>
       <div className="cf-offers-toolbar">
         <span>{en ? "SWIPE TO EXPLORE" : "اسحب لاكتشاف العروض"}</span>
-        <div className="cf-offers-controls">
-          <button type="button" onClick={() => goTo(active - 1)} aria-label={en ? "Previous offers" : "العرض السابق"}>‹</button>
-          <button type="button" onClick={() => goTo(active + 1)} aria-label={en ? "Next offers" : "العرض التالي"}>›</button>
-        </div>
+      </div>
+      <div className="cf-offers-controls" aria-label={en ? "Offer navigation" : "التنقل بين العروض"}>
+        <button type="button" onClick={() => goTo(active + 1)} aria-label={en ? "Next offer" : "العرض التالي"}>›</button>
+        <button type="button" onClick={() => goTo(active - 1)} aria-label={en ? "Previous offer" : "العرض السابق"}>‹</button>
       </div>
       <div className="cf-offers-track" ref={trackRef} dir="ltr" onTouchStart={() => setPaused(true)} onTouchEnd={() => setPaused(false)}>
         {offers.map((offer, index) => (
