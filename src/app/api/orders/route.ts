@@ -32,6 +32,20 @@ export async function POST(request: NextRequest) {
   };
   const url = runtimeEnv.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = runtimeEnv.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const keyKind = !serviceKey
+    ? "missing"
+    : serviceKey.startsWith("sb_secret_")
+      ? "sb_secret"
+      : serviceKey.startsWith("sb_publishable_")
+        ? "publishable"
+        : serviceKey.startsWith("eyJ")
+          ? "legacy_jwt"
+          : "unknown";
+  console.info("[orders] Supabase credential diagnostics", {
+    runtimeBindingPresent: Boolean(runtimeEnv.SUPABASE_SERVICE_ROLE_KEY),
+    processEnvPresent: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+    keyKind,
+  });
   if (!url || !serviceKey) {
     console.error("[orders] missing server configuration", { hasUrl: Boolean(url), hasServiceKey: Boolean(serviceKey) });
     return NextResponse.json({ error: "إعدادات تسجيل الطلبات غير مكتملة على الخادم. يرجى المحاولة لاحقًا." }, { status: 503 });
