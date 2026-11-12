@@ -1,9 +1,11 @@
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { createBranch } from "@/app/actions/catalog";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 type Props = { searchParams: Promise<{ error?: string; success?: string }> };
 
 export default async function BranchesPage({ searchParams }: Props) {
   const params = await searchParams;
+  await requireBackoffice(["admin","super_admin"]);
   const supabase = await createSupabaseServerClient();
   const { data: branches, error } = await supabase.from("branches")
     .select("id, code, name_ar, name_en, phone, address_ar, is_active, accepts_delivery, accepts_pickup")
