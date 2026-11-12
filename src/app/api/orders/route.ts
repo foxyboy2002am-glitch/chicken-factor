@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { getPromotion } from "@/lib/promotions";
 
 export const runtime = "nodejs";
 
@@ -17,7 +18,7 @@ const schema = z.object({
     landmark: z.string().trim().max(180).optional(),
   }).nullable(),
   notes: z.string().trim().max(500).optional(),
-  items: z.array(z.object({ variantId: z.string().uuid(), quantity: z.number().int().min(1).max(20) })).min(1).max(30),
+  items: z.array(z.object({ variantId: z.string().uuid().optional(), offerId: z.string().regex(/^[a-z0-9-]+$/).optional(), quantity: z.number().int().min(1).max(20) }).refine(item => Boolean(item.variantId) !== Boolean(item.offerId), { message: "يجب تحديد منتج أو عرض واحد فقط" })).min(1).max(30),
   idempotencyKey: z.string().uuid(),
 }).refine(v => v.fulfillment !== "delivery" || v.address !== null, { message: "عنوان التوصيل مطلوب", path: ["address"] });
 
@@ -39,15 +40,30 @@ export async function POST(request: NextRequest) {
   if (input.fulfillment === "delivery" && !branch.accepts_delivery) return NextResponse.json({ error: "الفرع لا يقبل طلبات التوصيل." }, { status: 400 });
   if (input.fulfillment === "pickup" && !branch.accepts_pickup) return NextResponse.json({ error: "الفرع لا يقبل الاستلام من الفرع." }, { status: 400 });
 
-  const variantIds = [...new Set(input.items.map(item => item.variantId))];
-  const { data: variants, error: variantError } = await admin.from("product_variants")
-    .select("id,product_id,name_ar,name_en,sku,base_price,products!inner(id,name_ar,name_en,sku,is_active)")
-    .in("id", variantIds).eq("is_active", true).eq("products.is_active", true);
+  const variantIds = [...new Set(input.items.flatMap(item => item.variantId ? [item.variantId] : []))];
+  const { data: variants, error: variantError } = variantIds.length
+    ? await admin.from("product_variants")
+        .select("id,product_id,name_ar,name_en,sku,base_price,products!inner(id,name_ar,name_en,sku,is_active)")
+        .in("id", variantIds).eq("is_active", true).eq("products.is_active", true)
+    : { data: [], error: null };
   if (variantError || !variants || variants.length !== variantIds.length) return NextResponse.json({ error: "بعض المنتجات لم تعد متاحة. حدّث المنيو وحاول مرة أخرى." }, { status: 400 });
 
   const byId = new Map(variants.map(v => [v.id, v]));
   const lines = input.items.map(item => {
-    const variant = byId.get(item.variantId)!;
+    if (item.offerId) {
+      const offer = getPromotion(item.offerId);
+      if (!offer) return null;
+      return {
+        product_id: null, variant_id: null,
+        product_name_ar: offer.title, product_name_en: offer.nameEn,
+        variant_name_ar: "عرض كامل", variant_name_en: "Complete offer",
+        sku_snapshot: `OFFER-${offer.id}`,
+        quantity: item.quantity, unit_price: offer.price, line_total: Number((offer.price * item.quantity).toFixed(2)),
+        addons_snapshot: [{ type: "promotion", offer_id: offer.id, description: offer.description }],
+      };
+    }
+    const variant = byId.get(item.variantId!);
+    if (!variant) return null;
     const product = Array.isArray(variant.products) ? variant.products[0] : variant.products;
     const price = Number(variant.base_price);
     return {
@@ -59,7 +75,9 @@ export async function POST(request: NextRequest) {
       addons_snapshot: [],
     };
   });
-  const subtotal = Number(lines.reduce((sum, line) => sum + line.line_total, 0).toFixed(2));
+  if (lines.some(line => !line)) return NextResponse.json({ error: "أحد العروض أو المنتجات لم يعد متاحاً. حدّث السلة وحاول مرة أخرى." }, { status: 400 });
+  const validLines = lines.filter((line): line is NonNullable<typeof line> => line !== null);
+  const subtotal = Number(validLines.reduce((sum, line) => sum + line.line_total, 0).toFixed(2));
   // Delivery zones are not configured yet, so do not invent a fee; the branch confirms it with the customer.
   const deliveryFee = 0;
   const { data: order, error: orderError } = await admin.from("orders").insert({
@@ -79,7 +97,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "لم نتمكن من تسجيل الطلب. حاول مرة أخرى بعد قليل." }, { status: 500 });
   }
 
-  const { error: itemsError } = await admin.from("order_items").insert(lines.map(line => ({ ...line, order_id: order.id })));
+  const { error: itemsError } = await admin.from("order_items").insert(validLines.map(line => ({ ...line, order_id: order.id })));
   if (itemsError) {
     await admin.from("orders").delete().eq("id", order.id);
     console.error("[orders] order items insert failed", itemsError.message);
