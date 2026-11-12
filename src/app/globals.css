@@ -931,3 +931,53 @@ html[lang="en"] .cf-product-content{text-align:left}
 .admin-order-toast>div{display:grid;gap:3px}.admin-order-toast strong{font-size:12px;color:#3a2822}.admin-order-toast small{font-size:10px;color:#907c73}
 @keyframes cf-toast-in{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
 @media(max-width:700px){.topbar{height:65px;padding:0 13px}.topbar-title{font-size:12px}.topbar-mark{width:34px;height:34px}.topbar-tools{gap:7px}.admin-live-status{font-size:8px}.admin-sound-toggle{width:34px;justify-content:center;padding:0}.admin-sound-toggle small{display:none}.admin-notification-trigger{width:36px;height:36px}.user-email{max-width:100px;overflow:hidden;text-overflow:ellipsis;font-size:9px}.admin-order-alerts{gap:6px}.admin-order-toast{right:12px;bottom:12px}}
+
+
+/* Operations dashboard */
+.admin-dashboard{max-width:1600px;margin:0 auto}
+.admin-welcome{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:205px;padding:30px 35px;border-radius:23px;background:radial-gradient(circle at 88% 10%,#a32a31 0,transparent 34%),linear-gradient(115deg,#211719,#571b22 68%,#951d27);color:#fff;box-shadow:0 18px 42px #42121920}
+.admin-welcome>div:first-child{max-width:590px}
+.admin-welcome>div>span,.admin-section-heading>div>span,.admin-recent-orders header>div>span,.admin-quick-actions header>div>span{font-size:9px;letter-spacing:2px;color:#e8b87a;font-weight:1000}
+.admin-welcome h1{margin:9px 0 5px;font-size:30px;color:#fff}
+.admin-welcome p{margin:0;color:#e8d8d5;font-size:12px;line-height:1.9}
+.admin-welcome>a{position:relative;z-index:2;display:inline-flex;align-items:center;gap:17px;padding:12px 17px;border:1px solid #ffffff45;border-radius:12px;background:#ffffff16;color:#fff;font-size:12px;font-weight:900;white-space:nowrap;backdrop-filter:blur(10px)}
+.admin-welcome>a b{font-size:18px;color:#ffd36b}
+.admin-welcome-orbit{position:absolute;z-index:-1;left:28%;top:-85px;display:grid;place-items:center;width:310px;height:310px;border:1px solid #ffffff15;border-radius:50%;color:#ffffff12;font-size:90px;font-weight:1000}
+.admin-welcome-orbit:before,.admin-welcome-orbit:after{content:"";position:absolute;inset:25px;border:1px solid #ffffff12;border-radius:50%}
+.admin-welcome-orbit:after{inset:55px}
+.admin-section-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:32px 0 14px}
+.admin-section-heading h2{margin:3px 0 0;font-size:20px}
+.admin-section-heading>div>span{color:#b71922}
+.admin-section-heading>small{font-size:10px;color:#95847d}
+.admin-metrics{margin-top:0}
+.admin-metric{position:relative;overflow:hidden;min-height:145px;border:1px solid #eee4de;border-radius:18px;box-shadow:0 8px 24px #35120b06}
+.admin-metric:after{content:"";position:absolute;inset:auto -15px -45px auto;width:120px;height:120px;border-radius:50%;background:#b7192208}
+.admin-metric-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#fff0ed;color:#b71922;font-size:16px;font-weight:1000}
+.admin-metric.gold .admin-metric-icon{background:#fff6df;color:#b77a13}
+.admin-metric.blue .admin-metric-icon{background:#edf5ff;color:#3473b8}
+.admin-metric.green .admin-metric-icon{background:#eaf8ef;color:#16834c}
+.admin-metric p{margin:10px 0 0;font-size:11px}
+.admin-metric strong{font-size:25px;margin-top:3px}
+.admin-metric>small{display:block;margin-top:3px;color:#9b8d87;font-size:9px}
+.admin-dashboard-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.85fr);gap:18px;margin-top:20px}
+.admin-dashboard-grid .content-card{margin:0;border:1px solid #eee4de;border-radius:18px;box-shadow:0 8px 24px #35120b05}
+.admin-recent-orders>header,.admin-quick-actions>header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.admin-recent-orders header h2,.admin-quick-actions header h2{margin:4px 0 0;font-size:17px}
+.admin-recent-orders header>div>span,.admin-quick-actions header>div>span{color:#b71922}
+.admin-recent-orders header>a{font-size:10px;color:#b71922;font-weight:900}
+.admin-recent-row{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid #f2ece8}
+.admin-recent-row:last-child{border-bottom:0}
+.admin-recent-icon{display:grid;place-items:center;flex:0 0 38px;height:38px;border-radius:12px;background:#fff2e7;font-size:18px}
+.admin-recent-copy{display:grid;gap:3px;flex:1;min-width:0}
+.admin-recent-copy strong{font-size:11px}.admin-recent-copy small{font-size:9px;color:#9b8d87}
+.admin-recent-row>b{font-size:11px;color:#b71922;white-space:nowrap}
+.admin-order-status{padding:5px 8px;border-radius:20px;background:#f6f1ee;color:#76645c;font-size:9px;white-space:nowrap}
+.admin-order-status.status-pending_confirmation,.admin-order-status.status-pending{background:#fff5df;color:#a86b0a}
+.admin-order-status.status-completed{background:#eaf8ef;color:#16834c}
+.admin-quick-actions>a{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f2ece8}
+.admin-quick-actions>a>span{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#fff1eb;color:#a71b23;font-size:16px}
+.admin-quick-actions>a>div{display:grid;flex:1;gap:2px}.admin-quick-actions>a strong{font-size:11px}.admin-quick-actions>a small{font-size:9px;color:#9b8d87}.admin-quick-actions>a>b{color:#b71922}
+.admin-inventory-mini{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding-top:15px;font-size:10px;color:#8e7c75}
+.admin-inventory-mini strong{font-size:13px;color:#302623}.admin-inventory-mini i{grid-column:1/-1;height:1px;background:#f2ece8}
+@media(max-width:900px){.admin-dashboard-grid{grid-template-columns:1fr}.admin-welcome{padding:25px}}
+@media(max-width:600px){.admin-welcome{align-items:flex-start;flex-direction:column;min-height:0;padding:22px}.admin-welcome h1{font-size:24px}.admin-welcome-orbit{left:-65px;top:-60px}.admin-section-heading{align-items:flex-start;flex-direction:column}.admin-recent-row{gap:7px;flex-wrap:wrap}.admin-recent-copy{min-width:calc(100% - 55px)}.admin-recent-row>b{margin-right:auto}.admin-order-status{margin-right:48px}.admin-dashboard-grid{gap:12px}.admin-metric{min-height:130px}}
