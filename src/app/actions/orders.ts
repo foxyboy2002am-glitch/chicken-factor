@@ -34,7 +34,7 @@ export async function updateOrderStatus(formData: FormData) {
   const { error } = await supabase.from("orders").update(patch).eq("id",parsed.data.order_id);
   if(error) redirect("/admin/orders?error=update");
   await recordHistory(supabase,parsed.data.order_id,current.status,parsed.data.status,user.id,parsed.data.note);
-  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports","/admin"].forEach(revalidatePath);
+  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports","/admin"].forEach(path => revalidatePath(path));
   redirect("/admin/orders?success=updated");
 }
 
@@ -49,7 +49,7 @@ export async function assignOrderBranch(formData: FormData) {
   const {error}=await supabase.from("orders").update({branch_id:parsed.data.branch_id}).eq("id",parsed.data.order_id);
   if(error) redirect("/admin/call-center?error=assign");
   await recordHistory(supabase,parsed.data.order_id,current.status,current.status,user.id,"تم تحويل الطلب إلى فرع آخر");
-  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports"].forEach(revalidatePath);
+  ["/admin/orders","/admin/call-center","/admin/tracking","/admin/reports"].forEach(path => revalidatePath(path));
   redirect("/admin/call-center?success=assigned");
 }
 
@@ -61,7 +61,7 @@ export async function setPaymentStatus(formData: FormData) {
     _order_id:parsed.data.order_id,_payment_id:parsed.data.payment_id,_status:parsed.data.status
   });
   if(error) redirect("/admin/accounts?error=payment");
-  ["/admin/accounts","/admin/reports","/admin/orders"].forEach(revalidatePath);
+  ["/admin/accounts","/admin/reports","/admin/orders"].forEach(path => revalidatePath(path));
   redirect("/admin/accounts?success=updated");
 }
 
