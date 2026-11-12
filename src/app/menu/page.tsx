@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import MenuBrowser from "@/components/menu-browser";
 import CartButton from "@/components/cart-button";
 import OfferAddToCartButton from "@/components/offer-add-to-cart-button";
+import { StoreLanguageProvider, LanguageSwitcher } from "@/components/store-language";
 import { promotions } from "@/lib/promotions";
 
 export const revalidate = 60;
@@ -92,25 +93,25 @@ export default async function MenuPage() {
   })).filter((category) => category.products.length > 0);
 
   return (
-    <main className="store-page">
+    <StoreLanguageProvider><main className="store-page">
       <header className="store-header">
         <a className="store-logo" href="/menu" aria-label="Chicken Factor - الصفحة الرئيسية">
           <img src="/profile_chicken_factor.webp" alt="Chicken Factor" />
           <b>CHICKEN FACTOR</b>
         </a>
-        <div className="store-header-actions"><CartButton /><a className="store-hotline" href="tel:15407">الخط الساخن <strong>15407</strong></a></div>
+        <div className="store-header-actions"><LanguageSwitcher /><a className="store-hotline" href="tel:15407"><span data-ar="الخط الساخن" data-en="Hotline">الخط الساخن</span> <strong>15407</strong></a></div>
       </header>
 
       <section className="store-hero">
         <div className="store-hero-inner">
           <div className="store-hero-content">
             <span className="store-eyebrow">FRESH • CRISPY • DELICIOUS</span>
-            <p className="store-farm-slogan">فراخنا من إنتاج مزارعنا</p>
-            <h1>الطعم اللي <em>يلمّنا!</em></h1>
-            <p className="store-hero-description">اختار وجبتك المفضلة من تشيكن فاكتور واستمتع بعروضنا.</p>
+            <p className="store-farm-slogan" data-ar="فراخنا من إنتاج مزارعنا" data-en="Our chicken comes from our own farms">فراخنا من إنتاج مزارعنا</p>
+            <h1 data-ar="الطعم اللي يلمّنا!" data-en="The taste that brings us together!">الطعم اللي <em>يلمّنا!</em></h1>
+            <p className="store-hero-description" data-ar="اختار وجبتك المفضلة من تشيكن فاكتور واستمتع بعروضنا." data-en="Choose your favorite Chicken Factor meal and enjoy our offers.">اختار وجبتك المفضلة من تشيكن فاكتور واستمتع بعروضنا.</p>
             <div className="store-hero-actions">
-              <a href="#offers" className="store-primary-link">اكتشف العروض <span>←</span></a>
-              <a className="store-hero-call" href="tel:15407">اطلب على <strong>15407</strong></a>
+              <a href="#offers" className="store-primary-link"><span data-ar="اكتشف العروض" data-en="Explore offers">اكتشف العروض</span> <span>←</span></a>
+              <a className="store-hero-call" href="tel:15407"><span data-ar="اطلب على" data-en="Call to order">اطلب على</span> <strong>15407</strong></a>
             </div>
           </div>
           <div className="store-hero-visual">
@@ -124,7 +125,7 @@ export default async function MenuPage() {
       {activeOffers.length > 0 ? (
         <section className="offers-section database-offers-section" aria-label="العروض السارية من الإدارة">
           <div className="offers-heading">
-            <div><span>LIVE OFFERS</span><h2>عروض سارية الآن</h2></div>
+            <div><span>LIVE OFFERS</span><h2 data-ar="عروض سارية الآن" data-en="Current offers">عروض سارية الآن</h2></div>
           </div>
           <div className="offers-grid">
             {activeOffers.map((offer) => {
@@ -138,11 +139,11 @@ export default async function MenuPage() {
                 <article className="offer-card database-offer-card" key={offer.id}>
                   <div className="offer-card-content">
                     <div className="offer-title-row">
-                      <h3>{offer.name_ar}</h3>
+                      <h3 data-ar={offer.name_ar} data-en={offer.name_en || offer.name_ar}>{offer.name_ar}</h3>
                       <strong>{discountText}</strong>
                     </div>
                     {offer.description_ar ? <p>{offer.description_ar}</p> : null}
-                    <small>ساري حتى {new Date(offer.ends_at).toLocaleString("ar-EG")}</small>
+                    <small><span data-ar="ساري حتى" data-en="Valid until">ساري حتى</span> {new Date(offer.ends_at).toLocaleString("ar-EG")}</small>
                   </div>
                 </article>
               );
@@ -153,8 +154,8 @@ export default async function MenuPage() {
 
       <section className="offers-section" id="offers">
         <div className="offers-heading">
-          <div><span>HOT DEALS</span><h2>عروض تشيكن فاكتور</h2></div>
-          <a href="tel:15407">اطلب الآن <strong>15407</strong></a>
+          <div><span>HOT DEALS</span><h2 data-ar="عروض تشيكن فاكتور" data-en="Chicken Factor offers">عروض تشيكن فاكتور</h2></div>
+          <a href="tel:15407"><span data-ar="اطلب الآن" data-en="Order now">اطلب الآن</span> <strong>15407</strong></a>
         </div>
         <div className="offers-grid">
           {promotions.map((offer) => (
@@ -162,8 +163,8 @@ export default async function MenuPage() {
               <img src={offer.image} alt={offer.title} loading="lazy" />
               <div className="offer-card-content">
                 <div className="offer-title-row">
-                  <h3>{offer.title}</h3>
-                  <strong>{offer.price} <small>جنيه</small></strong>
+                  <h3 data-ar={offer.title} data-en={offer.nameEn}>{offer.title}</h3>
+                  <strong>{offer.price} <small data-ar="جنيه" data-en="EGP">جنيه</small></strong>
                 </div>
                 <p>{offer.description}</p>
                 <OfferAddToCartButton offerId={offer.id} offerName={offer.title} price={offer.price} />
@@ -174,23 +175,23 @@ export default async function MenuPage() {
       </section>
 
       {queryError ? (
-        <p className="store-error">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel.</p>
+        <p className="store-error" data-ar="العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel." data-en="Offers are available, but the menu is not connected to the database. Check the Supabase settings in Vercel.">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel.</p>
       ) : grouped.length === 0 ? (
-        <p className="store-error">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
+        <p className="store-error" data-ar="المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل." data-en="The menu is being prepared. Please try again shortly.">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
       ) : (
         <>
           <div className="menu-section-intro" id="menu-categories">
             <span>OUR MENU</span>
-            <h2>المنيو الكامل</h2>
-            <p>اختار القسم وشوف المنتجات والأسعار.</p>
+            <h2 data-ar="المنيو الكامل" data-en="Full menu">المنيو الكامل</h2>
+            <p data-ar="اختار القسم وشوف المنتجات والأسعار." data-en="Choose a category to explore meals and prices.">اختار القسم وشوف المنتجات والأسعار.</p>
           </div>
           <MenuBrowser categories={grouped} />
         </>
       )}
       <footer className="store-footer">
         <img src="/profile_chicken_factor.webp" alt="" />
-        <b>CHICKEN FACTOR</b><span>فراخنا من إنتاج مزارعنا</span><span>للطلب والاستفسار</span><a href="tel:15407">15407</a>
-        <small>الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
+        <b>CHICKEN FACTOR</b><span data-ar="فراخنا من إنتاج مزارعنا" data-en="Our chicken comes from our own farms">فراخنا من إنتاج مزارعنا</span><span data-ar="للطلب والاستفسار" data-en="For orders and enquiries">للطلب والاستفسار</span><a href="tel:15407">15407</a>
+        <small data-ar="الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب." data-en="Prices are in Egyptian pounds. Please confirm offer availability with the branch before ordering.">الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
         <div className="store-copyright" dir="ltr">© 2026 Wonder Tech. All rights reserved.</div>
       </footer>
     </main>
