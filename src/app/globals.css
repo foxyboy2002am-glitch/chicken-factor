@@ -1259,3 +1259,172 @@ html[lang="en"] .cf-product-content{text-align:left}
 @media (max-width: 650px) {
   .store-hero-sticker { display: none !important; }
 }
+
+
+/* KFC-inspired storefront offer rail: swipe, snap, arrows and timed rotation. */
+.cf-offers-carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 4px;
+}
+.cf-offers-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 2px 13px;
+}
+.cf-offers-toolbar > span {
+  color: #a78b80;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+.cf-offers-controls { display: flex; gap: 8px; }
+.cf-offers-controls button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #eadbd4;
+  border-radius: 50%;
+  background: #fff;
+  color: #b71922;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .2s;
+}
+.cf-offers-controls button:hover { background: #b71922; color: #fff; transform: translateY(-2px); }
+.cf-offers-track {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 2px 15px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  direction: ltr;
+}
+.cf-offers-track::-webkit-scrollbar { display: none; }
+.cf-offer-slide {
+  flex: 0 0 calc(50% - 9px);
+  min-width: 0;
+  overflow: hidden;
+  scroll-snap-align: start;
+  border: 1px solid #f0dfd8;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 26px #5d1a0e0c;
+  transition: transform .22s, box-shadow .22s;
+}
+.cf-offer-slide:hover { transform: translateY(-3px); box-shadow: 0 15px 32px #5d1a0e16; }
+.cf-offer-image-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.72 / 1;
+  background: #8f1018;
+}
+.cf-offer-image-wrap > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s;
+}
+.cf-offer-slide:hover .cf-offer-image-wrap > img { transform: scale(1.035); }
+.cf-offer-ribbon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border-radius: 30px;
+  background: #fff;
+  color: #b71922;
+  font-size: 9px;
+  font-weight: 900;
+  box-shadow: 0 4px 12px #0002;
+}
+.cf-offer-price {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 7px 12px;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: #ffcf47;
+  color: #821017;
+  font-size: 19px;
+  line-height: 1.15;
+  box-shadow: 0 4px 14px #0003;
+}
+.cf-offer-price small { font-size: 9px; }
+.cf-offer-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 16px 16px;
+}
+.cf-offer-copy { min-width: 0; }
+.cf-offer-copy h3 { margin: 0; color: #211b18; font-size: 18px; font-weight: 900; }
+.cf-offer-copy p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 5px 0 0;
+  color: #84766f;
+  font-size: 11px;
+  line-height: 1.65;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.cf-offer-info .cf-offer-add {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 9px 13px;
+  border-radius: 11px;
+  background: #bd171d;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.cf-offer-info .cf-offer-add:hover { background: #8f1018; }
+.cf-offer-info .cf-offer-add.is-added { background: #187a45; }
+.cf-offers-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 0 0;
+}
+.cf-offers-pagination button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: #dfc9c0;
+  cursor: pointer;
+  transition: width .2s, background .2s;
+}
+.cf-offers-pagination button.is-active { width: 24px; background: #b71922; }
+@media (max-width: 650px) {
+  .offers-section { padding-inline: 15px; }
+  .offers-heading { margin-bottom: 12px; }
+  .cf-offers-toolbar { margin-bottom: 8px; }
+  .cf-offers-track { gap: 12px; padding-bottom: 12px; margin-inline: -2px; }
+  .cf-offer-slide { flex-basis: 86%; border-radius: 18px; }
+  .cf-offer-image-wrap { aspect-ratio: 1.62 / 1; }
+  .cf-offer-info { align-items: stretch; flex-direction: column; gap: 11px; padding: 13px; }
+  .cf-offer-copy h3 { font-size: 18px; }
+  .cf-offer-copy p { font-size: 11px; min-height: 0; }
+  .cf-offer-info .cf-offer-add { width: 100%; min-height: 43px; font-size: 12px; }
+  .cf-offers-controls button { width: 33px; height: 33px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-offers-track { scroll-behavior: auto; }
+  .cf-offer-slide, .cf-offer-image-wrap > img, .cf-offers-controls button { transition: none; }
+}
