@@ -25,12 +25,13 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
   // Cloudflare Worker secrets are runtime bindings; process.env alone may not expose them.
-  const cloudflareEnv = getCloudflareContext().env as {
+  const { env: cloudflareEnv } = await getCloudflareContext({ async: true });
+  const runtimeEnv = cloudflareEnv as {
     NEXT_PUBLIC_SUPABASE_URL?: string;
     SUPABASE_SERVICE_ROLE_KEY?: string;
   };
-  const url = cloudflareEnv.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = cloudflareEnv.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = runtimeEnv.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = runtimeEnv.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
     console.error("[orders] missing server configuration", { hasUrl: Boolean(url), hasServiceKey: Boolean(serviceKey) });
     return NextResponse.json({ error: "إعدادات تسجيل الطلبات غير مكتملة على الخادم. يرجى المحاولة لاحقًا." }, { status: 503 });
