@@ -1,9 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "chicken-factor",
+  "name": "chicken-factor-online-ordering",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-11-04",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
@@ -11,7 +13,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "chicken-factor"
+      "service": "chicken-factor-online-ordering"
     }
   ],
   "observability": {
