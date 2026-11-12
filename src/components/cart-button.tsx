@@ -7,6 +7,7 @@ type Item={productId?:string;variantId?:string;offerId?:string;productName:strin
 const money=(n:number,en=false)=>new Intl.NumberFormat(en?"en-EG":"ar-EG",{style:"currency",currency:"EGP",maximumFractionDigits:0}).format(n);
 function read():Item[]{try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x.filter(i=>i&&typeof i.productName==="string"&&Number(i.quantity)>0):[]}catch{return[]}}
 export default function CartButton(){
+ const {language}=useStoreLanguage(); const en=language==="en";
  const [items,setItems]=useState<Item[]>([]),[open,setOpen]=useState(false),[bump,setBump]=useState(false),[fly,setFly]=useState(false),[mounted,setMounted]=useState(false);
  useEffect(()=>{setMounted(true);const refresh=()=>setItems(read());const animate=()=>{setBump(true);setFly(true);window.setTimeout(()=>setBump(false),550);window.setTimeout(()=>setFly(false),800)};refresh();window.addEventListener("cf-cart-updated",refresh);window.addEventListener("cf-cart-fly",animate);window.addEventListener("storage",refresh);return()=>{window.removeEventListener("cf-cart-updated",refresh);window.removeEventListener("cf-cart-fly",animate);window.removeEventListener("storage",refresh)}},[]);
  const count=items.reduce((s,x)=>s+Number(x.quantity||0),0),total=items.reduce((s,x)=>s+Number(x.price||0)*Number(x.quantity||0),0);
