@@ -75,7 +75,8 @@ export default function CheckoutClient({ branches }: { branches: Branch[] }) {
   if (success) return <main className="cf-checkout-page" dir="rtl"><section className="cf-checkout-card cf-order-success"><div className="cf-success-mark">✓</div><h1>تم استلام طلبك بنجاح</h1><p>رقم الطلب: <strong>#{success.orderNumber}</strong></p><p>الإجمالي: <strong>{money(success.total)} جنيه</strong></p><p>الفرع هيتواصل معاك لتأكيد الطلب ومصاريف التوصيل إن وجدت.</p><a href="/menu" className="cf-submit-order">العودة للمنيو</a></section></main>;
 
   return <main className="cf-checkout-page" dir="rtl">
-    <header className="cf-checkout-header"><a href="/menu">← العودة للمنيو</a><h1>إتمام الطلب</h1></header>
+    <header className="cf-checkout-header"><a href="/menu">← العودة للمنيو</a><span className="cf-checkout-brand">CHICKEN FACTOR <b>•</b> ORDER ONLINE</span></header>
+    <section className="cf-checkout-hero"><span>خطوة واحدة تفصلك عن وجبتك</span><h1>كمّل طلبك، وإحنا نهتم بالباقي!</h1><p>راجع طلبك واختار طريقة الاستلام والفرع المناسب.</p><div className="cf-checkout-hero-stamp">FRESH<br/>CRISPY<br/>DAILY</div></section>
     <div className="cf-checkout-layout">
       <section className="cf-checkout-card">
         <h2>بيانات الطلب</h2>
