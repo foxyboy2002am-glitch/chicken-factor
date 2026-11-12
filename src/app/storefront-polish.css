@@ -156,3 +156,34 @@
 .store-social-links svg{width:16px;height:16px;fill:currentColor;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .store-social-links a[aria-label="Instagram"] svg{fill:none}
 .store-social-links .social-icon-fill{fill:currentColor;stroke:none}
+
+
+/* Main storefront navigation and branch directory */
+.store-header{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important}
+.store-main-nav{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2.5vw,30px);margin-inline:auto}
+.store-main-nav a{color:#3a2b26;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;transition:color .18s ease}
+.store-main-nav a:hover{color:var(--cf-red)}
+.store-page{scroll-behavior:smooth}
+.store-page [id]{scroll-margin-top:92px}
+.store-branches{padding:38px clamp(14px,4vw,48px) 44px;background:#fff5ee}
+.store-branches-heading{text-align:center;margin:0 auto 22px}
+.store-branches-heading>span{color:var(--cf-red);font-size:10px;font-weight:900;letter-spacing:1.5px}
+.store-branches-heading h2{margin:7px 0;font-size:clamp(22px,3vw,30px);color:#30231e}
+.store-branches-heading p{margin:0;color:#806e64;font-size:13px}
+.store-branches-grid{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.store-branch-card{min-height:94px;padding:15px;border:1px solid #f0e1d7;border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:9px;box-shadow:0 4px 14px #32160c08}
+.store-branch-card h3{margin:0;color:#30231e;font-size:15px}
+.store-branch-card a{color:var(--cf-red);font-size:12px;font-weight:800;text-decoration:none}
+.store-branch-card a:hover{text-decoration:underline}
+.store-branch-soon{color:#927e73;background:#f8f0eb;padding:4px 9px;border-radius:20px;font-size:11px}
+@media(max-width:760px){
+ .store-header{height:auto!important;min-height:64px;padding-block:8px!important;gap:6px!important;flex-wrap:wrap!important}
+ .store-main-nav{order:3;width:100%;flex-basis:100%;gap:0;justify-content:space-around;border-top:1px solid #f1e6df;padding-top:7px}
+ .store-main-nav a{font-size:12px;padding:3px 10px}
+ .store-header-actions{margin-inline-start:auto}
+ .store-page [id]{scroll-margin-top:112px}
+ .store-branches{padding:28px 13px 34px}
+ .store-branches-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .store-branch-card{min-height:84px;padding:12px}
+ .store-branch-card h3{font-size:13px}
+}
