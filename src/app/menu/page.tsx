@@ -178,6 +178,18 @@ export default async function MenuPage() {
         <img src="/profile_chicken_factor.webp" alt="" />
         <b>CHICKEN FACTOR</b><span data-ar="فراخنا من إنتاج مزارعنا" data-en="Our chicken comes from our own farms">فراخنا من إنتاج مزارعنا</span><span data-ar="للطلب والاستفسار" data-en="For orders and enquiries">للطلب والاستفسار</span><a href="tel:15407">15407</a>
         <small data-ar="الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب." data-en="Prices are in Egyptian pounds. Please confirm offer availability with the branch before ordering.">الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
+        <nav className="store-social-links" aria-label="تابع تشيكن فاكتور">
+          <span data-ar="تابعنا على" data-en="Follow us">تابعنا على</span>
+          <a href="https://www.facebook.com/Chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.6V13h2.7v8h3.2Z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/chickennfactor/?hl=ar" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.7" r=".9" className="social-icon-fill"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/tag/chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.2 1.8 1.2 3.1 3 3.7v3.1a8 8 0 0 1-3-1v5.7a6.2 6.2 0 1 1-6.2-6.2c.4 0 .8 0 1.2.1v3.2a3.1 3.1 0 1 0 1.9 2.9V3Z"/></svg>
+          </a>
+        </nav>
         <div className="store-copyright" dir="ltr">© 2026 Wonder Tech. All rights reserved.</div>
       </footer>
     </main></StoreLanguageProvider>
