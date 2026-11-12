@@ -1902,3 +1902,23 @@ html[lang="en"] .cf-product-content{text-align:left}
 @media(prefers-reduced-motion:reduce){
   .cf-flight-chicken{display:none!important}
 }
+
+
+/* Playful food-image motion adapted from the supplied reference page */
+@keyframes cf-food-shake{
+  0%,100%{transform:translate3d(0,0,0) rotate(0)}
+  20%{transform:translate3d(-3px,1px,0) rotate(-2deg)}
+  40%{transform:translate3d(3px,-2px,0) rotate(2deg)}
+  60%{transform:translate3d(-2px,-1px,0) rotate(-1.5deg)}
+  80%{transform:translate3d(2px,1px,0) rotate(1deg)}
+}
+.cf-product-visual:hover>img,.offer-card:hover>img,.store-hero-food:hover{
+  animation:cf-food-shake .48s ease-in-out;
+}
+.cf-product-art-icon{display:inline-block;transition:transform .2s ease}
+.cf-product-card:hover .cf-product-art-icon{transform:translateY(-5px) rotate(9deg) scale(1.08)}
+.cf-add-cart.is-added{animation:cf-cart-bump .45s ease}
+@media(prefers-reduced-motion:reduce){
+  .cf-product-visual:hover>img,.offer-card:hover>img,.store-hero-food:hover,
+  .cf-product-card:hover .cf-product-art-icon,.cf-add-cart.is-added{animation:none!important;transition:none!important}
+}
