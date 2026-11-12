@@ -186,19 +186,19 @@ export default async function MenuPage() {
           <p data-ar="تشيكن فاكتور معاك في كل مكان" data-en="Chicken Factor is always close to you">تشيكن فاكتور معاك في كل مكان</p>
         </div>
         <div className="store-branches-grid">
-          <article className="store-branch-card"><h3>الإسماعيلية</h3><a href="https://maps.google.com/?q=30.619795,32.286193&entry=gps&g_st=awb" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
+          <article className="store-branch-card"><h3>الإسماعيلية</h3><span className="store-branch-soon">قريباً</span></article>
           <article className="store-branch-card"><h3>العباسية</h3><span className="store-branch-soon">قريباً</span></article>
           <article className="store-branch-card"><h3>أبو كبير</h3><a href="https://maps.app.goo.gl/kubTMsSUQrSa8pNQA" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>العاشر من رمضان</h3><a href="https://maps.app.goo.gl/tzjKc45c3qbrxGTo7?g_st=awb" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>طنطا</h3><a href="https://maps.app.goo.gl/3wo1B9gJC95jK6bZ7?g_st=awb" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>السنبلاوين</h3><a href="https://maps.app.goo.gl/e3bzMJ2b2341skrE9?g_st=aw" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>الزقازيق</h3><a href="https://maps.app.goo.gl/KpgKMuYe2wP5f9Q87" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>أبو حماد</h3><span className="store-branch-soon">قريباً</span></article>
+          <article className="store-branch-card"><h3>أبو حماد</h3><a href="tel:15407">للعنوان اتصل 15407</a></article>
           <article className="store-branch-card"><h3>منيا القمح</h3><a href="https://maps.app.goo.gl/ySWdsBumYdzCfZoK7" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>بلبيس</h3><a href="https://maps.app.goo.gl/4FpuVtTiRW5mQ9nQ7" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>ديرب نجم</h3><a href="https://maps.app.goo.gl/RPTMf2KZERwvCzTaA" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
           <article className="store-branch-card"><h3>ههيا</h3><a href="https://maps.app.goo.gl/75e6UynKQdzmdq7G7" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>التل الكبير</h3><span className="store-branch-soon">قريباً</span></article>
+          <article className="store-branch-card"><h3>التل الكبير</h3><a href="tel:15407">للعنوان اتصل 15407</a></article>
           <article className="store-branch-card"><h3>القرين</h3><a href="https://maps.app.goo.gl/6BUch4TPtHiSngo6A" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
         </div>
       </section>
