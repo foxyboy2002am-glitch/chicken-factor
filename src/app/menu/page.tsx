@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import AddToCartButton from "@/components/add-to-cart-button";
+import MenuBrowser from "@/components/menu-browser";
 import CartButton from "@/components/cart-button";
 
 export const revalidate = 60;
@@ -116,6 +116,7 @@ export default async function MenuPage() {
       .map((product) => ({
         ...product,
         variants: variantsByProduct.get(product.id) ?? [],
+        imageUrl: product.image_path ? supabase.storage.from("product-images").getPublicUrl(product.image_path).data.publicUrl : null,
       })),
   })).filter((category) => category.products.length > 0);
 
@@ -212,65 +213,8 @@ export default async function MenuPage() {
             <h2>المنيو الكامل</h2>
             <p>اختار القسم وشوف المنتجات والأسعار.</p>
           </div>
-          <nav className="menu-category-nav" aria-label="أقسام المنيو">
-            {grouped.map((category) => <a key={category.id} href={`#${category.id}`}>{category.name_ar}</a>)}
-          </nav>
-          <div className="store-menu">
-            {grouped.map((category) => (
-              <section className="store-category" id={category.id} key={category.id}>
-                <div className="store-category-heading">
-                  <div><span>{category.name_en}</span><h2>{category.name_ar}</h2></div>
-                  <b>{category.products.length} صنف</b>
-                </div>
-                <div className="store-product-grid">
-                  {category.products.map((product: any) => (
-                    <article className="store-product" key={product.id}>
-                      <div className="product-photo-wrap">
-                        {product.image_path ? (
-                          <img
-                            className="product-photo"
-                            src={supabase.storage.from("product-images").getPublicUrl(product.image_path).data.publicUrl}
-                            alt={product.name_ar}
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="product-photo-placeholder">
-                            <span className="product-placeholder-kicker">CHICKEN FACTOR</span>
-                            <span className="product-placeholder-name">{product.name_ar}</span>
-                            <span className="product-photo-badge">FRESH • CRISPY</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="store-product-body">
-                        <div className="store-product-top"><span className="store-product-code">{product.sku}</span><span className="store-product-mark">CF</span></div>
-                        <h3>{product.name_ar}</h3>
-                        <p className="store-product-en">{product.name_en}</p>
-                        {product.description_ar ? <p className="store-product-desc">{product.description_ar}</p> : null}
-                        <div className="store-price-list">
-                          {product.variants.map((variant: any) => {
-                            const price = Number(variant.base_price);
-                            const message = `مرحباً، أريد طلب:\n${product.name_ar} - ${variant.name_ar}\nالسعر: ${price} جنيه`;
-                            const whatsappUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` : null;
-                            return (
-                              <div className="store-price" key={variant.id}>
-                                <span>{variant.name_ar}</span>
-                                <strong>{price.toLocaleString("ar-EG")} <small>جنيه</small></strong>
-                                <AddToCartButton productId={product.id} variantId={variant.id} productName={product.name_ar} variantName={variant.name_ar} price={price} sku={product.sku} />
-                                {whatsappUrl ? <a className="variant-whatsapp-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">اطلب هذا الحجم عبر واتساب</a> : null}
-                              </div>
-                            );
-                          })}
-                          {!product.variants.length ? <span className="store-product-desc">السعر غير متاح حالياً</span> : null}
-                        </div>
-                        {whatsappNumber ? <a className="product-order-link" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`مرحباً، أريد الاستفسار عن ${product.name_ar}`)}`} target="_blank" rel="noopener noreferrer">اطلب عبر واتساب</a> : <a className="product-order-link" href="tel:15407">اطلب الآن <span>15407</span></a>}
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </>
+          <MenuBrowser categories={grouped} whatsappNumber={whatsappNumber} />
+        
       )}
       <footer className="store-footer">
         <img src="/profile_chicken_factor.webp" alt="" />
