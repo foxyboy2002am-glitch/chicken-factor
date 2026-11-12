@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useState} from "react";
 const KEY="cf-store-cart-v1";
 type Item={productId?:string;variantId?:string;offerId?:string;productName:string;variantName?:string;price:number|string;quantity:number;sku?:string};
 const money=(n:number)=>new Intl.NumberFormat("ar-EG",{style:"currency",currency:"EGP",maximumFractionDigits:0}).format(n);
