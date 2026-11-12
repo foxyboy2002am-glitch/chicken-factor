@@ -1,5 +1,6 @@
 import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { signOut } from "@/app/actions/auth";
+import AdminOrderNotifications from "@/components/admin-order-notifications";
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const { user, roles } = await requireBackoffice();
@@ -23,6 +24,6 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
       </nav>
       <form action={signOut}><button className="signout" type="submit">تسجيل الخروج</button></form>
     </aside>
-    <section className="admin-main"><header className="topbar"><span>لوحة التحكم</span><span className="user-email">{user.email}</span></header>{children}</section>
+    <section className="admin-main"><header className="topbar"><div className="topbar-title"><span className="topbar-mark">CF</span><span>لوحة التحكم<small>Chicken Factor Management</small></span></div><div className="topbar-tools"><AdminOrderNotifications /><span className="user-email">{user.email}</span></div></header>{children}</section>
   </div>;
 }
