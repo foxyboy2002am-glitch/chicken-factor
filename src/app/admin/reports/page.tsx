@@ -29,7 +29,7 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
    }
    if(!error){
     const itemQuery=()=>supabase.from("order_items").select("product_name_ar,variant_name_ar,quantity,line_total,orders!inner(created_at,status,branch_id)").gte("orders.created_at",from.toISOString()).lt("orders.created_at",end.toISOString());
-    const {count:itemCount,error:itemCountError}=await itemQuery().select("id",{count:"exact",head:true});
+    const {count:itemCount,error:itemCountError}=await supabase.from("order_items").select("id",{count:"exact",head:true}).gte("orders.created_at",from.toISOString()).lt("orders.created_at",end.toISOString());
     if(itemCountError) error=itemCountError.message;
     else if((itemCount||0)>50000) error="الفترة تحتوي على أكثر من 50,000 بند أصناف؛ قلل الفترة الزمنية.";
     else for(let offset=0;offset<(itemCount||0);offset+=1000){
