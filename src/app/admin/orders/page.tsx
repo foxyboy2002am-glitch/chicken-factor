@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireBackoffice } from "@/lib/auth/require-backoffice";
 import { updateOrderStatus } from "@/app/actions/orders";
 
 const statusLabels: Record<string, string> = {
@@ -26,10 +27,11 @@ const money = (value: number) =>
 
 export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {
   const params = await searchParams;
+  await requireBackoffice(["admin","super_admin","call_center","accountant","operations","branch_manager","branch_staff"]);
   const supabase = await createSupabaseServerClient();
   const { data: orders, error } = await supabase
     .from("orders")
-    .select("id, order_number, customer_name, customer_phone, branch_id, fulfillment, status, payment_method, payment_status, subtotal, discount_total, delivery_fee, total, customer_notes, created_at, order_items(id, product_name_ar, variant_name_ar, quantity, unit_price, line_total)")
+    .select("id, order_number, customer_name, customer_phone, branch_id, fulfillment, status, payment_method, payment_status, subtotal, discount_total, delivery_fee, total, customer_notes, created_at, branches(name_ar), order_items(id, product_name_ar, variant_name_ar, quantity, unit_price, line_total)")
     .order("created_at", { ascending: false })
     .limit(200);
 
@@ -64,7 +66,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                 <th>رقم الطلب</th>
                 <th>العميل</th>
                 <th>رقم الهاتف</th>
-                <th>طريقة الاستلام</th>
+                <th>الفرع</th><th>طريقة الاستلام</th>
                 <th>حالة الطلب</th>
                 <th>حالة الدفع</th>
                 <th>الإجمالي</th>
@@ -78,7 +80,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   <td>#{order.order_number}</td>
                   <td>{order.customer_name || "—"}</td>
                   <td>{order.customer_phone || "—"}</td>
-                  <td>{order.fulfillment === "delivery" ? "توصيل" : order.fulfillment === "pickup" ? "استلام من الفرع" : order.fulfillment || "—"}</td>
+                  <td>{Array.isArray(order.branches) ? order.branches[0]?.name_ar : (order.branches as any)?.name_ar || "—"}</td>\n                  <td>{order.fulfillment === "delivery" ? "توصيل" : order.fulfillment === "pickup" ? "استلام من الفرع" : order.fulfillment || "—"}</td>
                   <td>{statusLabels[String(order.status)] ?? String(order.status)}</td>
                   <td>{paymentLabels[String(order.payment_status)] ?? String(order.payment_status)}</td>
                   <td>{money(Number(order.total ?? 0))}</td>
@@ -108,7 +110,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   </td>
                 </tr>
               ))}
-              {!rows.length && !error ? <tr><td colSpan={10} className="empty">لا توجد طلبات مسجلة حتى الآن.</td></tr> : null}
+              {!rows.length && !error ? <tr><td colSpan={11} className="empty">لا توجد طلبات مسجلة حتى الآن.</td></tr> : null}
             </tbody>
           </table>
         </div>
