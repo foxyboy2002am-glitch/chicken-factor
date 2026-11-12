@@ -166,7 +166,7 @@ export default async function MenuPage() {
                   <h3 data-ar={offer.title} data-en={offer.nameEn}>{offer.title}</h3>
                   <strong>{offer.price} <small data-ar="جنيه" data-en="EGP">جنيه</small></strong>
                 </div>
-                <p>{offer.description}</p>
+                <p data-ar={offer.description} data-en={offer.descriptionEn}>{offer.description}</p>
                 <OfferAddToCartButton offerId={offer.id} offerName={offer.title} price={offer.price} />
               </div>
             </article>
