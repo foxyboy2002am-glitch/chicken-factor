@@ -1,6 +1,8 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import MenuBrowser from "@/components/menu-browser";
 import CartButton from "@/components/cart-button";
+import OfferAddToCartButton from "@/components/offer-add-to-cart-button";
+import { promotions } from "@/lib/promotions";
 
 export const revalidate = 60;
 
@@ -19,37 +21,6 @@ const categoryImages: Record<string, string> = {
   "selected-pieces": "/offers/friends-625.webp",
   "wing-swaps": "/offers/friends-625.webp",
 };
-
-const promotions = [
-  {
-    id: "friends-625",
-    title: "عرض الصحاب",
-    price: 625,
-    image: "/offers/friends-625.webp",
-    description: "11 قطعة دجاج + 6 خبز + كولسلو + ثومية + بطاطس",
-  },
-  {
-    id: "rizo-150",
-    title: "عرض الريزو",
-    price: 150,
-    image: "/offers/rizo-150.webp",
-    description: "2 طبق ريزو",
-  },
-  {
-    id: "control-199",
-    title: "عرض السيطرة",
-    price: 199,
-    image: "/offers/control-199.webp",
-    description: "1 تشيكن كلاسيك سنجل + 1 توستر رول سنجل",
-  },
-  {
-    id: "mix-6-525",
-    title: "عرض ميكس 6",
-    price: 525,
-    image: "/offers/mix-6-525.webp",
-    description: "6 قطع دجاج + 6 قطع استربس + كولسلو + ثومية + بطاطس + 6 خبز",
-  },
-];
 
 export default async function MenuPage() {
   let categories: any[] = [];
@@ -195,7 +166,7 @@ export default async function MenuPage() {
                   <strong>{offer.price} <small>جنيه</small></strong>
                 </div>
                 <p>{offer.description}</p>
-                <a href="tel:15407">اطلب العرض <span>15407</span></a>
+                <OfferAddToCartButton offerId={offer.id} offerName={offer.title} price={offer.price} />
               </div>
             </article>
           ))}
