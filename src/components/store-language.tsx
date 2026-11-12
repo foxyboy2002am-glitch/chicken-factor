@@ -40,11 +40,17 @@ export function useStoreLanguage() {
 
 export function LanguageSwitcher() {
   const { language, setLanguage } = useStoreLanguage();
+  const next = language === "ar" ? "en" : "ar";
   return (
-    <div className="store-language-switch" role="group" aria-label="Choose language">
-      <button type="button" className={language === "ar" ? "is-active" : ""} aria-pressed={language === "ar"} onClick={() => setLanguage("ar")}>عربي</button>
-      <span aria-hidden="true" />
-      <button type="button" className={language === "en" ? "is-active" : ""} aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
-    </div>
+    <button
+      type="button"
+      className="store-language-switch"
+      aria-label={language === "ar" ? "Switch language to English" : "تغيير اللغة إلى العربية"}
+      aria-pressed={language === "en"}
+      onClick={() => setLanguage(next)}
+      title={language === "ar" ? "English" : "العربية"}
+    >
+      {language === "ar" ? "AR" : "EN"}
+    </button>
   );
 }
