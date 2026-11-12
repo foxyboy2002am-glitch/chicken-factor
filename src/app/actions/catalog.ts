@@ -40,7 +40,7 @@ async function uploadProductImage(supabase: Awaited<ReturnType<typeof createSupa
   const path = `${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage.from("product-images").upload(path, value, { contentType: value.type, upsert: false });
   if (error) throw new Error("فشل رفع صورة المنتج.");
-  return supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+  return path;
 }
 
 export async function createBranch(formData: FormData) {
