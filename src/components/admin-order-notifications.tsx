@@ -129,7 +129,7 @@ export default function AdminOrderNotifications() {
       <button type="button" className={`admin-sound-toggle ${soundEnabled ? "enabled" : ""}`} onClick={toggleSound} aria-pressed={soundEnabled} title={soundEnabled ? "إيقاف صوت التنبيه" : "تفعيل صوت التنبيه"}>
         <span aria-hidden="true">{soundEnabled ? "♫" : "♪"}</span><small>{soundEnabled ? "الصوت يعمل" : "تفعيل الصوت"}</small>
       </button>
-      <button type="button" className="admin-notification-trigger" onClick={() => setOpen((value) => !value)} aria-label={`الإشعارات، ${unread} طلب جديد`} aria-expanded={open} onClick={() => { setOpen((value) => !value); setUnread(0); }}>
+      <button type="button" className="admin-notification-trigger" aria-label={`الإشعارات، ${unread} طلب جديد`} aria-expanded={open} onClick={() => { setOpen((value) => !value); setUnread(0); }}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></svg>
         {unread > 0 ? <b>{unread > 99 ? "99+" : unread}</b> : null}
       </button>
