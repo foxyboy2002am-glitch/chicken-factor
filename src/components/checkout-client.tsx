@@ -3,7 +3,8 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Branch = { id: string; name_ar: string; accepts_delivery: boolean; accepts_pickup: boolean };
-type CartItem = { productId: string; variantId: string; productName: string; variantName: string; price: number; quantity: number };
+type CartItem = { productId?: string; variantId?: string; offerId?: string; productName: string; variantName: string; price: number; quantity: number };
+const cartLineKey = (item: CartItem) => item.offerId ? `offer:${item.offerId}` : `variant:${item.variantId || item.productId || item.productName}`;
 const CART_KEY = "cf-store-cart-v1";
 const money = (n: number) => new Intl.NumberFormat("ar-EG", { maximumFractionDigits: 2 }).format(n);
 
@@ -28,8 +29,8 @@ export default function CheckoutClient({ branches }: { branches: Branch[] }) {
     if (!eligibleBranches.some(b => b.id === branchId)) setBranchId(eligibleBranches[0]?.id || "");
   }, [fulfillment, branches, branchId]);
 
-  function updateQuantity(variantId: string, quantity: number) {
-    const next = cart.map(item => item.variantId === variantId ? { ...item, quantity } : item).filter(item => item.quantity > 0);
+  function updateQuantity(lineKey: string, quantity: number) {
+    const next = cart.map(item => cartLineKey(item) === lineKey ? { ...item, quantity } : item).filter(item => item.quantity > 0);
     setCart(next);
     localStorage.setItem(CART_KEY, JSON.stringify(next));
     window.dispatchEvent(new Event("cf-cart-updated"));
@@ -54,7 +55,7 @@ export default function CheckoutClient({ branches }: { branches: Branch[] }) {
         landmark: String(form.get("landmark") || ""),
       } : null,
       notes: String(form.get("notes") || ""),
-      items: cart.map(item => ({ variantId: item.variantId, quantity: item.quantity })),
+      items: cart.map(item => item.offerId ? ({ offerId: item.offerId, quantity: item.quantity }) : ({ variantId: item.variantId, quantity: item.quantity })),
       idempotencyKey: crypto.randomUUID(),
     };
     setBusy(true);
@@ -78,9 +79,9 @@ export default function CheckoutClient({ branches }: { branches: Branch[] }) {
     <div className="cf-checkout-layout">
       <section className="cf-checkout-card">
         <h2>بيانات الطلب</h2>
-        {!cart.length ? <p className="cf-empty-cart">السلة فارغة. <a href="/menu">اختار منتجات من المنيو</a>.</p> : cart.map(item => <div className="cf-cart-line" key={item.variantId}>
-          <div><strong>{item.productName}</strong><small>{item.variantName} · {money(item.price)} جنيه</small></div>
-          <div className="cf-quantity"><button type="button" onClick={() => updateQuantity(item.variantId, item.quantity - 1)} aria-label="تقليل الكمية">−</button><b>{item.quantity}</b><button type="button" onClick={() => updateQuantity(item.variantId, Math.min(20, item.quantity + 1))} aria-label="زيادة الكمية">+</button></div>
+        {!cart.length ? <p className="cf-empty-cart">السلة فارغة. <a href="/menu">اختار منتجات من المنيو</a>.</p> : cart.map(item => <div className="cf-cart-line" key={cartLineKey(item)}>
+          <div><strong>{item.productName}</strong><small>{item.offerId ? "عرض كامل" : item.variantName} · {money(item.price)} جنيه</small></div>
+          <div className="cf-quantity"><button type="button" onClick={() => updateQuantity(cartLineKey(item), item.quantity - 1)} aria-label="تقليل الكمية">−</button><b>{item.quantity}</b><button type="button" onClick={() => updateQuantity(cartLineKey(item), Math.min(20, item.quantity + 1))} aria-label="زيادة الكمية">+</button></div>
           <strong>{money(item.price * item.quantity)} ج</strong>
         </div>)}
         <div className="cf-total-line"><span>الإجمالي المبدئي</span><strong>{money(total)} جنيه</strong></div>
