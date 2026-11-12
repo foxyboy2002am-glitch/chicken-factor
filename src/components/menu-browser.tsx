@@ -8,6 +8,25 @@ type Variant = { id: string; name_ar: string; name_en?: string | null; base_pric
 type Product = { id: string; sku?: string | null; name_ar: string; name_en?: string | null; description_ar?: string | null; imageUrl?: string | null; variants: Variant[] };
 type Category = { id: string; slug: string; name_ar: string; name_en?: string | null; products: Product[] };
 
+const categoryNamesEn: Record<string, string> = {
+  "individual-meals": "Individual Meals",
+  "family-meals": "Family Meals",
+  "rice-meals": "Rice Meals",
+  "drumstick-meals": "Drumstick Meals",
+  "strips-family": "Family Strips",
+  sandwiches: "Sandwiches",
+  "chicken-burgers": "Chicken Burger Sandwiches",
+  "beef-burgers": "Beef Burger Sandwiches",
+  extras: "Extras",
+  sauces: "Sauces",
+  drinks: "Drinks",
+  "selected-pieces": "Selected Pieces",
+  "wing-swaps": "Wing Swaps",
+};
+
+const categoryName = (category: Category, en: boolean) =>
+  en ? (category.name_en || categoryNamesEn[category.slug] || category.name_ar) : category.name_ar;
+
 export default function MenuBrowser({ categories }: { categories: Category[] }) {
   const { language } = useStoreLanguage();
   const en = language === "en";
@@ -33,12 +52,12 @@ export default function MenuBrowser({ categories }: { categories: Category[] }) 
       <nav className="cf-category-tabs" aria-label={en ? "Menu categories" : "أقسام المنيو"}>
         {categories.map((category, index) => (
           <button type="button" key={category.id} className={category.id === activeId ? "is-active" : ""} onClick={() => { setActiveId(category.id); setQuery(""); }}>
-            <span className="cf-tab-number">{String(index + 1).padStart(2, "0")}</span>{en ? (category.name_en || category.name_ar) : category.name_ar}<small>{category.products.length}</small>
+            <span className="cf-tab-number">{String(index + 1).padStart(2, "0")}</span>{categoryName(category, en)}<small>{category.products.length}</small>
           </button>
         ))}
       </nav>
       <div className="cf-active-category" key={active.id}>
-        <div className="cf-active-heading"><div><span>{active.name_en || "CHICKEN FACTOR MENU"}</span><h3>{en ? (active.name_en || active.name_ar) : active.name_ar}</h3></div><b>{visibleProducts.length} {en ? "items" : "صنف"}</b></div>
+        <div className="cf-active-heading"><div><span>{active.name_en || "CHICKEN FACTOR MENU"}</span><h3>{categoryName(active, en)}</h3></div><b>{visibleProducts.length} {en ? "items" : "صنف"}</b></div>
         {visibleProducts.length ? <div className="cf-product-grid">
           {visibleProducts.map((product, index) => (
             <article className="cf-product-card" key={product.id} style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}>
