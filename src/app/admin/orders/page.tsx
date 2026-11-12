@@ -80,19 +80,22 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   <td>#{order.order_number}</td>
                   <td>{order.customer_name || "—"}</td>
                   <td>{order.customer_phone || "—"}</td>
-                  <td>{Array.isArray(order.branches) ? order.branches[0]?.name_ar : (order.branches as any)?.name_ar || "—"}</td>\n                  <td>{order.fulfillment === "delivery" ? "توصيل" : order.fulfillment === "pickup" ? "استلام من الفرع" : order.fulfillment || "—"}</td>
+                  <td>{Array.isArray(order.branches) ? order.branches[0]?.name_ar : (order.branches as any)?.name_ar || "—"}</td>
+                  <td>{order.fulfillment === "delivery" ? "توصيل" : order.fulfillment === "pickup" ? "استلام من الفرع" : order.fulfillment || "—"}</td>
                   <td>{statusLabels[String(order.status)] ?? String(order.status)}</td>
                   <td>{paymentLabels[String(order.payment_status)] ?? String(order.payment_status)}</td>
                   <td>{money(Number(order.total ?? 0))}</td>
                   <td>{new Date(order.created_at).toLocaleString("ar-EG")}</td>
                   <td>
+                    <div className="order-status-actions">
+                    {order.status === "pending_confirmation" ? <form action={updateOrderStatus}><input type="hidden" name="order_id" value={order.id}/><input type="hidden" name="status" value="confirmed"/><button type="submit" className="confirm-button">تأكيد الطلب</button></form> : null}
                     <form action={updateOrderStatus} className="order-status-form">
                       <input type="hidden" name="order_id" value={order.id} />
                       <select name="status" defaultValue={String(order.status)} aria-label="حالة الطلب">
                         <option value="pending_confirmation">جديد - في انتظار التأكيد</option><option value="confirmed">تم التأكيد</option><option value="preparing">قيد التحضير</option><option value="ready">جاهز</option><option value="out_for_delivery">خرج للتوصيل</option><option value="completed">مكتمل</option><option value="rejected">مرفوض</option><option value="cancelled">ملغي</option><option value="payment_failed">فشل الدفع</option>
                       </select>
                       <button type="submit" className="secondary-button">تحديث</button>
-                    </form>
+                    </form></div>
                   </td>
                   <td>
                     <details>
