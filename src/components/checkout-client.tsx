@@ -159,6 +159,7 @@ export default function CheckoutClient({ branches }: { branches: Branch[] }) {
         <label>رقم الموبايل<input name="customerPhone" required type="tel" inputMode="tel" minLength={10} maxLength={20} autoComplete="tel" placeholder="01xxxxxxxxx" /></label>
         <label>طريقة الاستلام<select value={fulfillment} onChange={e => setFulfillment(e.target.value as "delivery" | "pickup")}><option value="delivery">توصيل للعنوان</option><option value="pickup">استلام من الفرع</option></select></label>
         <label>الفرع<select value={branchId} onChange={e => setBranchId(e.target.value)} required><option value="">اختار الفرع</option>{eligibleBranches.map(b => <option key={b.id} value={b.id}>{b.name_ar}</option>)}</select></label>
+        {fulfillment === "delivery" ? <small className="cf-branch-selection-note">اختيار الفرع يدوي حاليًا؛ هنفعّل اختيار الأقرب تلقائيًا بعد تسجيل مواقع الفروع على الخريطة.</small> : null}
         {fulfillment === "delivery" ? <div className="cf-address-fields">
           <div className="cf-location-heading"><div><strong>عنوان التوصيل</strong><small>حدد موقعك لتسهيل وصول الطلب</small></div><button type="button" onClick={detectLocation} disabled={locating}>{locating ? "جارٍ التحديد…" : "⌖ حدد موقعي تلقائيًا"}</button></div>
           {locationStatus ? <p className="cf-location-status" role="status">{locationStatus}</p> : null}
