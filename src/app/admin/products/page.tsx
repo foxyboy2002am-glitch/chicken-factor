@@ -12,7 +12,7 @@ export default async function ProductsPage({ searchParams }: Props) {
     supabase.from("categories").select("id, name_ar, name_en").order("name_ar"),
     supabase.from("products").select("id, name_ar, name_en, sku, image_path, is_active, category_id, product_variants(id, name_ar, name_en, base_price)").order("created_at", { ascending: false }),
   ]);
-  const productRows = (products ?? []).map(p => ({ ...p, image_url: p.image_path ? supabase.storage.from("product-images").getPublicUrl(p.image_path).data.publicUrl : null }));
+  const productRows = (products ?? []).map(p => ({ ...p, image_url: p.image_path ? (p.image_path.startsWith("http") ? p.image_path : supabase.storage.from("product-images").getPublicUrl(p.image_path).data.publicUrl) : null }));
 
   return <main className="dashboard-content">
     <div className="page-heading"><div><p className="eyebrow">MENU MANAGEMENT</p><h1>المنتجات والمنيو</h1><p className="muted">إضافة وتعديل المنتجات والأسعار والصور والتصنيفات.</p></div></div>
