@@ -177,6 +177,14 @@ export default async function MenuPage() {
       <footer className="store-footer">
         <img src="/profile_chicken_factor.webp" alt="" />
         <b>CHICKEN FACTOR</b><span data-ar="فراخنا من إنتاج مزارعنا" data-en="Our chicken comes from our own farms">فراخنا من إنتاج مزارعنا</span><span data-ar="للطلب والاستفسار" data-en="For orders and enquiries">للطلب والاستفسار</span><a href="tel:15407">15407</a>
+        <div className="store-socials" aria-label="تابع تشيكن فاكتور">
+          <span className="store-socials-title" data-ar="تابعنا على السوشيال ميديا" data-en="Follow us on social media">تابعنا على السوشيال ميديا</span>
+          <div className="store-social-links">
+            <a href="https://www.facebook.com/Chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><span aria-hidden="true">f</span> Facebook</a>
+            <a href="https://www.instagram.com/chickennfactor/?hl=ar" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span aria-hidden="true">◎</span> Instagram</a>
+            <a href="https://www.tiktok.com/tag/chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><span aria-hidden="true">♪</span> TikTok</a>
+          </div>
+        </div>
         <small data-ar="الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب." data-en="Prices are in Egyptian pounds. Please confirm offer availability with the branch before ordering.">الأسعار بالجنيه المصري. يرجى التأكد من توافر العرض في الفرع قبل الطلب.</small>
         <div className="store-copyright" dir="ltr">© 2026 Wonder Tech. All rights reserved.</div>
       </footer>
