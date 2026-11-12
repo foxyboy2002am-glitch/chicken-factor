@@ -184,7 +184,7 @@ export default async function MenuPage() {
             <h2>المنيو الكامل</h2>
             <p>اختار القسم وشوف المنتجات والأسعار.</p>
           </div>
-          <MenuBrowser categories={grouped} whatsappNumber={whatsappNumber} />
+          <MenuBrowser categories={grouped} />
         </>
       )}
       <footer className="store-footer">
