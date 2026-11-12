@@ -688,7 +688,8 @@
 @media print{
  @page{size:A4 landscape;margin:12mm}
  body{background:#fff!important;color:#111}
- .sidebar,.topbar,.report-toolbar,.signout,.print-button{display:none!important}
+ .sidebar,.topbar,.signout,.print-button{display:none!important}
+ .report-toolbar{display:flex!important}.report-filter-form button,.report-filter-form a{display:none!important}.report-filter-form input{border:0!important;padding:0!important}
  .admin-shell{display:block!important}.admin-main{width:100%!important}
  .dashboard-content{padding:0!important}
  .content-card,.metric-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ddd!important}
