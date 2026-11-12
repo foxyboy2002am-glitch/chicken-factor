@@ -28,8 +28,15 @@ export default async function ReportsPage({searchParams}:{searchParams:Promise<{
     if(loadError){error=loadError.message;rows=[];break;}rows.push(...(data as Order[]||[]));
    }
    if(!error){
-    const {data,error:itemError}=await supabase.from("order_items").select("product_name_ar,variant_name_ar,quantity,line_total,orders!inner(created_at,status,branch_id)").gte("orders.created_at",from.toISOString()).lt("orders.created_at",end.toISOString()).limit(50000);
-    if(itemError) error=itemError.message; else items=(data as Item[])||[];
+    const itemQuery=()=>supabase.from("order_items").select("product_name_ar,variant_name_ar,quantity,line_total,orders!inner(created_at,status,branch_id)").gte("orders.created_at",from.toISOString()).lt("orders.created_at",end.toISOString());
+    const {count:itemCount,error:itemCountError}=await itemQuery().select("id",{count:"exact",head:true});
+    if(itemCountError) error=itemCountError.message;
+    else if((itemCount||0)>50000) error="الفترة تحتوي على أكثر من 50,000 بند أصناف؛ قلل الفترة الزمنية.";
+    else for(let offset=0;offset<(itemCount||0);offset+=1000){
+      const {data,error:itemError}=await itemQuery().range(offset,Math.min(offset+999,(itemCount||0)-1));
+      if(itemError){error=itemError.message;items=[];break;}
+      items.push(...((data as Item[])||[]));
+    }
    }
   }else if(!e)error="الفترة تحتوي على أكثر من 20,000 طلب؛ قلل الفترة الزمنية.";
  }
