@@ -1,20 +1,7 @@
 import { StoreLanguageProvider, LanguageSwitcher } from "@/components/store-language";
 import CartButton from "@/components/cart-button";
+import BranchFinder from "@/components/branch-finder";
 
-const branches = [
-  { name: "فرع الزقازيق 1", address: "شارع الجلاء - أمام عمر أفندي وسط البلد قبل عالم ماركت" },
-  { name: "فرع الزقازيق 2", address: "شارع صلاح سالم - داخل كوزاكي" },
-  { name: "فرع أبو حماد", address: "أمام كوبري الساحة" },
-  { name: "فرع بلبيس", address: "محلات الساحة الشعبية بجوار مستشفى الغندور" },
-  { name: "فرع ديرب نجم", address: "شارع النصر - أمام موقف الزقازيق - بجوار مجمع نصر عابدين" },
-  { name: "فرع منيا القمح", address: "برج الفتح - شارع وجيه أباظة - أمام قاعة البطل" },
-  { name: "فرع ههيا", address: "طريق أبو كبير بجوار المستشفى العام" },
-  { name: "فرع القرين", address: "ميدان الشيخ حمادة" },
-  { name: "فرع التل الكبير", address: "شارع حماده - عمارة الأوقاف" },
-  { name: "فرع السنبلاوين", address: "شارع المشاية - أرض الملج" },
-  { name: "فرع طنطا", address: "شارع الاستاد" },
-];
-const comingSoon = ["العاشر من رمضان", "أبو كبير", "الإسماعيلية", "العباسية"];
 
 export default function BranchesPage() {
   return (
@@ -44,16 +31,7 @@ export default function BranchesPage() {
             <h1 id="branches-title" data-ar="فروع تشيكن فاكتور" data-en="Chicken Factor branches">فروع تشيكن فاكتور</h1>
             <p data-ar="اختار أقرب فرع ليك واعرف عنوانه بالتفصيل" data-en="Find your nearest branch and its full address">اختار أقرب فرع ليك واعرف عنوانه بالتفصيل</p>
           </div>
-          <div className="branches-address-grid">
-            {branches.map((branch, index) => (
-              <article className="store-branch-card branches-address-card" key={branch.name}>
-                <span className="branch-number">{String(index + 1).padStart(2, "0")}</span>
-                <h2>{branch.name}</h2>
-                <p>{branch.address}</p>
-                <a href="tel:15407">للطلب اتصل 15407</a>
-              </article>
-            ))}
-          </div>
+          <BranchFinder />
           <div className="branches-coming-soon">
             <h2 data-ar="فروع قريباً" data-en="Coming soon">فروع قريباً</h2>
             <div>{comingSoon.map((name) => <span key={name}>{name}</span>)}</div>
