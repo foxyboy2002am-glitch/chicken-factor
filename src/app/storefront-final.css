@@ -648,3 +648,18 @@ html[lang="en"] .cf-variant-row > div { text-align: left; }
   .branches-address-card{min-height:140px!important;padding:18px!important}
   .branches-coming-soon{padding:17px;margin-top:20px}
 }
+
+
+/* Chicken Factor bucket cart animation */
+.cf-bucket-trigger{min-width:142px!important;gap:8px!important;padding:6px 10px!important}
+.cf-bucket-art{display:grid;place-items:center;flex:0 0 42px;width:42px;height:46px}
+.cf-bucket-art svg{width:42px;height:46px;overflow:visible;filter:drop-shadow(0 3px 3px #530b1240)}
+.cf-bucket-fill{opacity:0;transform:translateY(18px);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
+.cf-bucket-chicken{opacity:0;transform:translateY(15px) scale(.72);transform-origin:32px 20px;transition:opacity .25s ease,transform .5s cubic-bezier(.16,1,.3,1)}
+.cf-bucket-trigger.has-items .cf-bucket-fill{opacity:1;transform:translateY(0)}
+.cf-bucket-trigger.has-items .cf-bucket-chicken{opacity:1;transform:translateY(0) scale(1)}
+.cf-bucket-trigger.is-bumping .cf-bucket-chicken{animation:cf-bucket-drop .48s cubic-bezier(.2,.8,.2,1)}
+.cf-bucket-trigger.is-bumping .cf-bucket-art{animation:cf-bucket-wobble .55s ease}
+@keyframes cf-bucket-drop{0%{transform:translateY(-15px) scale(.6);opacity:0}65%{transform:translateY(2px) scale(1.06);opacity:1}100%{transform:translateY(0) scale(1)}}
+@keyframes cf-bucket-wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}55%{transform:rotate(6deg)}78%{transform:rotate(-3deg)}}
+@media(max-width:380px){.cf-bucket-trigger{min-width:132px!important}.cf-bucket-art{flex-basis:38px;width:38px;height:42px}.cf-bucket-art svg{width:38px;height:42px}}
