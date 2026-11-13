@@ -430,3 +430,35 @@ html[lang="en"] .cf-variant-row > div { text-align: left; }
 @media(prefers-reduced-motion:reduce){
   .store-page *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+
+/* Compact social shortcuts in the main navigation */
+.store-header-social{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-inline-start:clamp(4px,1vw,12px);padding-inline-start:clamp(8px,1.2vw,14px);
+  border-inline-start:1px solid #eee1da;
+}
+.store-header-social-link{
+  display:grid;place-items:center;width:32px;height:32px;
+  border:1px solid #eadbd3;border-radius:50%;
+  background:#fffaf7;color:#7b312f;
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease;
+}
+.store-header-social-link svg{width:15px;height:15px;fill:currentColor;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.store-header-social-link[aria-label="Instagram"] svg{fill:none}
+.store-header-social-link .social-icon-fill{fill:currentColor;stroke:none}
+.store-header-social-link:hover{
+  transform:translateY(-2px);background:#b71922;border-color:#b71922;color:#fff;
+  box-shadow:0 5px 12px #b7192225;
+}
+@media(max-width:760px){
+  .store-main-nav{gap:4px!important}
+  .store-header-social{gap:5px;margin-inline-start:3px;padding-inline-start:7px}
+  .store-header-social-link{width:28px;height:28px}
+  .store-header-social-link svg{width:13px;height:13px}
+}
+@media(max-width:380px){
+  .store-header-social{gap:3px;margin-inline-start:1px;padding-inline-start:5px}
+  .store-header-social-link{width:25px;height:25px}
+  .store-header-social-link svg{width:12px;height:12px}
+}

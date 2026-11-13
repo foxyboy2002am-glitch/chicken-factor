@@ -103,6 +103,17 @@ export default async function MenuPage() {
           <a href="#menu-categories" data-ar="المنيو" data-en="Menu">المنيو</a>
           <a href="#offers" data-ar="العروض" data-en="Offers">العروض</a>
           <a href="#branches" data-ar="الفروع" data-en="Branches">الفروع</a>
+          <span className="store-header-social" aria-label="تابعنا على السوشيال ميديا">
+            <a className="store-header-social-link" href="https://www.facebook.com/Chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.6V13h2.7v8h3.2Z"/></svg>
+            </a>
+            <a className="store-header-social-link" href="https://www.instagram.com/chickennfactor/?hl=ar" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.7" r=".9" className="social-icon-fill"/></svg>
+            </a>
+            <a className="store-header-social-link" href="https://www.tiktok.com/tag/chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.2 1.8 1.2 3.1 3 3.7v3.1a8 8 0 0 1-3-1v5.7a6.2 6.2 0 1 1-6.2-6.2c.4 0 .8 0 1.2.1v3.2a3.1 3.1 0 1 0 1.9 2.9V3Z"/></svg>
+            </a>
+          </span>
         </nav>
         <div className="store-header-actions"><LanguageSwitcher /><CartButton /><a className="store-hotline" href="tel:15407"><span data-ar="الخط الساخن" data-en="Hotline">الخط الساخن</span> <strong>15407</strong></a></div>
       </header>
