@@ -44,16 +44,16 @@ export default function MenuBrowser({ categories }: { categories: Category[] }) 
     <section className="cf-menu-browser" aria-label={en ? "Food menu" : "قائمة الطعام"}>
       <div className="cf-menu-toolbar">
         <div>
-          <span className="cf-menu-kicker">{en ? "GOOD FOOD, GOOD MOOD" : "طعم يفرّح يومك 😋"}</span>
-          <h2>{en ? "Pick your favorite 🍗" : "اختار وجبتك المفضلة 🍗"}</h2>
-          <p>{en ? "Tap a category and explore the menu" : "اختار القسم اللي نفسك فيه وشوف أصنافه 👇"}</p>
+          <span className="cf-menu-kicker">{en ? "OUR MENU" : "منيو تشيكن فاكتور"}</span>
+          <h2>{en ? "Pick your favorite meal" : "اختار وجبتك المفضلة"}</h2>
+          <p>{en ? "Choose a category to explore the menu" : "اختار القسم اللي نفسك فيه وشوف أصنافه"}</p>
         </div>
-        <label className="cf-menu-search"><span>🔎</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={en ? "Search meals..." : "بتدور على إيه؟ 🔍"} aria-label={en ? "Search products" : "ابحث في المنتجات"} /></label>
+        <label className="cf-menu-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={en ? "Search the menu" : "ابحث في المنيو"} aria-label={en ? "Search products" : "ابحث في المنتجات"} /></label>
       </div>
       <nav className="cf-category-tabs" aria-label={en ? "Menu categories" : "أقسام المنيو"}>
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <button type="button" key={category.id} className={category.id === activeId ? "is-active" : ""} onClick={() => { setActiveId(category.id); setQuery(""); }}>
-            <span className="cf-tab-number">{String(index + 1).padStart(2, "0")}</span><span>{categoryEmojis[category.slug] || "🍽️"} {categoryName(category, en)}</span><small>{category.products.length}</small>
+            <span>{categoryEmojis[category.slug] || "🍽️"} {categoryName(category, en)}</span><small>{category.products.length}</small>
           </button>
         ))}
       </nav>
@@ -63,20 +63,19 @@ export default function MenuBrowser({ categories }: { categories: Category[] }) 
           {visibleProducts.map((product, index) => (
             <article className="cf-product-card" key={product.id} style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}>
               <div className="cf-product-visual">
-                {product.imageUrl ? <img src={product.imageUrl} alt={product.name_ar} loading="lazy" /> : <div className="cf-product-art"><span className="cf-product-spark">✦</span><span className="cf-product-art-brand">CHICKEN FACTOR</span><strong>{product.name_ar}</strong><span className="cf-product-art-icon">🍗</span></div>}
-                <span className="cf-product-fresh">{en ? "FRESH • CRISPY" : "طازج ولذيذ 😍"}</span>
+                {product.imageUrl ? <img src={product.imageUrl} alt={en ? (product.name_en || product.name_ar) : product.name_ar} loading="lazy" /> : <div className="cf-product-art"><span className="cf-product-spark">✦</span><span className="cf-product-art-brand">CHICKEN FACTOR</span><strong>{en ? (product.name_en || product.name_ar) : product.name_ar}</strong><span className="cf-product-art-icon">🍗</span></div>}
+                
               </div>
               <div className="cf-product-content">
-                <div className="cf-product-meta"><span>{product.sku || "CHICKEN FACTOR"}</span><span>{en ? "Fresh daily" : "طازج يومياً ✨"}</span></div>
-                <h4>{en ? (product.name_en || product.name_ar) : product.name_ar}</h4>
-                {product.name_en ? <p className="cf-product-en">{product.name_en}</p> : null}
+                                <h4>{en ? (product.name_en || product.name_ar) : product.name_ar}</h4>
+                {!en && product.name_en ? <p className="cf-product-en">{product.name_en}</p> : null}
                 {product.description_ar ? <p className="cf-product-description">{product.description_ar}</p> : null}
                 <div className="cf-variant-list">
                   {product.variants.map((variant) => {
                     const price = Number(variant.base_price);
                     return <div className="cf-variant-row" key={variant.id}>
                       <div><span>{en ? (variant.name_en || variant.name_ar) : variant.name_ar}</span><strong>{price.toLocaleString(en ? "en-EG" : "ar-EG")} <small>{en ? "EGP" : "جنيه"}</small></strong></div>
-                      <AddToCartButton productId={product.id} variantId={variant.id} productName={en ? (product.name_en || product.name_ar) : product.name_ar} variantName={en ? (variant.name_en || variant.name_ar) : variant.name_ar} price={price} sku={product.sku} />
+                      <AddToCartButton productId={product.id} variantId={variant.id} productName={en ? (product.name_en || product.name_ar) : product.name_ar} variantName={en ? (variant.name_en || variant.name_ar) : variant.name_ar} nameAr={product.name_ar} nameEn={product.name_en || product.name_ar} variantAr={variant.name_ar} variantEn={variant.name_en || variant.name_ar} price={price} sku={product.sku} />
                     </div>;
                   })}
                   {!product.variants.length ? <p className="cf-unavailable">{en ? "Price currently unavailable" : "السعر غير متاح حالياً"}</p> : null}

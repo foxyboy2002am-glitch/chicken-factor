@@ -3,7 +3,7 @@
 import { useState, type MouseEvent as ReactMouseEvent } from "react";
 import { useStoreLanguage } from "@/components/store-language";
 
-type Props = { productId: string; variantId: string; productName: string; variantName: string; price: number; sku?: string | null };
+type Props = { productId: string; variantId: string; productName: string; variantName: string; nameAr?: string; nameEn?: string; variantAr?: string; variantEn?: string; price: number; sku?: string | null };
 
 const CART_KEY = "cf-store-cart-v1";
 
@@ -27,6 +27,10 @@ export default function AddToCartButton(props: Props) {
           variantId: props.variantId,
           productName: props.productName,
           variantName: props.variantName,
+          nameAr: props.nameAr,
+          nameEn: props.nameEn,
+          variantAr: props.variantAr,
+          variantEn: props.variantEn,
           price: props.price,
           sku: props.sku || "",
           quantity: 1,
@@ -47,7 +51,7 @@ export default function AddToCartButton(props: Props) {
 
   return (
     <button type="button" className={added ? "cf-add-cart is-added" : "cf-add-cart"} onClick={add} aria-label={en ? `Add ${props.productName} ${props.variantName} to cart` : `أضف ${props.productName} ${props.variantName} إلى السلة`}>
-      {added ? (en ? "Added! ✓" : "اتضافت! ✓") : (en ? "🛒 Add to cart" : "🛒 أضف للسلة")}
+      {added ? (en ? "Added ✓" : "تمت الإضافة ✓") : (en ? "Add to cart" : "أضف للسلة")}
     </button>
   );
 }

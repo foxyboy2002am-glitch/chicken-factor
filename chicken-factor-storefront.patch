@@ -1,0 +1,537 @@
+From a4fef0ff1e9bda05e1cd195a2fc54c970da601b9 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 13 Nov 2026 11:15:24 +0000
+Subject: [PATCH] Storefront: consolidated professional menu design, mobile
+ product cards, bilingual cart
+
+- Add storefront-final.css as the single source of truth for the menu browser
+  (replaces conflicting layered rules): auto-fill grid, 2 vertical cards on mobile,
+  full-width add button, no clipped text, consistent tabs/search.
+- Stop exposing internal SKUs to customers; remove emoji clutter and duplicate
+  search icon; remove stray emoji from CTAs.
+- Fix English cart panel (hard-coded direction:rtl), store AR/EN names in cart,
+  direction-aware checkout arrow, localized aria-labels, singular/plural.
+- Remove render-blocking CSS @import; load Cairo via <link> with preconnect.
+- Add OpenGraph/Twitter metadata, viewport + theme-color.
+- Remove Vercel wording from customer-facing errors; localize DB offer text.
+---
+ README.md                                   |   2 +-
+ src/app/globals.css                         |   1 -
+ src/app/layout.tsx                          |  31 ++-
+ src/app/menu/page.tsx                       |  17 +-
+ src/app/storefront-final.css                | 235 ++++++++++++++++++++
+ src/components/add-to-cart-button.tsx       |   8 +-
+ src/components/cart-button.tsx              |  12 +-
+ src/components/menu-browser.tsx             |  23 +-
+ src/components/offer-add-to-cart-button.tsx |   6 +-
+ 9 files changed, 303 insertions(+), 32 deletions(-)
+ create mode 100644 src/app/storefront-final.css
+
+diff --git a/README.md b/README.md
+index bf8b362..4975be8 100644
+--- a/README.md
++++ b/README.md
+@@ -4,7 +4,7 @@ Standalone bilingual (Arabic/English) multi-branch online ordering platform.
+ 
+ ## Approved decisions
+ - Independent domain
+-- VPS deployment target
++- Deployed on Cloudflare Workers (OpenNext) — see `wrangler.jsonc`
+ - Multi-branch ordering with manual selection and automatic recommendation
+ - Arabic + English (RTL/LTR)
+ - Cash on Delivery + Paymob hosted checkout (planned)
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 6b25ae0..e87d305 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -1,4 +1,3 @@
+-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+ :root{--red:#b91c1c;--red-dark:#991b1b;--yellow:#f5b82e;--ink:#202124;--muted:#737373;--bg:#f5f6f8;--line:#e8e8e8}
+ *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Cairo',Arial,sans-serif;color:var(--ink)}body{background:var(--bg)}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}
+ .auth-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#fff 0%,#fff7e5 100%)}
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 8c4e47d..7e3fe97 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,10 +1,24 @@
+-import type { Metadata } from "next";
++import type { Metadata, Viewport } from "next";
+ import "./globals.css";
+ import "./storefront-polish.css";
++import "./storefront-final.css";
++
++const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+ 
+ export const metadata: Metadata = {
+-  title: "Chicken Factor | تشيكن فاكتور",
+-  description: "منيو وعروض تشيكن فاكتور - اطلب وجبتك المفضلة.",
++  ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
++  title: { default: "Chicken Factor | تشيكن فاكتور", template: "%s | Chicken Factor" },
++  description: "منيو وعروض تشيكن فاكتور - فراخنا من إنتاج مزارعنا. اطلب وجبتك المفضلة أونلاين أو اتصل 15407.",
++  applicationName: "Chicken Factor",
++  openGraph: {
++    type: "website",
++    siteName: "Chicken Factor",
++    title: "Chicken Factor | تشيكن فاكتور",
++    description: "منيو وعروض تشيكن فاكتور - فراخنا من إنتاج مزارعنا.",
++    locale: "ar_EG",
++    images: [{ url: "/offers/mix-6-525.webp", alt: "عرض ميكس 6 من تشيكن فاكتور" }],
++  },
++  twitter: { card: "summary_large_image", title: "Chicken Factor | تشيكن فاكتور", images: ["/offers/mix-6-525.webp"] },
+   icons: {
+     icon: "/profile_chicken_factor.webp",
+     shortcut: "/profile_chicken_factor.webp",
+@@ -12,9 +26,20 @@ export const metadata: Metadata = {
+   },
+ };
+ 
++export const viewport: Viewport = {
++  width: "device-width",
++  initialScale: 1,
++  themeColor: "#b71922",
++};
++
+ export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+   return (
+     <html lang="ar" dir="rtl">
++      <head>
++        <link rel="preconnect" href="https://fonts.googleapis.com" />
++        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
++        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" />
++      </head>
+       <body>{children}</body>
+     </html>
+   );
+diff --git a/src/app/menu/page.tsx b/src/app/menu/page.tsx
+index 4ad5719..8558793 100644
+--- a/src/app/menu/page.tsx
++++ b/src/app/menu/page.tsx
+@@ -48,7 +48,7 @@ export default async function MenuPage() {
+         .eq("is_active", true)
+         .order("sort_order"),
+       supabase.from("offers")
+-        .select("id, name_ar, name_en, description_ar, discount_type, discount_value, starts_at, ends_at")
++        .select("id, name_ar, name_en, description_ar, description_en, discount_type, discount_value, starts_at, ends_at")
+         .eq("is_active", true)
+         .lte("starts_at", now)
+         .gte("ends_at", now)
+@@ -135,19 +135,24 @@ export default async function MenuPage() {
+           <div className="offers-grid">
+             {activeOffers.map((offer) => {
+               const value = Number(offer.discount_value);
+-              const discountText = offer.discount_type === "percentage"
+-                ? `${value}% خصم`
++              const discountAr = offer.discount_type === "percentage"
++                ? `${value.toLocaleString("ar-EG")}٪ خصم`
+                 : offer.discount_type === "bundle_price"
+                   ? `سعر الباقة ${value.toLocaleString("ar-EG")} جنيه`
+                   : `${value.toLocaleString("ar-EG")} جنيه خصم`;
++              const discountEn = offer.discount_type === "percentage"
++                ? `${value}% off`
++                : offer.discount_type === "bundle_price"
++                  ? `Bundle price ${value.toLocaleString("en-EG")} EGP`
++                  : `${value.toLocaleString("en-EG")} EGP off`;
+               return (
+                 <article className="offer-card database-offer-card" key={offer.id}>
+                   <div className="offer-card-content">
+                     <div className="offer-title-row">
+                       <h3 data-ar={offer.name_ar} data-en={offer.name_en || offer.name_ar}>{offer.name_ar}</h3>
+-                      <strong>{discountText}</strong>
++                      <strong data-ar={discountAr} data-en={discountEn}>{discountAr}</strong>
+                     </div>
+-                    {offer.description_ar ? <p>{offer.description_ar}</p> : null}
++                    {offer.description_ar ? <p data-ar={offer.description_ar} data-en={offer.description_en || offer.description_ar}>{offer.description_ar}</p> : null}
+                     <small><span data-ar="ساري حتى" data-en="Valid until">ساري حتى</span> {new Date(offer.ends_at).toLocaleString("ar-EG")}</small>
+                   </div>
+                 </article>
+@@ -166,7 +171,7 @@ export default async function MenuPage() {
+       </section>
+ 
+       {queryError ? (
+-        <p className="store-error" data-ar="العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel." data-en="Offers are available, but the menu is not connected to the database. Check the Supabase settings in Vercel.">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel.</p>
++        <p className="store-error" data-ar="العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. برجاء المحاولة مرة أخرى بعد قليل." data-en="Offers are available, but the menu is not connected to the database. Please try again shortly.">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. برجاء المحاولة مرة أخرى بعد قليل.</p>
+       ) : grouped.length === 0 ? (
+         <p className="store-error" data-ar="المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل." data-en="The menu is being prepared. Please try again shortly.">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
+       ) : (
+diff --git a/src/app/storefront-final.css b/src/app/storefront-final.css
+new file mode 100644
+index 0000000..20a4967
+--- /dev/null
++++ b/src/app/storefront-final.css
+@@ -0,0 +1,235 @@
++/*
++ * Storefront – final consolidated styles for the menu browser.
++ * Loaded LAST (see layout.tsx) so it is the single source of truth for the
++ * toolbar, category tabs and product cards. Older layers in globals.css and
++ * storefront-polish.css are intentionally overridden here.
++ */
++
++:root {
++  --cf-red: #b71922;
++  --cf-red-dark: #8f1219;
++  --cf-ink: #251e1c;
++  --cf-muted: #7d716c;
++  --cf-line: #eee3dd;
++  --cf-surface: #ffffff;
++  --cf-tint: #fbf3ee;
++  --cf-radius: 18px;
++}
++
++/* ---------- Accessibility ---------- */
++.store-page a:focus-visible,
++.store-page button:focus-visible,
++.store-page input:focus-visible,
++.cf-floating-cart button:focus-visible {
++  outline: 3px solid #ffb703;
++  outline-offset: 2px;
++}
++
++/* ---------- Toolbar + search ---------- */
++.cf-menu-toolbar {
++  display: flex;
++  align-items: flex-end;
++  justify-content: space-between;
++  gap: 20px;
++  margin: 8px 0 18px;
++}
++.cf-menu-toolbar h2 { margin: 4px 0; font-size: 26px; color: var(--cf-ink); }
++.cf-menu-toolbar p { margin: 0; font-size: 13px; color: var(--cf-muted); }
++.cf-menu-kicker { font-size: 10px; letter-spacing: 2px; font-weight: 800; color: var(--cf-red); }
++
++.cf-menu-search {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  width: min(100%, 340px);
++  height: 46px;
++  padding: 0 14px;
++  border: 1px solid #e8dbd4;
++  border-radius: 14px;
++  background: var(--cf-surface);
++  box-shadow: 0 4px 14px #32100a08;
++  transition: border-color .2s, box-shadow .2s;
++}
++.cf-menu-search:focus-within { border-color: var(--cf-red); box-shadow: 0 0 0 3px #b7192214; }
++.cf-menu-search svg { flex: none; width: 18px; height: 18px; fill: none; stroke: #a08f88; stroke-width: 2; stroke-linecap: round; }
++.cf-menu-search input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 14px; color: var(--cf-ink); }
++.cf-menu-search input::placeholder { color: #a99c96; }
++
++/* ---------- Category tabs ---------- */
++.cf-category-tabs {
++  display: flex;
++  gap: 8px;
++  overflow-x: auto;
++  padding: 10px 0 12px;
++  scroll-snap-type: x proximity;
++  scrollbar-width: none;
++  -webkit-overflow-scrolling: touch;
++}
++.cf-category-tabs::-webkit-scrollbar { display: none; }
++.cf-category-tabs button {
++  display: inline-flex;
++  align-items: center;
++  gap: 8px;
++  flex: none;
++  min-height: 42px;
++  padding: 0 15px;
++  scroll-snap-align: start;
++  border: 1px solid #e9ded8;
++  border-radius: 999px;
++  background: var(--cf-surface);
++  color: #5d514d;
++  font-size: 13px;
++  font-weight: 700;
++  white-space: nowrap;
++  cursor: pointer;
++  transition: background .2s, color .2s, border-color .2s;
++}
++.cf-category-tabs button:hover { border-color: var(--cf-red); color: var(--cf-red); }
++.cf-category-tabs button.is-active { border-color: var(--cf-red); background: var(--cf-red); color: #fff; box-shadow: 0 6px 16px #b7192230; }
++.cf-category-tabs button small {
++  display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px;
++  border-radius: 999px; background: #f6ebe6; color: #9e2825; font-size: 11px; font-weight: 700;
++}
++.cf-category-tabs button.is-active small { background: #ffffff30; color: #fff; }
++
++/* ---------- Active category heading ---------- */
++.cf-active-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin: 8px 0 18px; }
++.cf-active-heading > div > span { font-size: 10px; letter-spacing: 2px; font-weight: 800; color: var(--cf-red); }
++.cf-active-heading h3 { margin: 3px 0 0; font-size: 26px; color: var(--cf-ink); }
++.cf-active-heading > b { padding: 6px 12px; border-radius: 999px; background: #f8eae4; color: #a51a21; font-size: 12px; white-space: nowrap; }
++
++/* ---------- Product grid + card ---------- */
++.cf-product-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fill, minmax(236px, 1fr));
++  gap: 18px;
++}
++.cf-product-card {
++  display: flex;
++  flex-direction: column;
++  min-width: 0;
++  overflow: hidden;
++  border: 1px solid var(--cf-line);
++  border-radius: var(--cf-radius);
++  background: var(--cf-surface);
++  box-shadow: 0 6px 20px #32100a08;
++  transition: transform .22s, box-shadow .22s;
++}
++.cf-product-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px #32100a14; }
++
++.cf-product-visual {
++  position: relative;
++  height: auto;
++  min-height: 0;
++  aspect-ratio: 4 / 3;
++  overflow: hidden;
++  background: linear-gradient(135deg, #f7e9e1, #fbf5f0);
++}
++.cf-product-visual > img { display: block; width: 100%; height: 100%; object-fit: cover; }
++.cf-product-fresh { display: none; }
++
++.cf-product-art {
++  position: absolute; inset: 0;
++  display: flex; flex-direction: column; align-items: center; justify-content: center;
++  gap: 6px; padding: 14px; text-align: center;
++}
++.cf-product-art-brand { font-size: 9px; letter-spacing: 2px; font-weight: 800; color: #c9858a; }
++.cf-product-art strong { font-size: clamp(15px, 1.6vw, 20px); line-height: 1.35; color: #3a1c1a; overflow-wrap: anywhere; }
++.cf-product-art-icon { font-size: 26px; line-height: 1; }
++.cf-product-spark { display: none; }
++
++.cf-product-content { display: flex; flex: 1; flex-direction: column; padding: 14px 15px 15px; }
++.cf-product-meta { display: none; }
++.cf-product-content h4 { margin: 0; font-size: 17px; line-height: 1.4; color: var(--cf-ink); overflow-wrap: anywhere; }
++.cf-product-en { margin: 2px 0 0; font-size: 12px; color: #a47b75; direction: ltr; text-align: start; }
++.cf-product-description { display: block; margin: 8px 0 0; font-size: 12px; line-height: 1.7; color: var(--cf-muted); }
++
++.cf-variant-list { margin-top: auto; padding-top: 10px; border-top: 0; }
++.cf-variant-row {
++  display: flex; align-items: center; justify-content: space-between; gap: 10px;
++  padding: 10px 0; border-top: 1px solid #f3eae5; border-bottom: 0;
++}
++.cf-variant-row > div { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
++.cf-variant-row > div > span { font-size: 12px; color: #6b5f5a; }
++.cf-variant-row > div > strong { font-size: 18px; line-height: 1.2; color: var(--cf-red); white-space: nowrap; font-weight: 800; }
++.cf-variant-row > div > strong small { font-size: 11px; font-weight: 600; color: #9c8d87; }
++.cf-unavailable { margin: 0; padding: 10px 0; font-size: 12px; color: var(--cf-muted); }
++
++.cf-add-cart {
++  flex: none;
++  min-height: 40px;
++  padding: 0 16px;
++  border: 0;
++  border-radius: 12px;
++  background: var(--cf-red);
++  color: #fff;
++  font-size: 13px;
++  font-weight: 700;
++  white-space: nowrap;
++  cursor: pointer;
++  transition: background .2s, transform .1s;
++}
++.cf-add-cart:hover { background: var(--cf-red-dark); }
++.cf-add-cart:active { transform: scale(.97); }
++.cf-add-cart.is-added { background: #18834c; }
++
++.cf-no-products { padding: 40px 20px; border: 1px dashed #e7d5cd; border-radius: var(--cf-radius); background: #fff; text-align: center; color: var(--cf-muted); }
++
++/* ---------- Tablet ---------- */
++@media (max-width: 900px) {
++  .cf-product-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
++}
++
++/* ---------- Mobile: two vertical cards per row ---------- */
++@media (max-width: 650px) {
++  .cf-menu-toolbar { flex-direction: column; align-items: stretch; gap: 12px; }
++  .cf-menu-toolbar h2 { font-size: 22px; }
++  .cf-menu-search { width: 100%; }
++  .cf-category-tabs button { min-height: 40px; padding: 0 13px; font-size: 12px; }
++  .cf-active-heading h3 { font-size: 21px; }
++
++  .cf-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
++  .cf-product-card { display: flex; flex-direction: column; border-radius: 15px; }
++  .cf-product-visual { height: auto; min-height: 0; aspect-ratio: 1 / 1; }
++  .cf-product-art { gap: 4px; padding: 10px; }
++  .cf-product-art strong { font-size: 14px; }
++  .cf-product-art-icon { font-size: 22px; }
++  .cf-product-content { padding: 11px 11px 12px; }
++  .cf-product-content h4 { font-size: 14px; }
++  .cf-product-en { font-size: 11px; }
++  .cf-product-description { display: none; }
++
++  .cf-variant-row { flex-direction: column; align-items: stretch; gap: 8px; padding: 9px 0; }
++  .cf-variant-row > div { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 6px; }
++  .cf-variant-row > div > span { font-size: 11px; }
++  .cf-variant-row > div > strong { font-size: 16px; }
++  .cf-add-cart { width: 100%; min-height: 40px; padding: 0 8px; font-size: 12px; }
++}
++
++/* Very narrow phones: one card per row */
++@media (max-width: 340px) {
++  .cf-product-grid { grid-template-columns: 1fr; }
++}
++
++/* Arabic script must never be letter-spaced (it breaks the joined letters) */
++html[lang="ar"] .cf-menu-kicker,
++html[lang="ar"] .cf-active-heading > div > span { letter-spacing: 0; }
++
++/* English (LTR) alignment */
++html[lang="en"] .cf-product-content { text-align: left; }
++html[lang="en"] .cf-variant-row > div { text-align: left; }
++
++@media (prefers-reduced-motion: reduce) {
++  .cf-product-card, .cf-add-cart, .cf-category-tabs button { transition: none !important; }
++}
++
++/* ---------- Floating cart: follow the active language direction ----------
++ * globals.css hard-codes `direction: rtl` on .cf-floating-cart, which beat the
++ * dir attribute and left the English cart mirrored (punctuation at the wrong
++ * end, close button on the wrong side). */
++.cf-floating-cart[dir="ltr"] { direction: ltr; }
++.cf-floating-cart[dir="rtl"] { direction: rtl; }
++.cf-floating-cart[dir="ltr"] .cf-cart-panel-head,
++.cf-floating-cart[dir="ltr"] .cf-cart-line-info,
++.cf-floating-cart[dir="ltr"] .cf-cart-panel-foot { text-align: left; }
++.cf-floating-cart[dir="ltr"] .cf-cart-line > .cf-cart-line-total { text-align: right; }
+diff --git a/src/components/add-to-cart-button.tsx b/src/components/add-to-cart-button.tsx
+index 535e6e2..ff48c39 100644
+--- a/src/components/add-to-cart-button.tsx
++++ b/src/components/add-to-cart-button.tsx
+@@ -3,7 +3,7 @@
+ import { useState, type MouseEvent as ReactMouseEvent } from "react";
+ import { useStoreLanguage } from "@/components/store-language";
+ 
+-type Props = { productId: string; variantId: string; productName: string; variantName: string; price: number; sku?: string | null };
++type Props = { productId: string; variantId: string; productName: string; variantName: string; nameAr?: string; nameEn?: string; variantAr?: string; variantEn?: string; price: number; sku?: string | null };
+ 
+ const CART_KEY = "cf-store-cart-v1";
+ 
+@@ -27,6 +27,10 @@ export default function AddToCartButton(props: Props) {
+           variantId: props.variantId,
+           productName: props.productName,
+           variantName: props.variantName,
++          nameAr: props.nameAr,
++          nameEn: props.nameEn,
++          variantAr: props.variantAr,
++          variantEn: props.variantEn,
+           price: props.price,
+           sku: props.sku || "",
+           quantity: 1,
+@@ -47,7 +51,7 @@ export default function AddToCartButton(props: Props) {
+ 
+   return (
+     <button type="button" className={added ? "cf-add-cart is-added" : "cf-add-cart"} onClick={add} aria-label={en ? `Add ${props.productName} ${props.variantName} to cart` : `أضف ${props.productName} ${props.variantName} إلى السلة`}>
+-      {added ? (en ? "Added! ✓" : "اتضافت! ✓") : (en ? "🛒 Add to cart" : "🛒 أضف للسلة")}
++      {added ? (en ? "Added ✓" : "تمت الإضافة ✓") : (en ? "Add to cart" : "أضف للسلة")}
+     </button>
+   );
+ }
+diff --git a/src/components/cart-button.tsx b/src/components/cart-button.tsx
+index 6073f0a..0cf3413 100644
+--- a/src/components/cart-button.tsx
++++ b/src/components/cart-button.tsx
+@@ -3,7 +3,7 @@ import {useEffect,useState} from "react";
+ import {createPortal} from "react-dom";
+ import {useStoreLanguage} from "@/components/store-language";
+ const KEY="cf-store-cart-v1";
+-type Item={productId?:string;variantId?:string;offerId?:string;productName:string;variantName?:string;price:number|string;quantity:number;sku?:string};
++type Item={productId?:string;variantId?:string;offerId?:string;productName:string;variantName?:string;nameAr?:string;nameEn?:string;variantAr?:string;variantEn?:string;price:number|string;quantity:number;sku?:string};
+ const money=(n:number,en=false)=>new Intl.NumberFormat(en?"en-EG":"ar-EG",{style:"currency",currency:"EGP",maximumFractionDigits:0}).format(n);
+ function read():Item[]{try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x.filter(i=>i&&typeof i.productName==="string"&&Number(i.quantity)>0):[]}catch{return[]}}
+ export default function CartButton(){
+@@ -15,10 +15,10 @@ export default function CartButton(){
+  const change=(i:number,d:number)=>save(items.map((x,n)=>n===i?{...x,quantity:Math.max(1,Math.min(20,x.quantity+d))}:x));
+  const remove=(i:number)=>save(items.filter((_,n)=>n!==i));
+  return mounted ? createPortal(<div className="cf-floating-cart" dir={en?"ltr":"rtl"}>
+- {open?<><button className="cf-cart-backdrop" aria-label="إغلاق السلة" onClick={()=>setOpen(false)}/><section className="cf-cart-panel" aria-label="سلة المشتريات">
+- <header className="cf-cart-panel-head"><div><span>YOUR ORDER</span><h3>{en?"Your basket is ready? 🍗":"سلتك جاهزة؟ 🍗"}</h3><small>{count} {en?"items in your cart":"قطعة في السلة"}</small></div><button onClick={()=>setOpen(false)} aria-label="إغلاق">×</button></header>
+- <div className="cf-cart-items">{items.length?items.map((item,i)=><article className="cf-cart-line" key={item.offerId||item.variantId||i}><div className="cf-cart-thumb">🍗</div><div className="cf-cart-line-info"><strong>{item.productName}</strong><small>{item.variantName||(en?"Full offer":"عرض كامل")}</small><b>{money(Number(item.price),en)}</b><div className="cf-cart-qty"><button onClick={()=>change(i,-1)} disabled={item.quantity<=1}>−</button><span>{item.quantity}</span><button onClick={()=>change(i,1)} disabled={item.quantity>=20}>+</button><button className="cf-cart-remove" onClick={()=>remove(i)}>{en?"Remove":"حذف"}</button></div></div><strong className="cf-cart-line-total">{money(Number(item.price)*item.quantity,en)}</strong></article>):<div className="cf-cart-empty"><span>🛒</span><strong>{en?"Your cart is empty":"السلة لسه فاضية"}</strong><small>{en?"Choose your favorite meal and we’ll be ready!":"اختار وجبتك المفضلة وإحنا جاهزين!"}</small></div>}</div>
+- <footer className="cf-cart-panel-foot"><div><span>{en?"Estimated total":"الإجمالي المبدئي"}</span><strong>{money(total,en)}</strong></div><small>{en?"Delivery fees and discounts are calculated at checkout.":"رسوم التوصيل والخصومات تُحسب عند إتمام الطلب."}</small><a className={items.length?"":"is-disabled"} href={items.length?"/checkout":"#menu-categories"} onClick={e=>{if(!items.length){e.preventDefault();setOpen(false)}}}>{en?"Checkout":"إتمام الطلب"} <span>←</span></a></footer></section></>:null}
+- <button data-cf-cart-trigger className={`cf-floating-cart-trigger ${bump?"is-bumping":""}`} onClick={()=>setOpen(v=>!v)} aria-label={`فتح السلة، ${count} قطعة`}><span className="cf-cart-trigger-icon">🛒</span><span className="cf-cart-trigger-copy"><b>{en?"Cart":"سلتك"}</b><small>{count?money(total,en):(en?"Start shopping":"اختار وجبتك")}</small></span><b className="cf-cart-count">{count}</b></button>
++ {open?<><button className="cf-cart-backdrop" aria-label={en?"Close cart":"إغلاق السلة"} onClick={()=>setOpen(false)}/><section className="cf-cart-panel" aria-label={en?"Shopping cart":"سلة المشتريات"}>
++ <header className="cf-cart-panel-head"><div><span>YOUR ORDER</span><h3>{en?"Your basket is ready? 🍗":"سلتك جاهزة؟ 🍗"}</h3><small>{count} {en?(count===1?"item in your cart":"items in your cart"):"قطعة في السلة"}</small></div><button onClick={()=>setOpen(false)} aria-label={en?"Close":"إغلاق"}>×</button></header>
++ <div className="cf-cart-items">{items.length?items.map((item,i)=><article className="cf-cart-line" key={item.offerId||item.variantId||i}><div className="cf-cart-thumb">🍗</div><div className="cf-cart-line-info"><strong>{en?(item.nameEn||item.productName):(item.nameAr||item.productName)}</strong><small>{en?(item.variantEn||item.variantName||"Full offer"):(item.variantAr||item.variantName||"عرض كامل")}</small><b>{money(Number(item.price),en)}</b><div className="cf-cart-qty"><button onClick={()=>change(i,-1)} disabled={item.quantity<=1}>−</button><span>{item.quantity}</span><button onClick={()=>change(i,1)} disabled={item.quantity>=20}>+</button><button className="cf-cart-remove" onClick={()=>remove(i)}>{en?"Remove":"حذف"}</button></div></div><strong className="cf-cart-line-total">{money(Number(item.price)*item.quantity,en)}</strong></article>):<div className="cf-cart-empty"><span>🛒</span><strong>{en?"Your cart is empty":"السلة لسه فاضية"}</strong><small>{en?"Choose your favorite meal and we’ll be ready!":"اختار وجبتك المفضلة وإحنا جاهزين!"}</small></div>}</div>
++ <footer className="cf-cart-panel-foot"><div><span>{en?"Estimated total":"الإجمالي المبدئي"}</span><strong>{money(total,en)}</strong></div><small>{en?"Delivery fees and discounts are calculated at checkout.":"رسوم التوصيل والخصومات تُحسب عند إتمام الطلب."}</small><a className={items.length?"":"is-disabled"} href={items.length?"/checkout":"#menu-categories"} onClick={e=>{if(!items.length){e.preventDefault();setOpen(false)}}}>{en?"Checkout":"إتمام الطلب"} <span aria-hidden="true">{en?"→":"←"}</span></a></footer></section></>:null}
++ <button data-cf-cart-trigger className={`cf-floating-cart-trigger ${bump?"is-bumping":""}`} onClick={()=>setOpen(v=>!v)} aria-label={en?`Open cart, ${count} items`:`فتح السلة، ${count} قطعة`}><span className="cf-cart-trigger-icon">🛒</span><span className="cf-cart-trigger-copy"><b>{en?"Cart":"سلتك"}</b><small>{count?money(total,en):(en?"Start shopping":"اختار وجبتك")}</small></span><b className="cf-cart-count">{count}</b></button>
+  </div>,document.body) : null;
+ }
+diff --git a/src/components/menu-browser.tsx b/src/components/menu-browser.tsx
+index 6339c46..77e4928 100644
+--- a/src/components/menu-browser.tsx
++++ b/src/components/menu-browser.tsx
+@@ -44,16 +44,16 @@ export default function MenuBrowser({ categories }: { categories: Category[] })
+     <section className="cf-menu-browser" aria-label={en ? "Food menu" : "قائمة الطعام"}>
+       <div className="cf-menu-toolbar">
+         <div>
+-          <span className="cf-menu-kicker">{en ? "GOOD FOOD, GOOD MOOD" : "طعم يفرّح يومك 😋"}</span>
+-          <h2>{en ? "Pick your favorite 🍗" : "اختار وجبتك المفضلة 🍗"}</h2>
+-          <p>{en ? "Tap a category and explore the menu" : "اختار القسم اللي نفسك فيه وشوف أصنافه 👇"}</p>
++          <span className="cf-menu-kicker">{en ? "OUR MENU" : "منيو تشيكن فاكتور"}</span>
++          <h2>{en ? "Pick your favorite meal" : "اختار وجبتك المفضلة"}</h2>
++          <p>{en ? "Choose a category to explore the menu" : "اختار القسم اللي نفسك فيه وشوف أصنافه"}</p>
+         </div>
+-        <label className="cf-menu-search"><span>🔎</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={en ? "Search meals..." : "بتدور على إيه؟ 🔍"} aria-label={en ? "Search products" : "ابحث في المنتجات"} /></label>
++        <label className="cf-menu-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={en ? "Search the menu" : "ابحث في المنيو"} aria-label={en ? "Search products" : "ابحث في المنتجات"} /></label>
+       </div>
+       <nav className="cf-category-tabs" aria-label={en ? "Menu categories" : "أقسام المنيو"}>
+-        {categories.map((category, index) => (
++        {categories.map((category) => (
+           <button type="button" key={category.id} className={category.id === activeId ? "is-active" : ""} onClick={() => { setActiveId(category.id); setQuery(""); }}>
+-            <span className="cf-tab-number">{String(index + 1).padStart(2, "0")}</span><span>{categoryEmojis[category.slug] || "🍽️"} {categoryName(category, en)}</span><small>{category.products.length}</small>
++            <span>{categoryEmojis[category.slug] || "🍽️"} {categoryName(category, en)}</span><small>{category.products.length}</small>
+           </button>
+         ))}
+       </nav>
+@@ -63,20 +63,19 @@ export default function MenuBrowser({ categories }: { categories: Category[] })
+           {visibleProducts.map((product, index) => (
+             <article className="cf-product-card" key={product.id} style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}>
+               <div className="cf-product-visual">
+-                {product.imageUrl ? <img src={product.imageUrl} alt={product.name_ar} loading="lazy" /> : <div className="cf-product-art"><span className="cf-product-spark">✦</span><span className="cf-product-art-brand">CHICKEN FACTOR</span><strong>{product.name_ar}</strong><span className="cf-product-art-icon">🍗</span></div>}
+-                <span className="cf-product-fresh">{en ? "FRESH • CRISPY" : "طازج ولذيذ 😍"}</span>
++                {product.imageUrl ? <img src={product.imageUrl} alt={en ? (product.name_en || product.name_ar) : product.name_ar} loading="lazy" /> : <div className="cf-product-art"><span className="cf-product-spark">✦</span><span className="cf-product-art-brand">CHICKEN FACTOR</span><strong>{en ? (product.name_en || product.name_ar) : product.name_ar}</strong><span className="cf-product-art-icon">🍗</span></div>}
++                
+               </div>
+               <div className="cf-product-content">
+-                <div className="cf-product-meta"><span>{product.sku || "CHICKEN FACTOR"}</span><span>{en ? "Fresh daily" : "طازج يومياً ✨"}</span></div>
+-                <h4>{en ? (product.name_en || product.name_ar) : product.name_ar}</h4>
+-                {product.name_en ? <p className="cf-product-en">{product.name_en}</p> : null}
++                                <h4>{en ? (product.name_en || product.name_ar) : product.name_ar}</h4>
++                {!en && product.name_en ? <p className="cf-product-en">{product.name_en}</p> : null}
+                 {product.description_ar ? <p className="cf-product-description">{product.description_ar}</p> : null}
+                 <div className="cf-variant-list">
+                   {product.variants.map((variant) => {
+                     const price = Number(variant.base_price);
+                     return <div className="cf-variant-row" key={variant.id}>
+                       <div><span>{en ? (variant.name_en || variant.name_ar) : variant.name_ar}</span><strong>{price.toLocaleString(en ? "en-EG" : "ar-EG")} <small>{en ? "EGP" : "جنيه"}</small></strong></div>
+-                      <AddToCartButton productId={product.id} variantId={variant.id} productName={en ? (product.name_en || product.name_ar) : product.name_ar} variantName={en ? (variant.name_en || variant.name_ar) : variant.name_ar} price={price} sku={product.sku} />
++                      <AddToCartButton productId={product.id} variantId={variant.id} productName={en ? (product.name_en || product.name_ar) : product.name_ar} variantName={en ? (variant.name_en || variant.name_ar) : variant.name_ar} nameAr={product.name_ar} nameEn={product.name_en || product.name_ar} variantAr={variant.name_ar} variantEn={variant.name_en || variant.name_ar} price={price} sku={product.sku} />
+                     </div>;
+                   })}
+                   {!product.variants.length ? <p className="cf-unavailable">{en ? "Price currently unavailable" : "السعر غير متاح حالياً"}</p> : null}
+diff --git a/src/components/offer-add-to-cart-button.tsx b/src/components/offer-add-to-cart-button.tsx
+index 6239357..b2baa0c 100644
+--- a/src/components/offer-add-to-cart-button.tsx
++++ b/src/components/offer-add-to-cart-button.tsx
+@@ -26,6 +26,10 @@ export default function OfferAddToCartButton({ offerId, offerName, offerNameEn,
+           variantId: "",
+           productName: en ? (offerNameEn || offerName) : offerName,
+           variantName: "عرض كامل",
++          nameAr: offerName,
++          nameEn: offerNameEn || offerName,
++          variantAr: "عرض كامل",
++          variantEn: "Full offer",
+           price,
+           sku: `OFFER-${offerId}`,
+           quantity: 1,
+@@ -44,6 +48,6 @@ export default function OfferAddToCartButton({ offerId, offerName, offerNameEn,
+   }
+ 
+   return <button type="button" className={added ? "cf-offer-add is-added" : "cf-offer-add"} onClick={addOffer}>
+-    {added ? (en ? "Added to cart! ✓" : "العرض في السلة! ✓") : (en ? "🛒 Add offer to cart" : "🛒 أضف العرض للسلة")}
++    {added ? (en ? "Added to cart! ✓" : "العرض في السلة! ✓") : (en ? "Add offer to cart" : "أضف العرض للسلة")}
+   </button>;
+ }
+-- 
+2.43.0
+

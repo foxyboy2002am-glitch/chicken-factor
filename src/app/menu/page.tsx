@@ -48,7 +48,7 @@ export default async function MenuPage() {
         .eq("is_active", true)
         .order("sort_order"),
       supabase.from("offers")
-        .select("id, name_ar, name_en, description_ar, discount_type, discount_value, starts_at, ends_at")
+        .select("id, name_ar, name_en, description_ar, description_en, discount_type, discount_value, starts_at, ends_at")
         .eq("is_active", true)
         .lte("starts_at", now)
         .gte("ends_at", now)
@@ -135,19 +135,24 @@ export default async function MenuPage() {
           <div className="offers-grid">
             {activeOffers.map((offer) => {
               const value = Number(offer.discount_value);
-              const discountText = offer.discount_type === "percentage"
-                ? `${value}% خصم`
+              const discountAr = offer.discount_type === "percentage"
+                ? `${value.toLocaleString("ar-EG")}٪ خصم`
                 : offer.discount_type === "bundle_price"
                   ? `سعر الباقة ${value.toLocaleString("ar-EG")} جنيه`
                   : `${value.toLocaleString("ar-EG")} جنيه خصم`;
+              const discountEn = offer.discount_type === "percentage"
+                ? `${value}% off`
+                : offer.discount_type === "bundle_price"
+                  ? `Bundle price ${value.toLocaleString("en-EG")} EGP`
+                  : `${value.toLocaleString("en-EG")} EGP off`;
               return (
                 <article className="offer-card database-offer-card" key={offer.id}>
                   <div className="offer-card-content">
                     <div className="offer-title-row">
                       <h3 data-ar={offer.name_ar} data-en={offer.name_en || offer.name_ar}>{offer.name_ar}</h3>
-                      <strong>{discountText}</strong>
+                      <strong data-ar={discountAr} data-en={discountEn}>{discountAr}</strong>
                     </div>
-                    {offer.description_ar ? <p>{offer.description_ar}</p> : null}
+                    {offer.description_ar ? <p data-ar={offer.description_ar} data-en={offer.description_en || offer.description_ar}>{offer.description_ar}</p> : null}
                     <small><span data-ar="ساري حتى" data-en="Valid until">ساري حتى</span> {new Date(offer.ends_at).toLocaleString("ar-EG")}</small>
                   </div>
                 </article>
@@ -166,7 +171,7 @@ export default async function MenuPage() {
       </section>
 
       {queryError ? (
-        <p className="store-error" data-ar="العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel." data-en="Offers are available, but the menu is not connected to the database. Check the Supabase settings in Vercel.">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. راجع إعدادات Supabase في Vercel.</p>
+        <p className="store-error" data-ar="العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. برجاء المحاولة مرة أخرى بعد قليل." data-en="Offers are available, but the menu is not connected to the database. Please try again shortly.">العروض متاحة حالياً، لكن المنيو غير متصل بقاعدة البيانات. برجاء المحاولة مرة أخرى بعد قليل.</p>
       ) : grouped.length === 0 ? (
         <p className="store-error" data-ar="المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل." data-en="The menu is being prepared. Please try again shortly.">المنيو بيتجهز حالياً، حاول مرة أخرى بعد قليل.</p>
       ) : (

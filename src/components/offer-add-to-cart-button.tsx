@@ -26,6 +26,10 @@ export default function OfferAddToCartButton({ offerId, offerName, offerNameEn, 
           variantId: "",
           productName: en ? (offerNameEn || offerName) : offerName,
           variantName: "عرض كامل",
+          nameAr: offerName,
+          nameEn: offerNameEn || offerName,
+          variantAr: "عرض كامل",
+          variantEn: "Full offer",
           price,
           sku: `OFFER-${offerId}`,
           quantity: 1,
@@ -44,6 +48,6 @@ export default function OfferAddToCartButton({ offerId, offerName, offerNameEn, 
   }
 
   return <button type="button" className={added ? "cf-offer-add is-added" : "cf-offer-add"} onClick={addOffer}>
-    {added ? (en ? "Added to cart! ✓" : "العرض في السلة! ✓") : (en ? "🛒 Add offer to cart" : "🛒 أضف العرض للسلة")}
+    {added ? (en ? "Added to cart! ✓" : "العرض في السلة! ✓") : (en ? "Add offer to cart" : "أضف العرض للسلة")}
   </button>;
 }
