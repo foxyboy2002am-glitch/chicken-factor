@@ -462,3 +462,52 @@ html[lang="en"] .cf-variant-row > div { text-align: left; }
   .store-header-social-link{width:25px;height:25px}
   .store-header-social-link svg{width:12px;height:12px}
 }
+
+
+/* Neutral premium background refresh — replace the peach-heavy canvas */
+.store-page{
+  background:
+    radial-gradient(ellipse at 8% 18%,rgba(183,25,34,.025),transparent 34%),
+    radial-gradient(ellipse at 92% 62%,rgba(90,103,116,.035),transparent 32%),
+    linear-gradient(180deg,#f7f8fa 0%,#f2f4f6 48%,#f8f9fa 100%)!important;
+}
+.offers-section,.menu-section-intro{
+  background:transparent!important;
+}
+.cf-menu-browser{
+  background:linear-gradient(145deg,#ffffff 0%,#f8f9fb 100%)!important;
+  border-color:#e5e8ec!important;
+  box-shadow:0 16px 42px rgba(28,39,49,.055)!important;
+}
+.cf-active-category{
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(183,25,34,.045),transparent 36%),
+    linear-gradient(145deg,#ffffff 0%,#f5f7f9 100%)!important;
+}
+.store-branches{
+  background:linear-gradient(180deg,#eef1f4 0%,#f6f7f9 100%)!important;
+  border-color:#e5e9ed!important;
+}
+.store-branch-card{
+  background:rgba(255,255,255,.96)!important;
+  border-color:#e3e7eb!important;
+  box-shadow:0 8px 22px rgba(28,39,49,.055)!important;
+}
+.cf-product-visual{
+  background:linear-gradient(145deg,#f4f6f8 0%,#e9edf1 100%)!important;
+}
+.cf-product-art{
+  background:
+    radial-gradient(circle at 85% 15%,rgba(183,25,34,.07),transparent 32%),
+    linear-gradient(135deg,#ffffff 0%,#f0f3f6 100%)!important;
+}
+.cf-product-art:before,.cf-product-art:after{
+  border-color:rgba(100,112,124,.13)!important;
+}
+.cf-product-card{
+  border-color:#e6e9ed!important;
+  box-shadow:0 9px 25px rgba(28,39,49,.055)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .store-page{scroll-behavior:auto!important}
+}
