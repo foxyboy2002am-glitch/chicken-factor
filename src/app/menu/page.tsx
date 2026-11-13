@@ -102,7 +102,7 @@ export default async function MenuPage() {
         <nav className="store-main-nav" aria-label="التنقل الرئيسي">
           <a href="#menu-categories" data-ar="المنيو" data-en="Menu">المنيو</a>
           <a href="#offers" data-ar="العروض" data-en="Offers">العروض</a>
-          <a href="#branches" data-ar="الفروع" data-en="Branches">الفروع</a>
+          <a href="/branches" data-ar="الفروع" data-en="Branches">الفروع</a>
           <span className="store-header-social" aria-label="تابعنا على السوشيال ميديا">
             <a className="store-header-social-link" href="https://www.facebook.com/Chickenfactor" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.6V13h2.7v8h3.2Z"/></svg>
@@ -195,30 +195,6 @@ export default async function MenuPage() {
           <MenuBrowser categories={grouped} />
         </>
       )}
-      <section className="store-branches" id="branches" aria-labelledby="branches-title">
-        <div className="store-branches-heading">
-          <span>OUR LOCATIONS</span>
-          <h2 id="branches-title" data-ar="فروع تشيكن فاكتور" data-en="Chicken Factor branches">فروع تشيكن فاكتور</h2>
-          <p data-ar="تشيكن فاكتور معاك في كل مكان" data-en="Chicken Factor is always close to you">تشيكن فاكتور معاك في كل مكان</p>
-        </div>
-        <div className="store-branches-grid">
-          <article className="store-branch-card"><h3>الإسماعيلية</h3><span className="store-branch-soon">قريباً</span></article>
-          <article className="store-branch-card"><h3>العباسية</h3><span className="store-branch-soon">قريباً</span></article>
-          <article className="store-branch-card"><h3>أبو كبير</h3><a href="https://maps.app.goo.gl/kubTMsSUQrSa8pNQA" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>العاشر من رمضان</h3><a href="https://maps.app.goo.gl/tzjKc45c3qbrxGTo7?g_st=awb" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>طنطا</h3><a href="https://maps.app.goo.gl/3wo1B9gJC95jK6bZ7?g_st=awb" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>السنبلاوين</h3><a href="https://maps.app.goo.gl/e3bzMJ2b2341skrE9?g_st=aw" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>الزقازيق</h3><a href="https://maps.app.goo.gl/KpgKMuYe2wP5f9Q87" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>أبو حماد</h3><a href="tel:15407">للعنوان اتصل 15407</a></article>
-          <article className="store-branch-card"><h3>منيا القمح</h3><a href="https://maps.app.goo.gl/ySWdsBumYdzCfZoK7" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>بلبيس</h3><a href="https://maps.app.goo.gl/4FpuVtTiRW5mQ9nQ7" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>ديرب نجم</h3><a href="https://maps.app.goo.gl/RPTMf2KZERwvCzTaA" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>ههيا</h3><a href="https://maps.app.goo.gl/75e6UynKQdzmdq7G7" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-          <article className="store-branch-card"><h3>التل الكبير</h3><a href="tel:15407">للعنوان اتصل 15407</a></article>
-          <article className="store-branch-card"><h3>القرين</h3><a href="https://maps.app.goo.gl/6BUch4TPtHiSngo6A" target="_blank" rel="noopener noreferrer">افتح على الخريطة ↗</a></article>
-        </div>
-      </section>
-
       <footer className="store-footer">
         <img src="/profile_chicken_factor.webp" alt="" />
         <b>CHICKEN FACTOR</b><span data-ar="فراخنا من إنتاج مزارعنا" data-en="Our chicken comes from our own farms">فراخنا من إنتاج مزارعنا</span><span data-ar="للطلب والاستفسار" data-en="For orders and enquiries">للطلب والاستفسار</span><a href="tel:15407">15407</a>
