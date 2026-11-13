@@ -4,6 +4,7 @@ import CartButton from "@/components/cart-button";
 import OffersCarousel from "@/components/offers-carousel";
 import { StoreLanguageProvider, LanguageSwitcher } from "@/components/store-language";
 import { promotions } from "@/lib/promotions";
+import BranchFinder from "@/components/branch-finder";
 
 export const revalidate = 60;
 
@@ -117,6 +118,8 @@ export default async function MenuPage() {
         </nav>
         <div className="store-header-actions"><LanguageSwitcher /><CartButton /><a className="store-hotline" href="tel:15407"><span data-ar="الخط الساخن" data-en="Hotline">الخط الساخن</span> <strong>15407</strong></a></div>
       </header>
+
+      <section className="store-nearest-branch-entry"><BranchFinder /></section>
 
       <section className="store-hero">
         <div className="store-hero-inner">
